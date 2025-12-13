@@ -5,3 +5,7 @@ api-version: 1.21
 authors: [ZkAleeJoo]
 description: Plugin avanzado de administración.
 commands:
+  staff:
+    description: Entra en modo staff
+    usage: /staff
+    permission: maxstaff.use
