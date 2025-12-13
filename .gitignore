@@ -1,2 +1,6 @@
 .idea/
 .mvn/
+server-plugins/
+server-data/
+target/
+docker-compose.yml
