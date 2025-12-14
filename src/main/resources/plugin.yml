@@ -1,11 +1,5 @@
-name: MaxStaff
-version: 1.0-SNAPSHOT
-main: org.zkaleejoo.maxstaff.MaxStaff
-api-version: 1.21
-authors: [ZkAleeJoo]
-description: Plugin avanzado de administración.
-commands:
-  staff:
-    description: Entra en modo staff
-    usage: /staff
-    permission: maxstaff.use
+main: org.zkaleejoo.MaxStaff
+version: ${project.version}
+name: ZkAleeJoo
+author: ZkAleeJoo
+api-version: 1.20
