@@ -20,7 +20,7 @@ public class PunishmentManager {
 
     public PunishmentManager(MaxStaff plugin) {
         this.plugin = plugin;
-        this.dataFile = new CustomConfig("data.yml", null, plugin, false);
+        this.dataFile = new CustomConfig("data.yml", null, plugin, true);
         this.dataFile.registerConfig();
     }
 
