@@ -12,16 +12,22 @@ import org.zkaleejoo.listeners.StaffItemsListener;
 
 import org.zkaleejoo.listeners.PlayerQuitListener;
 
+import org.zkaleejoo.managers.GuiManager; 
+import org.zkaleejoo.listeners.GuiListener; 
+
 public class MaxStaff extends JavaPlugin {
 
     private MainConfigManager mainConfigManager;
     private StaffManager staffManager;
+    private GuiManager guiManager;
 
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
         mainConfigManager = new MainConfigManager(this);
         staffManager = new StaffManager(this);
+        guiManager = new GuiManager(this);
+
         registerCommands();
         registerEvents();
 
@@ -63,10 +69,15 @@ public class MaxStaff extends JavaPlugin {
     public StaffManager getStaffManager() {
         return staffManager;
     }
+    
+    public GuiManager getGuiManager() {
+        return guiManager;
+    }
 
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new GuiListener(this), this);
     }
 }
