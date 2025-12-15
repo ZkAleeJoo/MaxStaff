@@ -35,5 +35,25 @@ staff-mode:
       off-name: "&7&lVanish: DISABLED"
       message-on: "&aVanish: ACTIVATED &7(You are invisible)" 
       message-off: "&cVanish: DISABLED &7(You are visible)"
-      slot: 8 
+      slot: 8
+    freeze:
+      name: "&b&lFreeze &7(Player Click)"
+      slot: 1 
+      message-freeze: "&fFrozen Flash to &b{player}"
+      message-unfreeze: "&fYou have unfrozen &b{player}"
+      #Messages the victim sees
+      target-frozen: 
+        - "&c&lYOU'VE BEEN FROZEN!"
+        - "&ePlease wait for a staff member to assist you."
+        - "&7If you disconnect you will be banned."
+      target-unfrozen: "&aYou've been thawed!"
+
+#PUNISHMENT SETTINGS
+punishments:
+  broadcast: true #Notify the entire server
+  #Ban messages (Will support {player}, {staff}, {reason}, {time})
+  ban-message: "&c{player} &fhas been banned by &c{staff} &f| Reason: &e{reason}"
+  kick-message: "&c{player} &fhas been expelled for &c{staff} &f| Reason: &e{reason}"
+  mute-message: "&c{player} &fhas been muted by &c{staff} &f| Reason: &e{reason}"
+  freeze-message: "&c{player} &fhas been frozen by &c{staff}"
   
