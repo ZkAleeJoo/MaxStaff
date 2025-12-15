@@ -8,6 +8,20 @@ commands:
   maxstaff:
     description: Comando principal de MaxStaff
     aliases: [staff, ms]
+  ban:
+    description: Banear jugador
+  tempban:
+    description: Banear temporalmente
+  mute:
+    description: Mutear jugador
+  tempmute:
+    description: Mutear temporalmente
+  kick:
+    description: Expulsar jugador
+  unban:
+    description: Desbanear
+  unmute:
+    description: Desmutear
 
 permissions:
   maxstaff.admin:
