@@ -6,4 +6,27 @@ messages:
   plugin-reload: "&aConfiguration successfully reloaded."
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
+
+#MaxStaff Configuration
+staff-mode:
+  enabled: "&aStaff Mode ACTIVATED!"
+  disabled: "&cStaff Mode DISABLED"
+  inventory-saved: "&eYour inventory has been saved."
+  inventory-restored: "&eYour inventory has been restored."
+  
+  items:
+    punish:
+      name: "&c&lSanction &7(Right Click)"
+      slot: 0 
+    players:
+      name: "&b&lPlayers &7(Right Click)"
+      slot: 4 
+    inspect:
+      name: "&6&lInspect &7(Click Jugador)"
+      slot: 7 
+    vanish:
+      name: "&a&lVanish &7(Click to toggle)"
+      on-name: "&a&lVanish: ACTIVATED"
+      off-name: "&7&lVanish: DISABLED"
+      slot: 8 
   
