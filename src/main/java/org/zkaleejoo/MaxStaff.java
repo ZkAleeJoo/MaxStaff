@@ -7,6 +7,7 @@ import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
 import org.zkaleejoo.managers.StaffManager;
+import org.zkaleejoo.listeners.StaffItemsListener;
 
 public class MaxStaff extends JavaPlugin {
 
@@ -17,9 +18,10 @@ public class MaxStaff extends JavaPlugin {
     @Override
     public void onEnable() {
         mainConfigManager = new MainConfigManager(this);
-
+        staffManager = new StaffManager(this);
         staffManager = new StaffManager(this);
         registerCommands();
+        registerEvents();
 
         Bukkit.getConsoleSender().sendMessage("   _____                   _________ __          _____  _____ \r\n" + 
                         "  /     \\ _____  ___  ___ /   _____//  |______ _/ ____\\/ ____\\\r\n" + 
@@ -53,5 +55,9 @@ public class MaxStaff extends JavaPlugin {
 
     public StaffManager getStaffManager() {
         return staffManager;
+    }
+
+    public void registerEvents() {
+        getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
     }
 }
