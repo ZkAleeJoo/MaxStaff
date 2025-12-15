@@ -62,11 +62,13 @@ public class StaffItemsListener implements Listener {
             // Reloj
             else if (item.getType() == Material.CLOCK) {
                 event.setCancelled(true);
+                plugin.getGuiManager().openPlayersMenu(player);
                 player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPlayers()));
             }
             // Libro
             else if (item.getType() == Material.BOOK) {
                 event.setCancelled(true);
+                plugin.getGuiManager().openSanctionMenu(player, target.getName());
                 player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
             }
         }
