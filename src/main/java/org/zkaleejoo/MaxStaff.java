@@ -18,12 +18,17 @@ import org.zkaleejoo.listeners.GuiListener;
 import org.zkaleejoo.managers.FreezeManager;
 import org.zkaleejoo.listeners.FreezeListener;
 
+import org.zkaleejoo.managers.PunishmentManager;
+import org.zkaleejoo.commands.PunishmentCommand;
+import org.zkaleejoo.listeners.ChatListener;
+
 public class MaxStaff extends JavaPlugin {
 
     private MainConfigManager mainConfigManager;
     private StaffManager staffManager;
     private GuiManager guiManager;
     private FreezeManager freezeManager;
+    private PunishmentManager punishmentManager;
 
     //PLUGIN SE PRENDE
     @Override
@@ -32,6 +37,7 @@ public class MaxStaff extends JavaPlugin {
         freezeManager = new FreezeManager(this);
         staffManager = new StaffManager(this);
         guiManager = new GuiManager(this);
+        punishmentManager = new PunishmentManager(this);
 
         registerCommands();
         registerEvents();
@@ -65,6 +71,16 @@ public class MaxStaff extends JavaPlugin {
         MainCommand mainCommand = new MainCommand(this);
         this.getCommand("maxstaff").setExecutor(mainCommand);
         this.getCommand("maxstaff").setTabCompleter(mainCommand);
+
+        PunishmentCommand punCmd = new PunishmentCommand(this);
+        getCommand("ban").setExecutor(punCmd);
+        getCommand("tempban").setExecutor(punCmd);
+        getCommand("mute").setExecutor(punCmd);
+        getCommand("tempmute").setExecutor(punCmd);
+        getCommand("kick").setExecutor(punCmd);
+        getCommand("unban").setExecutor(punCmd);
+        getCommand("unmute").setExecutor(punCmd);
+
     }
 
     public MainConfigManager getMainConfigManager() {
@@ -83,11 +99,14 @@ public class MaxStaff extends JavaPlugin {
         return freezeManager;
     }
 
+    public PunishmentManager getPunishmentManager() { return punishmentManager; }
+
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new GuiListener(this), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
     }
 }
