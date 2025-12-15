@@ -7,5 +7,3 @@ messages:
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
   
-staff:
-  chat-enabled: true
