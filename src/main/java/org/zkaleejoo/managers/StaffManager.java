@@ -136,4 +136,14 @@ public class StaffManager {
         return vanishedPlayers;
     }
 
+
+    public void disableAllStaff() {
+        for (UUID uuid : new java.util.ArrayList<>(staffModePlayers.keySet())) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                disableStaffMode(player);
+            }
+        }
+    }
+
 }
