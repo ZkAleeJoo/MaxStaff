@@ -22,32 +22,36 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 
-        // COMANDOS DE CONSOLA O JUGADOR
-        
-        if (args.length >= 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (sender instanceof Player && !sender.hasPermission("maxstaff.admin")) {
-                    sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
-                    return true;
-                }
-
-                plugin.getMainConfigManager().reloadConfig();
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPluginReload()));
+        if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
+            if (sender instanceof Player && !sender.hasPermission("maxstaff.admin")) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
                 return true;
             }
+            
+            plugin.getMainConfigManager().reloadConfig();
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPluginReload()));
+            return true;
         }
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (!player.hasPermission("maxstaff.admin")) {
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
-                return true;
-            }
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cEste comando solo puede ser ejecutado por jugadores."));
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("maxstaff.admin")) {
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
+            return true;
         }
 
         if(args.length >= 1){
              if(args[0].equalsIgnoreCase("help")){
                 help(sender);
+
+            } else if (args[0].equalsIgnoreCase("mode") || args[0].equalsIgnoreCase("staff")) {
+                plugin.getStaffManager().toggleStaffMode(player);
+
             } else {
                  sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getSubcommandInvalid()));
             }
@@ -59,9 +63,10 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     public void help(CommandSender sender){
-        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&fLista de comandos: " + plugin.getDescription().getVersion()));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help"));
+        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&fLista de comandos: &b" + plugin.getDescription().getVersion()));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Recargar configuración"));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- Ver lista de comandos"));
     }
 
     @Override
@@ -75,6 +80,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             completions.add("reload");
             completions.add("help");
+            completions.add("mode"); 
             return filterCompletions(completions, args[0]);
         }
 
