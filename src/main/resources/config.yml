@@ -13,7 +13,9 @@ staff-mode:
   disabled: "&cStaff Mode DISABLED"
   inventory-saved: "&eYour inventory has been saved."
   inventory-restored: "&eYour inventory has been restored."
-  
+  cannot-drop: "&cYou cannot throw items in staff mode."
+  cannot-place: "&cYou cannot place blocks in staff mode."
+
   items:
     punish:
       name: "&c&lSanction &7(Right Click)"

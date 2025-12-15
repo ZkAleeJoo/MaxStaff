@@ -7,7 +7,9 @@ import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
 import org.zkaleejoo.managers.StaffManager;
+import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
+
 
 public class MaxStaff extends JavaPlugin {
 
@@ -18,7 +20,6 @@ public class MaxStaff extends JavaPlugin {
     @Override
     public void onEnable() {
         mainConfigManager = new MainConfigManager(this);
-        staffManager = new StaffManager(this);
         staffManager = new StaffManager(this);
         registerCommands();
         registerEvents();
@@ -59,5 +60,6 @@ public class MaxStaff extends JavaPlugin {
 
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
     }
 }

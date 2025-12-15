@@ -5,8 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
@@ -19,64 +22,81 @@ public class StaffItemsListener implements Listener {
         this.plugin = plugin;
     }
 
-    // EVENTO 1: Clic al aire o bloque
+    // --- PROTECCIÓN: No tirar ítems ---
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotDrop()));
+        }
+    }
+
+    // --- PROTECCIÓN: No poner bloques ---
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotPlace()));
+        }
+    }
+
+    // --- INTERACCIÓN: Clic al aire/bloque ---
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
         Player player = event.getPlayer();
 
-        if (!plugin.getStaffManager().isInStaffMode(player)) {
-            return;
-        }
+        if (!plugin.getStaffManager().isInStaffMode(player)) return;
 
         ItemStack item = event.getItem();
         if (item == null || item.getType() == Material.AIR) return;
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             
-            // --- ESTRELLA (VANISH) ---
+            // Vanish
             if (item.getType() == Material.NETHER_STAR) {
-                event.setCancelled(true); // Evitar que coloque bloques o interactúe
+                event.setCancelled(true); 
                 plugin.getStaffManager().toggleVanish(player);
             }
-
-            // --- RELOJ (JUGADORES) ---
+            // Reloj
             else if (item.getType() == Material.CLOCK) {
                 event.setCancelled(true);
-                player.sendMessage(MessageUtils.getColoredMessage("&ePróximamente: &fAbriendo menú de jugadores..."));
-                // AQUÍ PONDREMOS EL MENÚ EN EL SIGUIENTE PASO
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPlayers()));
             }
-
-            // --- LIBRO (SANCIONES - GENERAL) ---
+            // Libro
             else if (item.getType() == Material.BOOK) {
                 event.setCancelled(true);
-                player.sendMessage(MessageUtils.getColoredMessage("&ePróximamente: &fAbriendo menú de sanciones..."));
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
             }
         }
     }
 
-    // EVENTO 2: Clic a una entidad
+    // --- INTERACCIÓN: Clic a entidad ---
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
         Player player = event.getPlayer();
 
         if (!plugin.getStaffManager().isInStaffMode(player)) return;
-
         if (!(event.getRightClicked() instanceof Player)) return;
 
         Player target = (Player) event.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        // --- COFRE (INSPECCIONAR) ---
+        // Cofre (Inspect)
         if (item.getType() == Material.CHEST) {
             event.setCancelled(true);
-            player.sendMessage(MessageUtils.getColoredMessage("&6Inspeccionando a: &f" + target.getName()));
+            String msg = plugin.getMainConfigManager().getMsgInspect().replace("{player}", target.getName());
+            player.sendMessage(MessageUtils.getColoredMessage(msg));
             player.openInventory(target.getInventory());
         }
         
-        // --- LIBRO (SANCIONAR DIRECTO) ---
+        // Libro (Sancionar)
         else if (item.getType() == Material.BOOK) {
             event.setCancelled(true);
-            player.sendMessage(MessageUtils.getColoredMessage("&cSancionando a: &f" + target.getName()));
+            player.sendMessage(MessageUtils.getColoredMessage("&cSancionando a: " + target.getName()));
         }
     }
 }

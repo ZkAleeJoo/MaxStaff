@@ -92,13 +92,14 @@ public class StaffManager {
     public void toggleVanish(Player player) {
         if (!staffModePlayers.containsKey(player.getUniqueId())) return;
 
-
         if (isVanished(player)) {
             setVanish(player, false);
-            player.sendMessage(MessageUtils.getColoredMessage("&7Vanish: &cDISABLED"));
+            // Mensaje Configurable OFF
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOff()));
         } else {
             setVanish(player, true);
-            player.sendMessage(MessageUtils.getColoredMessage("&aVanish: &ACTIVATED"));
+            // Mensaje Configurable ON
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOn()));
         }
     }
 
@@ -123,6 +124,10 @@ public class StaffManager {
 
     public boolean isVanished(Player player) {
         return vanishedPlayers.contains(player.getUniqueId());
+    }
+
+    public java.util.List<UUID> getVanishedPlayers() {
+        return vanishedPlayers;
     }
 
 }
