@@ -32,6 +32,22 @@ public class MainConfigManager {
     private java.util.List<String> msgTargetFrozen; 
     private String msgTargetUnfrozen;
 
+    private String msgConsole;
+    private String noReason;
+    private String playerMuted;
+
+    private String TitleOnlinePlayers;
+    private String playerNoOnline;
+    private String tpPlayer;
+
+    private String sanctionMenuTitle;
+    private String kickedMessage;
+
+    private String TitleDuration;
+    private String SactionsMenu;
+
+    private String playerClickPls;
+
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
         configFile = new CustomConfig("config.yml", null, plugin, false);
@@ -65,6 +81,18 @@ public class MainConfigManager {
         msgUnfreezeStaff = config.getString("staff-mode.items.freeze.message-unfreeze");
         msgTargetFrozen = config.getStringList("staff-mode.items.freeze.target-frozen");
         msgTargetUnfrozen = config.getString("staff-mode.items.freeze.target-unfrozen");
+        msgConsole = config.getString("messages.message-console");
+        noReason = config.getString("messages.no-reason");
+        playerMuted = config.getString("messages.player-muted");
+        TitleOnlinePlayers = config.getString("online-players.title");
+        playerNoOnline = config.getString("online-players.player-no-online");
+        tpPlayer = config.getString("online-players.tp-player");
+        sanctionMenuTitle = config.getString("sanctions-players.title");
+        kickedMessage = config.getString("sanctions-players.kicked-message");
+
+        TitleDuration = config.getString("title-duration");
+        SactionsMenu = config.getString("sanctions-menu");
+        playerClickPls = config.getString("messages.player-click-pls");
     }
 
     public void reloadConfig(){
@@ -95,4 +123,16 @@ public class MainConfigManager {
     public String getMsgUnfreezeStaff() { return msgUnfreezeStaff; }
     public java.util.List<String> getMsgTargetFrozen() { return msgTargetFrozen; }
     public String getMsgTargetUnfrozen() { return msgTargetUnfrozen; }
+
+    public String getMsgConsole() { return msgConsole; }
+    public String getNoReason() { return noReason; }
+    public String getPlayerMuted() { return playerMuted; }
+    public String getTitleOnlinePlayers() { return TitleOnlinePlayers; }
+    public String getPlayerNoOnline() { return playerNoOnline; }
+    public String getTpPlayer() { return tpPlayer; }
+    public String getSanctionMenuTitle() { return sanctionMenuTitle; }
+    public String getKickedMessage() { return kickedMessage; }
+    public String getTitleDuration() { return TitleDuration; }
+    public String getSactionsMenu() { return SactionsMenu; }
+    public String getPlayerClickPls() { return playerClickPls; }
 }

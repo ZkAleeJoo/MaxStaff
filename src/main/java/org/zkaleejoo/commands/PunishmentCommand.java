@@ -19,12 +19,12 @@ public class PunishmentCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("maxstaff.punish")) {
-            sender.sendMessage(MessageUtils.getColoredMessage("&cNo tienes permiso."));
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
             return true;
         }
 
         if (args.length < 1) {
-            sender.sendMessage(MessageUtils.getColoredMessage("&cUso: /" + label + " <jugador> [tiempo] [razón]"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&cUse: /" + label + " <jugador> [tiempo] [razón]"));
             return true;
         }
 
@@ -32,7 +32,7 @@ public class PunishmentCommand implements CommandExecutor {
         
         // KICK
         if (label.equalsIgnoreCase("kick")) {
-            String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : "Sin razón";
+            String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : plugin.getMainConfigManager().getNoReason();
             plugin.getPunishmentManager().kickPlayer(sender, target, reason);
             return true;
         }
@@ -48,7 +48,7 @@ public class PunishmentCommand implements CommandExecutor {
         }
 
         String time = "perm";
-        String reason = "Sin razón";
+        String reason = plugin.getMainConfigManager().getNoReason();
         
         int reasonStartIndex = 1;
         if (args.length > 1) {

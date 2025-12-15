@@ -18,7 +18,7 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         if (plugin.getPunishmentManager().isMuted(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(MessageUtils.getColoredMessage("&c¡Estás muteado! No puedes hablar."));
+            event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerMuted()));
         }
     }
 }

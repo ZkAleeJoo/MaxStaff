@@ -63,12 +63,12 @@ public class StaffItemsListener implements Listener {
             else if (item.getType() == Material.CLOCK) {
                 event.setCancelled(true);
                 plugin.getGuiManager().openPlayersMenu(player);
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPlayers()));
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgPlayers()));
             }
             // Libro
             else if (item.getType() == Material.BOOK) {
                 event.setCancelled(true);
-                player.sendMessage(MessageUtils.getColoredMessage("&cDebes dar &lClick Derecho &ca un jugador para sancionarlo."));
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerClickPls()));
             }
         }
     }
@@ -91,7 +91,7 @@ public class StaffItemsListener implements Listener {
         if (item.getType() == Material.CHEST) {
             event.setCancelled(true);
             String msg = plugin.getMainConfigManager().getMsgInspect().replace("{player}", target.getName());
-            player.sendMessage(MessageUtils.getColoredMessage(msg));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
             player.openInventory(target.getInventory());
         }
         
@@ -99,7 +99,7 @@ public class StaffItemsListener implements Listener {
         else if (item.getType() == Material.BOOK) {
             event.setCancelled(true);
             plugin.getGuiManager().openSanctionMenu(player, target.getName());
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgPunish()));
         }
 
         // Hielo

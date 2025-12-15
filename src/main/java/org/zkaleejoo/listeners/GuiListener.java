@@ -26,7 +26,7 @@ public class GuiListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
 
-        if (title.equals(MessageUtils.getColoredMessage("&8Lista de Jugadores"))) {
+        if (title.equals(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getTitleOnlinePlayers()))) {
             event.setCancelled(true); 
             
             if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
@@ -35,15 +35,15 @@ public class GuiListener implements Listener {
                 
                 if (target != null) {
                     player.teleport(target);
-                    player.sendMessage(MessageUtils.getColoredMessage("&aTeletransportado a " + target.getName()));
+                    player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getTpPlayer() + " " + target.getName()));
                 } else {
-                    player.sendMessage(MessageUtils.getColoredMessage("&cEl jugador ya no está online."));
+                    player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerNoOnline().replace("{player}", targetName)));
                 }
                 player.closeInventory();
             }
         }
 
-        else if (title.startsWith(MessageUtils.getColoredMessage("&8Sancionar a:"))) {
+        else if (title.startsWith(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getSanctionMenuTitle()))) {
             event.setCancelled(true);
             
 
@@ -59,11 +59,11 @@ public class GuiListener implements Listener {
             } 
             else if (type == Material.FEATHER) { 
                 player.closeInventory();
-                Bukkit.dispatchCommand(player, "kick " + targetName + " [MaxStaff] Has sido expulsado.");
+                Bukkit.dispatchCommand(player, "kick " + targetName + " " + plugin.getMainConfigManager().getKickedMessage());
             }
         }
 
-        else if (title.startsWith(MessageUtils.getColoredMessage("&8Duración"))) {
+        else if (title.startsWith(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getTitleDuration()))) {
             event.setCancelled(true);
             
             String cleanTitle = ChatColor.stripColor(title); 
@@ -76,7 +76,7 @@ public class GuiListener implements Listener {
                 return;
             }
 
-            String duration = "";
+        String duration = "";
             Material mat = item.getType();
             if (mat == Material.LIME_DYE) duration = "1h";
             else if (mat == Material.YELLOW_DYE) duration = "1d";
@@ -84,9 +84,9 @@ public class GuiListener implements Listener {
             else if (mat == Material.RED_DYE) duration = "perm";
             
             if (type.equals("BAN")) {
-                            plugin.getPunishmentManager().banPlayer(player, targetName, "Sanción desde GUI", duration);
+                            plugin.getPunishmentManager().banPlayer(player, targetName, plugin.getMainConfigManager().getSactionsMenu(), duration);
                         } else {
-                            plugin.getPunishmentManager().mutePlayer(player, targetName, "Sanción desde GUI", duration);
+                            plugin.getPunishmentManager().mutePlayer(player, targetName, plugin.getMainConfigManager().getSactionsMenu(), duration);
                         }
 
             player.closeInventory();

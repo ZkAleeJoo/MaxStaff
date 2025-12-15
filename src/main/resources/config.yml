@@ -6,6 +6,10 @@ messages:
   plugin-reload: "&aConfiguration successfully reloaded."
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
+  message-console: "&cThis command can only be executed by a player."
+  no-reason: "No reason specified"
+  player-muted: "&cYou are muted and cannot send messages."
+  player-click-pls: "&ePlease click on a player to select them."
 
 #MaxStaff Configuration
 staff-mode:
@@ -56,4 +60,17 @@ punishments:
   kick-message: "&c{player} &fhas been expelled for &c{staff} &f| Reason: &e{reason}"
   mute-message: "&c{player} &fhas been muted by &c{staff} &f| Reason: &e{reason}"
   freeze-message: "&c{player} &fhas been frozen by &c{staff}"
+
+#Menu section
+online-players:
+  title: "&7Online Players"
+  player-no-online: "&cThe player &e{player} &cis not online."
+  tp-player: "&aTeleported to"
+
+sanctions-players:
+  title: "&7Sanctions Menu"
+  kicked-message: "You were kicked from the server"
+
+title-duration: "&7Duration"
+sanctions-menu: "&eYou were sanctioned from the Staff menu"
   

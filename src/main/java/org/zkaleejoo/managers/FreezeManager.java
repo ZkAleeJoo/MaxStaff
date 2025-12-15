@@ -21,10 +21,10 @@ public class FreezeManager {
     public void toggleFreeze(Player staff, Player target) {
         if (isFrozen(target)) {
             setFrozen(target, false);
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgUnfreezeStaff().replace("{player}", target.getName())));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnfreezeStaff().replace("{player}", target.getName())));
         } else {
             setFrozen(target, true);
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgFreezeStaff().replace("{player}", target.getName())));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgFreezeStaff().replace("{player}", target.getName())));
         }
     }
 
@@ -32,7 +32,7 @@ public class FreezeManager {
         if (freeze) {
             frozenPlayers.add(target.getUniqueId());
             for (String line : plugin.getMainConfigManager().getMsgTargetFrozen()) {
-                target.sendMessage(MessageUtils.getColoredMessage(line));
+                target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + line));
             }
             target.closeInventory();
         } else {

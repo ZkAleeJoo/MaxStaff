@@ -34,7 +34,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cEste comando solo puede ser ejecutado por jugadores."));
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgConsole()));
             return true;
         }
 
@@ -63,10 +63,10 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     public void help(CommandSender sender){
-        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&fLista de comandos: &b" + plugin.getDescription().getVersion()));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Recargar configuración"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- Ver lista de comandos"));
+        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&fList of commands: &b" + plugin.getDescription().getVersion()));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Activate/Deactivate staff mode"));
+        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
     }
 
     @Override
