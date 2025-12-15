@@ -51,7 +51,7 @@ public class GuiListener implements Listener {
 
             Material type = event.getCurrentItem().getType();
             
-            if (type == Material.IRON_SWORD) { /
+            if (type == Material.IRON_SWORD) { 
                 plugin.getGuiManager().openTimeMenu(player, targetName, "BAN");
             } 
             else if (type == Material.PAPER) { 
@@ -66,7 +66,7 @@ public class GuiListener implements Listener {
         else if (title.startsWith(MessageUtils.getColoredMessage("&8Duración"))) {
             event.setCancelled(true);
             
-            String cleanTitle = ChatColor.stripColor(title); /
+            String cleanTitle = ChatColor.stripColor(title); 
             String type = cleanTitle.split(" ")[1].replace(":", ""); 
             String targetName = cleanTitle.split(": ")[1]; 
 
