@@ -10,6 +10,7 @@ import org.zkaleejoo.managers.StaffManager;
 import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
 
+import org.zkaleejoo.listeners.PlayerQuitListener;
 
 public class MaxStaff extends JavaPlugin {
 
@@ -39,6 +40,11 @@ public class MaxStaff extends JavaPlugin {
     // PLUGIN SE APAGA
     @Override
     public void onDisable() {
+
+        if (staffManager != null) {
+            staffManager.disableAllStaff();
+        }
+
         String prefix = (mainConfigManager != null) ? mainConfigManager.getPrefix() : "&4MaxStaff ";
         Bukkit.getConsoleSender().sendMessage(
             ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was successfully deactivated"));
@@ -61,5 +67,6 @@ public class MaxStaff extends JavaPlugin {
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
     }
 }
