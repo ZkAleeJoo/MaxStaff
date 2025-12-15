@@ -1,5 +1,15 @@
 main: org.zkaleejoo.MaxStaff
 version: ${project.version}
-name: ZkAleeJoo
+name: MaxStaff
 author: ZkAleeJoo
 api-version: 1.20
+
+commands:
+  maxstaff:
+    description: Comando principal de MaxStaff
+    aliases: [staff, ms]
+
+permissions:
+  maxstaff.admin:
+    description: Permisos de administrador para MaxStaff
+    default: op
