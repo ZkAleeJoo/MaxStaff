@@ -71,6 +71,8 @@ public class StaffItemsListener implements Listener {
                 plugin.getGuiManager().openPlayersMenu(player);
                 player.sendMessage(MessageUtils.getColoredMessage("&eSelecciona un jugador para sancionar..."));
             }
+
+
         }
     }
 
@@ -102,5 +104,11 @@ public class StaffItemsListener implements Listener {
             plugin.getGuiManager().openSanctionMenu(player, target.getName());
             player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
         }
+
+        // Hielo
+        else if (item.getType() == Material.PACKED_ICE) {
+            event.setCancelled(true);
+            plugin.getFreezeManager().toggleFreeze(player, target);
+        }   
     }
 }
