@@ -65,16 +65,16 @@ public class StaffItemsListener implements Listener {
                 plugin.getGuiManager().openPlayersMenu(player);
                 player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPlayers()));
             }
-            // Libro
+            // Libro 
             else if (item.getType() == Material.BOOK) {
                 event.setCancelled(true);
-                plugin.getGuiManager().openSanctionMenu(player, target.getName());
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
+                plugin.getGuiManager().openPlayersMenu(player);
+                player.sendMessage(MessageUtils.getColoredMessage("&eSelecciona un jugador para sancionar..."));
             }
         }
     }
 
-    // --- INTERACCIÓN: Clic a entidad ---
+    // --- INTERACCIÓN: Clic a entidad (Jugador) ---
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -82,12 +82,13 @@ public class StaffItemsListener implements Listener {
         Player player = event.getPlayer();
 
         if (!plugin.getStaffManager().isInStaffMode(player)) return;
+        
         if (!(event.getRightClicked() instanceof Player)) return;
 
         Player target = (Player) event.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        // Cofre (Inspect)
+        // Cofre
         if (item.getType() == Material.CHEST) {
             event.setCancelled(true);
             String msg = plugin.getMainConfigManager().getMsgInspect().replace("{player}", target.getName());
@@ -95,10 +96,11 @@ public class StaffItemsListener implements Listener {
             player.openInventory(target.getInventory());
         }
         
-        // Libro (Sancionar)
+        // Libro
         else if (item.getType() == Material.BOOK) {
             event.setCancelled(true);
-            player.sendMessage(MessageUtils.getColoredMessage("&cSancionando a: " + target.getName()));
+            plugin.getGuiManager().openSanctionMenu(player, target.getName());
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPunish()));
         }
     }
 }
