@@ -38,7 +38,10 @@ public class StaffManager {
         savedArmor.put(player.getUniqueId(), player.getInventory().getArmorContents());
         
         player.getInventory().clear();
-        player.setGameMode(GameMode.CREATIVE); 
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        player.setInvulnerable(true);
         
         giveStaffItems(player);
         
@@ -59,6 +62,9 @@ public class StaffManager {
         }
         
         player.setGameMode(GameMode.SURVIVAL);
+        player.setAllowFlight(false);
+        player.setFlying(false);
+        player.setInvulnerable(false);
         
         staffModePlayers.remove(player.getUniqueId());
         player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cStaff Mode Disabled. Inventory Restored."));
