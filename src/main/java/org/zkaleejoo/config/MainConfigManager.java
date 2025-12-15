@@ -27,6 +27,11 @@ public class MainConfigManager {
     private String msgPunish;
     private String msgPlayers;
 
+    private String msgFreezeStaff;
+    private String msgUnfreezeStaff;
+    private java.util.List<String> msgTargetFrozen; 
+    private String msgTargetUnfrozen;
+
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
         configFile = new CustomConfig("config.yml", null, plugin, false);
@@ -55,6 +60,11 @@ public class MainConfigManager {
         msgVanishOff = config.getString("staff-mode.items.vanish.message-off");
         msgPunish = config.getString("staff-mode.items.punish.message");
         msgPlayers = config.getString("staff-mode.items.players.message");
+
+        msgFreezeStaff = config.getString("staff-mode.items.freeze.message-freeze");
+        msgUnfreezeStaff = config.getString("staff-mode.items.freeze.message-unfreeze");
+        msgTargetFrozen = config.getStringList("staff-mode.items.freeze.target-frozen");
+        msgTargetUnfrozen = config.getString("staff-mode.items.freeze.target-unfrozen");
     }
 
     public void reloadConfig(){
@@ -80,4 +90,9 @@ public class MainConfigManager {
     public String getMsgVanishOff() { return msgVanishOff; }
     public String getMsgPunish() { return msgPunish; }
     public String getMsgPlayers() { return msgPlayers; }
+
+    public String getMsgFreezeStaff() { return msgFreezeStaff; }
+    public String getMsgUnfreezeStaff() { return msgUnfreezeStaff; }
+    public java.util.List<String> getMsgTargetFrozen() { return msgTargetFrozen; }
+    public String getMsgTargetUnfrozen() { return msgTargetUnfrozen; }
 }
