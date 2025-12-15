@@ -76,6 +76,8 @@ public class StaffManager {
 
     private void giveStaffItems(Player player) {
         player.getInventory().setItem(0, createItem(Material.BOOK, "&c&lSanctions"));
+
+        player.getInventory().setItem(1, createItem(Material.PACKED_ICE, "&b&lFreeze"));
         
         player.getInventory().setItem(4, createItem(Material.CLOCK, "&b&lOnline Players"));
         
