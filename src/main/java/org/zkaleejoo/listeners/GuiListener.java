@@ -76,25 +76,21 @@ public class GuiListener implements Listener {
                 return;
             }
 
-            String command = "";
             String duration = "";
-            
             Material mat = item.getType();
             if (mat == Material.LIME_DYE) duration = "1h";
             else if (mat == Material.YELLOW_DYE) duration = "1d";
             else if (mat == Material.ORANGE_DYE) duration = "7d";
-            else if (mat == Material.RED_DYE) duration = ""; 
+            else if (mat == Material.RED_DYE) duration = "perm";
             
             if (type.equals("BAN")) {
-                if (duration.isEmpty()) command = "ban " + targetName + " [MaxStaff] Ban Permanente";
-                else command = "tempban " + targetName + " " + duration + " [MaxStaff] Sanción temporal";
-            } else {
-                if (duration.isEmpty()) command = "mute " + targetName + " [MaxStaff] Mute Permanente";
-                else command = "tempmute " + targetName + " " + duration + " [MaxStaff] Mute temporal";
-            }
+                            plugin.getPunishmentManager().banPlayer(player, targetName, "Sanción desde GUI", duration);
+                        } else {
+                            plugin.getPunishmentManager().mutePlayer(player, targetName, "Sanción desde GUI", duration);
+                        }
 
             player.closeInventory();
-            player.chat("/" + command); 
+    
         }
     }
 }
