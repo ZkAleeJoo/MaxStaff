@@ -1,0 +1,11 @@
+general:
+  prefix: "&4&lMaxStaff &8» "
+
+messages:
+  no-permission: "&cYou do not have permission to use this command."
+  plugin-reload: "&aConfiguration successfully reloaded."
+  subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
+  subcommand-specified: "&cPlease specify a subcommand."
+  
+staff:
+  chat-enabled: true
