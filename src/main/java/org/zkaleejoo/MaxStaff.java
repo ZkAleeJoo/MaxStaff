@@ -6,15 +6,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
+import org.zkaleejoo.managers.StaffManager;
+
 public class MaxStaff extends JavaPlugin {
 
     private MainConfigManager mainConfigManager;
+    private StaffManager staffManager;
 
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
         mainConfigManager = new MainConfigManager(this);
 
+        staffManager = new StaffManager(this);
         registerCommands();
 
         Bukkit.getConsoleSender().sendMessage("   _____                   _________ __          _____  _____ \r\n" + 
@@ -45,5 +49,9 @@ public class MaxStaff extends JavaPlugin {
 
     public MainConfigManager getMainConfigManager() {
         return mainConfigManager;
+    }
+
+    public StaffManager getStaffManager() {
+        return staffManager;
     }
 }
