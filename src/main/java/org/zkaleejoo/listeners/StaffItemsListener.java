@@ -65,14 +65,11 @@ public class StaffItemsListener implements Listener {
                 plugin.getGuiManager().openPlayersMenu(player);
                 player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgPlayers()));
             }
-            // Libro 
+            // Libro
             else if (item.getType() == Material.BOOK) {
                 event.setCancelled(true);
-                plugin.getGuiManager().openPlayersMenu(player);
-                player.sendMessage(MessageUtils.getColoredMessage("&eSelecciona un jugador para sancionar..."));
+                player.sendMessage(MessageUtils.getColoredMessage("&cDebes dar &lClick Derecho &ca un jugador para sancionarlo."));
             }
-
-
         }
     }
 
