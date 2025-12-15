@@ -1,5 +1,6 @@
 package org.zkaleejoo.managers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -86,4 +87,42 @@ public class StaffManager {
         }
         return item;
     }
+
+    //LOGICA DEL VANISH
+    public void toggleVanish(Player player) {
+        if (!staffModePlayers.containsKey(player.getUniqueId())) return;
+
+
+        if (isVanished(player)) {
+            setVanish(player, false);
+            player.sendMessage(MessageUtils.getColoredMessage("&7Vanish: &cDISABLED"));
+        } else {
+            setVanish(player, true);
+            player.sendMessage(MessageUtils.getColoredMessage("&aVanish: &ACTIVATED"));
+        }
+    }
+
+    private final java.util.List<UUID> vanishedPlayers = new java.util.ArrayList<>();
+
+    public void setVanish(Player player, boolean enable) {
+        if (enable) {
+            vanishedPlayers.add(player.getUniqueId());
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                if (!target.hasPermission("maxstaff.see.vanish")) {  //PERMISO
+                    target.hidePlayer(plugin, player);
+                }
+            }
+
+        } else {
+            vanishedPlayers.remove(player.getUniqueId());
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                target.showPlayer(plugin, player);
+            }
+        }
+    }
+
+    public boolean isVanished(Player player) {
+        return vanishedPlayers.contains(player.getUniqueId());
+    }
+
 }
