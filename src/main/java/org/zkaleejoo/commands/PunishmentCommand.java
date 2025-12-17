@@ -53,7 +53,10 @@ public class PunishmentCommand implements CommandExecutor {
         int reasonStartIndex = 1;
         if (args.length > 1) {
             String arg1 = args[1].toLowerCase();
-            if (arg1.matches(".*[dhms]") || arg1.equals("perm")) {
+            boolean looksLikeTime = (arg1.matches(".*[dhms]") && Character.isDigit(arg1.charAt(0))) 
+                                    || arg1.equals("perm") || arg1.equals("permanent");
+
+            if (looksLikeTime) {
                 time = arg1;
                 reasonStartIndex = 2;
             }
