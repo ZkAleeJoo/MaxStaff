@@ -78,6 +78,8 @@ public class MainConfigManager {
     private String msgUnmuteSuccess;
     private String msgUsage;
 
+    private boolean isBroadcastEnabled;
+
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
         configFile = new CustomConfig("config.yml", null, plugin, false);
@@ -159,6 +161,8 @@ public class MainConfigManager {
         msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
         msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
         msgUsage = config.getString("punishments.feedback.usage");
+
+        isBroadcastEnabled = config.getBoolean("punishments.broadcast");
     }
 
     public void reloadConfig(){
@@ -234,4 +238,6 @@ public class MainConfigManager {
     public String getMsgUnmuteSuccess() { return msgUnmuteSuccess; }
     public String getMsgUsage() { return msgUsage; }
     
+    public boolean isBroadcastEnabled() { return isBroadcastEnabled; }
+
 }
