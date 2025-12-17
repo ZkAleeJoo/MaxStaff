@@ -148,6 +148,8 @@ public class PunishmentManager {
     }
 
     private void broadcast(String msg) {
-        Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+        if (plugin.getMainConfigManager().isBroadcastEnabled()) {
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+        }
     }
 }
