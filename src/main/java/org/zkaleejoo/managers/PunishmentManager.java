@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PunishmentManager {
 
     private final MaxStaff plugin;
-    private CustomConfig dataFile; 
+    private CustomConfig dataFile;
 
     public PunishmentManager(MaxStaff plugin) {
         this.plugin = plugin;
@@ -28,44 +28,70 @@ public class PunishmentManager {
     public void kickPlayer(CommandSender staff, String targetName, String reason) {
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            String kickMsg = plugin.getMainConfigManager().getPrefix() + "&cHas sido expulsado.\n&fRazón: &e" + reason;
-            target.kickPlayer(MessageUtils.getColoredMessage(kickMsg));
+            String kickScreen = plugin.getMainConfigManager().getScreenKick()
+                    .replace("{staff}", staff.getName())
+                    .replace("{reason}", reason);
+            target.kickPlayer(MessageUtils.getColoredMessage(kickScreen));
             
-            broadcast("&e" + target.getName() + " &fha sido expulsado por &c" + staff.getName() + "&f.");
+            // Broadcast
+            if (Boolean.parseBoolean(plugin.getMainConfigManager().getBcKick())) { 
+                 String bcMsg = plugin.getMainConfigManager().getBcKick()
+                    .replace("{target}", target.getName())
+                    .replace("{staff}", staff.getName())
+                    .replace("{reason}", reason);
+                 broadcast(bcMsg);
+            } else {
+                String bcMsg = plugin.getMainConfigManager().getBcKick()
+                    .replace("{target}", target.getName())
+                    .replace("{staff}", staff.getName())
+                    .replace("{reason}", reason);
+                 broadcast(bcMsg);
+            }
         } else {
-            staff.sendMessage(MessageUtils.getColoredMessage("&cEl jugador no está online."));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgOffline()));
         }
     }
 
-    // --- BAN / TEMPBAN ---
+    // --- BAN ---
     public void banPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
         long duration = TimeUtils.parseDuration(durationStr);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
-        
+        String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
+
         Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, reason, expiry, staff.getName());
         
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            String timeMsg = (duration == -1) ? "Permanente" : TimeUtils.getDurationString(duration);
-            target.kickPlayer(MessageUtils.getColoredMessage("&cHas sido baneado.\n&fRazón: &e" + reason + "\n&fDuración: &e" + timeMsg));
+            String banScreen = plugin.getMainConfigManager().getScreenBan()
+                    .replace("{staff}", staff.getName())
+                    .replace("{reason}", reason)
+                    .replace("{duration}", timeDisplay);
+            target.kickPlayer(MessageUtils.getColoredMessage(banScreen));
         }
 
-        String timeDisplay = (duration == -1) ? "Permanente" : TimeUtils.getDurationString(duration);
-        broadcast("&c" + targetName + " &fha sido baneado por &c" + staff.getName() + " &f(&e" + timeDisplay + "&f).");
+        String bcMsg = plugin.getMainConfigManager().getBcBan()
+                .replace("{target}", targetName)
+                .replace("{staff}", staff.getName())
+                .replace("{duration}", timeDisplay)
+                .replace("{reason}", reason);
+        broadcast(bcMsg);
     }
 
     public void unbanPlayer(CommandSender staff, String targetName) {
         Bukkit.getBanList(BanList.Type.NAME).pardon(targetName);
-        staff.sendMessage(MessageUtils.getColoredMessage("&aHas desbaneado a " + targetName));
+        staff.sendMessage(MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getMsgUnbanSuccess().replace("{target}", targetName)
+        ));
     }
 
-    // --- MUTE / TEMPMUTE ---
+    // --- MUTE ---
     public void mutePlayer(CommandSender staff, String targetName, String reason, String durationStr) {
         Player target = Bukkit.getPlayer(targetName);
         UUID uuid = (target != null) ? target.getUniqueId() : Bukkit.getOfflinePlayer(targetName).getUniqueId();
         
         long duration = TimeUtils.parseDuration(durationStr);
         long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
+        String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
 
         FileConfiguration data = dataFile.getConfig();
         data.set("mutes." + uuid + ".reason", reason);
@@ -73,12 +99,18 @@ public class PunishmentManager {
         data.set("mutes." + uuid + ".staff", staff.getName());
         dataFile.saveConfig();
 
-        String timeDisplay = (duration == -1) ? "Permanente" : TimeUtils.getDurationString(duration);
-        broadcast("&c" + targetName + " &fha sido muteado por &c" + staff.getName() + " &f(&e" + timeDisplay + "&f).");
-        
         if (target != null) {
-            target.sendMessage(MessageUtils.getColoredMessage("&c¡Has sido muteado por " + staff.getName() + "!"));
+            String muteScreen = plugin.getMainConfigManager().getScreenMute()
+                    .replace("{staff}", staff.getName());
+            target.sendMessage(MessageUtils.getColoredMessage(muteScreen));
         }
+
+        String bcMsg = plugin.getMainConfigManager().getBcMute()
+                .replace("{target}", targetName)
+                .replace("{staff}", staff.getName())
+                .replace("{duration}", timeDisplay)
+                .replace("{reason}", reason);
+        broadcast(bcMsg);
     }
 
     public void unmutePlayer(CommandSender staff, String targetName) {
@@ -89,10 +121,16 @@ public class PunishmentManager {
         if (data.contains("mutes." + uuid)) {
             data.set("mutes." + uuid, null);
             dataFile.saveConfig();
-            staff.sendMessage(MessageUtils.getColoredMessage("&aHas desmuteado a " + targetName));
-            if (target != null) target.sendMessage(MessageUtils.getColoredMessage("&a¡Ya puedes hablar de nuevo!"));
+            
+            staff.sendMessage(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
+            ));
+            
+            if (target != null) {
+                target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
+            }
         } else {
-            staff.sendMessage(MessageUtils.getColoredMessage("&cEse jugador no está muteado."));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgNotMuted()));
         }
     }
 

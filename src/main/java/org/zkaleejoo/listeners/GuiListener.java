@@ -1,6 +1,5 @@
 package org.zkaleejoo.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,71 +25,90 @@ public class GuiListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
 
-        if (title.equals(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getTitleOnlinePlayers()))) {
+        String configPlayersTitle = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle());
+        
+        String configSanctionTitleBase = MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getGuiSanctionsTitle().split("\\{target}")[0]); 
+            
+        String configDurationTitleBase = MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getGuiDurationTitle().split("\\{type}")[0]);
+
+        // --- 1. MENÚ DE JUGADORES---
+        if (title.equals(configPlayersTitle)) {
             event.setCancelled(true); 
             
             if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
                 String targetName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-                Player target = Bukkit.getPlayer(targetName);
+                Player target = plugin.getServer().getPlayer(targetName);
                 
                 if (target != null) {
                     player.teleport(target);
-                    player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getTpPlayer() + " " + target.getName()));
+                    player.sendMessage(MessageUtils.getColoredMessage("&aTeletransportado a " + target.getName()));
                 } else {
-                    player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerNoOnline().replace("{player}", targetName)));
+                    player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgOffline()));
                 }
                 player.closeInventory();
             }
         }
 
-        else if (title.startsWith(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getSanctionMenuTitle()))) {
+        // --- 2. MENÚ DE SANCIONES---
+        else if (title.startsWith(configSanctionTitleBase)) {
             event.setCancelled(true);
             
+            String targetName = ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
 
-            String targetName = ChatColor.stripColor(title.split(": ")[1]);
-
-            Material type = event.getCurrentItem().getType();
+            String banName = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiItemBanName());
+            String muteName = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiItemMuteName());
+            String kickName = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiItemKickName());
             
-            if (type == Material.IRON_SWORD) { 
+            String clickedName = event.getCurrentItem().getItemMeta().getDisplayName();
+
+            if (clickedName.equals(banName)) { 
                 plugin.getGuiManager().openTimeMenu(player, targetName, "BAN");
             } 
-            else if (type == Material.PAPER) { 
+            else if (clickedName.equals(muteName)) { 
                 plugin.getGuiManager().openTimeMenu(player, targetName, "MUTE");
             } 
-            else if (type == Material.FEATHER) { 
+            else if (clickedName.equals(kickName)) { 
                 player.closeInventory();
-                Bukkit.dispatchCommand(player, "kick " + targetName + " " + plugin.getMainConfigManager().getKickedMessage());
+                plugin.getPunishmentManager().kickPlayer(player, targetName, "Kicked from GUI");
             }
         }
 
-        else if (title.startsWith(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getTitleDuration()))) {
+        // --- 3. MENÚ DE DURACIÓN---
+        else if (title.startsWith(configDurationTitleBase)) {
             event.setCancelled(true);
             
-            String cleanTitle = ChatColor.stripColor(title); 
+            String cleanTitle = ChatColor.stripColor(title);
             String type = cleanTitle.split(" ")[1].replace(":", ""); 
-            String targetName = cleanTitle.split(": ")[1]; 
+            String targetName = cleanTitle.split(": ")[1];
 
-            ItemStack item = event.getCurrentItem();
-            if (item.getType() == Material.ARROW) {
+            String name1h = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiTime1hName());
+            String name1d = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiTime1dName());
+            String name7d = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiTime7dName());
+            String namePerm = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiTimePermName());
+            String nameBack = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiBackName());
+            
+            String clickedName = event.getCurrentItem().getItemMeta().getDisplayName();
+
+            if (clickedName.equals(nameBack)) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
                 return;
             }
 
-        String duration = "";
-            Material mat = item.getType();
-            if (mat == Material.LIME_DYE) duration = "1h";
-            else if (mat == Material.YELLOW_DYE) duration = "1d";
-            else if (mat == Material.ORANGE_DYE) duration = "7d";
-            else if (mat == Material.RED_DYE) duration = "perm";
-            
+            String duration = "";
+            if (clickedName.equals(name1h)) duration = "1h";
+            else if (clickedName.equals(name1d)) duration = "1d";
+            else if (clickedName.equals(name7d)) duration = "7d";
+            else if (clickedName.equals(namePerm)) duration = "perm";
+            else return;
             if (type.equals("BAN")) {
-                            plugin.getPunishmentManager().banPlayer(player, targetName, plugin.getMainConfigManager().getSactionsMenu(), duration);
-                        } else {
-                            plugin.getPunishmentManager().mutePlayer(player, targetName, plugin.getMainConfigManager().getSactionsMenu(), duration);
-                        }
+                plugin.getPunishmentManager().banPlayer(player, targetName, "Banned from GUI", duration);
+            } else {
+                plugin.getPunishmentManager().mutePlayer(player, targetName, "Muted from GUI", duration);
+            }
 
             player.closeInventory();
-    
         }
     }
 }

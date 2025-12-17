@@ -6,71 +6,113 @@ messages:
   plugin-reload: "&aConfiguration successfully reloaded."
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
-  message-console: "&cThis command can only be executed by a player."
-  no-reason: "No reason specified"
-  player-muted: "&cYou are muted and cannot send messages."
-  player-click-pls: "&ePlease click on a player to select them."
 
-#MaxStaff Configuration
+# Staff Mode Configuration
 staff-mode:
-  enabled: "&aStaff Mode ACTIVATED!"
-  disabled: "&cStaff Mode DISABLED"
+  enabled: "&aStaff Mode &lACTIVATED&a!"
+  disabled: "&cStaff Mode &lDISABLED&c."
   inventory-saved: "&eYour inventory has been saved."
   inventory-restored: "&eYour inventory has been restored."
-  cannot-drop: "&cYou cannot throw items in staff mode."
-  cannot-place: "&cYou cannot place blocks in staff mode."
-
+  cannot-drop: "&cYou cannot drop items while in staff mode."
+  cannot-place: "&cYou cannot place blocks while in staff mode."
+  
   items:
     punish:
-      name: "&c&lSanction &7(Right Click)"
-      slot: 0 
-      message: "&eOpening the sanctions menu..."
+      name: "&c&lPunish &7(Right Click)"
+      slot: 0
+      message: "&eOpening punishment menu..."
+    freeze:
+      name: "&b&lFreeze &7(Click Player)"
+      slot: 1
+      message-freeze: "&fYou have frozen &b{player}"
+      message-unfreeze: "&fYou have unfrozen &b{player}"
+      # Messages the victim sees when frozen
+      target-frozen: 
+        - "&c&lYOU HAVE BEEN FROZEN!"
+        - "&ePlease wait for a Staff member to assist you."
+        - "&7If you disconnect, you will be banned."
+      target-unfrozen: "&aYou have been unfrozen!"
     players:
-      name: "&b&lPlayers &7(Right Click)"
-      slot: 4 
-      message: "&eOpening player menu..."
+      name: "&b&lOnline Players &7(Right Click)"
+      slot: 4
+      message: "&eOpening player list..."
     inspect:
-      name: "&6&lInspect &7(Click Jugador)"
-      slot: 7 
+      name: "&6&lInspect Inventory &7(Click Player)"
+      slot: 7
       message: "&6Inspecting: &f{player}"
     vanish:
       name: "&a&lVanish &7(Click to toggle)"
-      on-name: "&a&lVanish: ACTIVATED"
+      on-name: "&a&lVanish: ENABLED"
       off-name: "&7&lVanish: DISABLED"
-      message-on: "&aVanish: ACTIVATED &7(You are invisible)" 
-      message-off: "&cVanish: DISABLED &7(You are visible)"
+      message-on: "&aVanish: &lENABLED &7(You are invisible)"
+      message-off: "&cVanish: &lDISABLED &7(You are visible)"
       slot: 8
-    freeze:
-      name: "&b&lFreeze &7(Player Click)"
-      slot: 1 
-      message-freeze: "&fFrozen Flash to &b{player}"
-      message-unfreeze: "&fYou have unfrozen &b{player}"
-      #Messages the victim sees
-      target-frozen: 
-        - "&c&lYOU'VE BEEN FROZEN!"
-        - "&ePlease wait for a staff member to assist you."
-        - "&7If you disconnect you will be banned."
-      target-unfrozen: "&aYou've been thawed!"
 
-#PUNISHMENT SETTINGS
-punishments:
-  broadcast: true #Notify the entire server
-  #Ban messages (Will support {player}, {staff}, {reason}, {time})
-  ban-message: "&c{player} &fhas been banned by &c{staff} &f| Reason: &e{reason}"
-  kick-message: "&c{player} &fhas been expelled for &c{staff} &f| Reason: &e{reason}"
-  mute-message: "&c{player} &fhas been muted by &c{staff} &f| Reason: &e{reason}"
-  freeze-message: "&c{player} &fhas been frozen by &c{staff}"
-
-#Menu section
-online-players:
-  title: "&7Online Players"
-  player-no-online: "&cThe player &e{player} &cis not online."
-  tp-player: "&aTeleported to"
-
-sanctions-players:
-  title: "&7Sanctions Menu"
-  kicked-message: "You were kicked from the server"
-
-title-duration: "&7Duration"
-sanctions-menu: "&eYou were sanctioned from the Staff menu"
+# GUI (Menus) Configuration
+gui:
+  # Online Players Menu
+  players:
+    title: "&8Online Players"
+    head-lore: "&7Click to teleport"
   
+  # Sanctions Main Menu
+  sanctions:
+    title: "&8Punish: &0{target}"
+    items:
+      ban:
+        name: "&c&lBAN"
+        lore: 
+          - "&7Click to select duration"
+      mute:
+        name: "&e&lMUTE"
+        lore: 
+          - "&7Click to select duration"
+      kick:
+        name: "&b&lKICK"
+        lore: 
+          - "&7Click to kick now"
+
+  # Duration Selection Menu
+  duration:
+    title: "&8Duration {type}: &0{target}"
+    items:
+      1h:
+        name: "&a1 Hour"
+        lore: "&7Duration: 1h"
+      1d:
+        name: "&e1 Day"
+        lore: "&7Duration: 1d"
+      7d:
+        name: "&67 Days"
+        lore: "&7Duration: 7d"
+      perm:
+        name: "&4Permanent"
+        lore: "&7Duration: Perm"
+      back: "&cBack"
+
+# Punishment Configuration (Ban/Mute/Kick)
+punishments:
+  broadcast: true
+  default-reason: "No reason provided"
+  
+  # Public Broadcast Messages (Sent to everyone)
+  broadcasts:
+    ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
+    mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
+    kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
+  
+  # Messages sent to the victim (Screen/Chat)
+  screens:
+    ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
+    kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
+    mute: "&cYou have been muted by {staff}!"
+    unmute: "&aYou may now speak again!"
+    muted-chat: "&cYou are muted! You cannot speak."
+  
+  # Feedback messages for Staff
+  feedback:
+    player-offline: "&cThat player is not online."
+    not-muted: "&cThat player is not muted."
+    unban-success: "&aYou have unbanned &e{target}"
+    unmute-success: "&aYou have unmuted &e{target}"
+    usage: "&cUsage: /{command} <player> [time] [reason]"

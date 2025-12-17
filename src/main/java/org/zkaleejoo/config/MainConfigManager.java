@@ -1,5 +1,7 @@
 package org.zkaleejoo.config;
 
+import java.util.List;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.zkaleejoo.MaxStaff;
 
@@ -48,6 +50,34 @@ public class MainConfigManager {
 
     private String playerClickPls;
 
+    private String guiPlayersTitle;
+    private String guiHeadLore;
+    private String guiSanctionsTitle;
+    private String guiItemBanName; private List<String> guiItemBanLore;
+    private String guiItemMuteName; private List<String> guiItemMuteLore;
+    private String guiItemKickName; private List<String> guiItemKickLore;
+    private String guiDurationTitle;
+    private String guiTime1hName; private String guiTime1hLore;
+    private String guiTime1dName; private String guiTime1dLore;
+    private String guiTime7dName; private String guiTime7dLore;
+    private String guiTimePermName; private String guiTimePermLore;
+    private String guiBackName;
+
+    private String defaultReason;
+    private String bcBan;
+    private String bcMute;
+    private String bcKick;
+    private String screenBan;
+    private String screenKick;
+    private String screenMute;
+    private String screenUnmute;
+    private String msgMutedChat;
+    private String msgOffline;
+    private String msgNotMuted;
+    private String msgUnbanSuccess;
+    private String msgUnmuteSuccess;
+    private String msgUsage;
+
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
         configFile = new CustomConfig("config.yml", null, plugin, false);
@@ -93,6 +123,42 @@ public class MainConfigManager {
         TitleDuration = config.getString("title-duration");
         SactionsMenu = config.getString("sanctions-menu");
         playerClickPls = config.getString("messages.player-click-pls");
+
+        guiPlayersTitle = config.getString("gui.players.title");
+        guiHeadLore = config.getString("gui.players.head-lore");
+        guiSanctionsTitle = config.getString("gui.sanctions.title");
+        guiItemBanName = config.getString("gui.sanctions.items.ban.name");
+        guiItemBanLore = config.getStringList("gui.sanctions.items.ban.lore");
+        guiItemMuteName = config.getString("gui.sanctions.items.mute.name");
+        guiItemMuteLore = config.getStringList("gui.sanctions.items.mute.lore");
+        guiItemKickName = config.getString("gui.sanctions.items.kick.name");
+        guiItemKickLore = config.getStringList("gui.sanctions.items.kick.lore");
+        
+        guiDurationTitle = config.getString("gui.duration.title");
+        guiTime1hName = config.getString("gui.duration.items.1h.name");
+        guiTime1hLore = config.getString("gui.duration.items.1h.lore");
+        guiTime1dName = config.getString("gui.duration.items.1d.name");
+        guiTime1dLore = config.getString("gui.duration.items.1d.lore");
+        guiTime7dName = config.getString("gui.duration.items.7d.name");
+        guiTime7dLore = config.getString("gui.duration.items.7d.lore");
+        guiTimePermName = config.getString("gui.duration.items.perm.name");
+        guiTimePermLore = config.getString("gui.duration.items.perm.lore");
+        guiBackName = config.getString("gui.duration.items.back");
+
+        defaultReason = config.getString("punishments.default-reason");
+        bcBan = config.getString("punishments.broadcasts.ban");
+        bcMute = config.getString("punishments.broadcasts.mute");
+        bcKick = config.getString("punishments.broadcasts.kick");
+        screenBan = config.getString("punishments.screens.ban");
+        screenKick = config.getString("punishments.screens.kick");
+        screenMute = config.getString("punishments.screens.mute");
+        screenUnmute = config.getString("punishments.screens.unmute");
+        msgMutedChat = config.getString("punishments.screens.muted-chat");
+        msgOffline = config.getString("punishments.feedback.player-offline");
+        msgNotMuted = config.getString("punishments.feedback.not-muted");
+        msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
+        msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
+        msgUsage = config.getString("punishments.feedback.usage");
     }
 
     public void reloadConfig(){
@@ -135,4 +201,37 @@ public class MainConfigManager {
     public String getTitleDuration() { return TitleDuration; }
     public String getSactionsMenu() { return SactionsMenu; }
     public String getPlayerClickPls() { return playerClickPls; }
+
+    public String getGuiPlayersTitle() { return guiPlayersTitle; }
+    public String getGuiHeadLore() { return guiHeadLore; }
+    public String getGuiSanctionsTitle() { return guiSanctionsTitle; }
+    public String getGuiItemBanName() { return guiItemBanName; }
+    public List<String> getGuiItemBanLore() { return guiItemBanLore; }
+    public String getGuiItemMuteName() { return guiItemMuteName; }
+    public List<String> getGuiItemMuteLore() { return guiItemMuteLore; }
+    public String getGuiItemKickName() { return guiItemKickName; }
+    public List<String> getGuiItemKickLore() { return guiItemKickLore; }
+    
+    public String getGuiDurationTitle() { return guiDurationTitle; }
+    public String getGuiTime1hName() { return guiTime1hName; } public String getGuiTime1hLore() { return guiTime1hLore; }
+    public String getGuiTime1dName() { return guiTime1dName; } public String getGuiTime1dLore() { return guiTime1dLore; }
+    public String getGuiTime7dName() { return guiTime7dName; } public String getGuiTime7dLore() { return guiTime7dLore; }
+    public String getGuiTimePermName() { return guiTimePermName; } public String getGuiTimePermLore() { return guiTimePermLore; }
+    public String getGuiBackName() { return guiBackName; }
+
+    public String getDefaultReason() { return defaultReason; }
+    public String getBcBan() { return bcBan; }
+    public String getBcMute() { return bcMute; }
+    public String getBcKick() { return bcKick; }
+    public String getScreenBan() { return screenBan; }
+    public String getScreenKick() { return screenKick; }
+    public String getScreenMute() { return screenMute; }
+    public String getScreenUnmute() { return screenUnmute; }
+    public String getMsgMutedChat() { return msgMutedChat; }
+    public String getMsgOffline() { return msgOffline; }
+    public String getMsgNotMuted() { return msgNotMuted; }
+    public String getMsgUnbanSuccess() { return msgUnbanSuccess; }
+    public String getMsgUnmuteSuccess() { return msgUnmuteSuccess; }
+    public String getMsgUsage() { return msgUsage; }
+    
 }

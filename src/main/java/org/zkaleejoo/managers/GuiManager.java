@@ -23,7 +23,8 @@ public class GuiManager {
 
     // --- MENÚ 1: JUGADORES ONLINE ---
     public void openPlayersMenu(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage("&8Lista de Jugadores"));
+        String title = plugin.getMainConfigManager().getGuiPlayersTitle();
+        Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(title));
 
         for (Player target : Bukkit.getOnlinePlayers()) {
             gui.addItem(createPlayerHead(target));
@@ -34,34 +35,54 @@ public class GuiManager {
 
     // --- MENÚ 2: TIPOS DE SANCIÓN ---
     public void openSanctionMenu(Player player, String targetName) {
-        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.getColoredMessage("&8Sancionar a: &0" + targetName));
+        String title = plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", targetName);
+        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.getColoredMessage(title));
 
-        gui.setItem(11, createItem(Material.IRON_SWORD, "&c&lBANEAR", "&7Clic para elegir tiempo"));
-        gui.setItem(13, createItem(Material.PAPER, "&e&lMUTEAR", "&7Clic para elegir tiempo"));
-        gui.setItem(15, createItem(Material.FEATHER, "&b&lKICKEAR", "&7Clic para expulsar ahora"));
+        // Usamos los items configurables
+        gui.setItem(11, createItem(Material.IRON_SWORD, 
+            plugin.getMainConfigManager().getGuiItemBanName(), 
+            plugin.getMainConfigManager().getGuiItemBanLore()));
+            
+        gui.setItem(13, createItem(Material.PAPER, 
+            plugin.getMainConfigManager().getGuiItemMuteName(), 
+            plugin.getMainConfigManager().getGuiItemMuteLore()));
+            
+        gui.setItem(15, createItem(Material.FEATHER, 
+            plugin.getMainConfigManager().getGuiItemKickName(), 
+            plugin.getMainConfigManager().getGuiItemKickLore()));
 
         player.openInventory(gui);
     }
 
     // --- MENÚ 3: DURACIÓN (TIEMPO) ---
     public void openTimeMenu(Player player, String targetName, String type) {
-        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.getColoredMessage("&8Duración " + type + ": &0" + targetName));
+        String title = plugin.getMainConfigManager().getGuiDurationTitle()
+            .replace("{type}", type).replace("{target}", targetName);
+        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.getColoredMessage(title));
 
-        gui.setItem(10, createItem(Material.LIME_DYE, "&a1 Hora", "&7Duración: 1h", "time:1h"));
-        gui.setItem(12, createItem(Material.YELLOW_DYE, "&e1 Día", "&7Duración: 1d", "time:1d"));
-        gui.setItem(14, createItem(Material.ORANGE_DYE, "&67 Días", "&7Duración: 7d", "time:7d"));
-        gui.setItem(16, createItem(Material.RED_DYE, "&4Permanente", "&7Duración: Perm", "time:perm"));
+        gui.setItem(10, createItem(Material.LIME_DYE, plugin.getMainConfigManager().getGuiTime1hName(), 
+            java.util.Collections.singletonList(plugin.getMainConfigManager().getGuiTime1hLore())));
+            
+        gui.setItem(12, createItem(Material.YELLOW_DYE, plugin.getMainConfigManager().getGuiTime1dName(), 
+            java.util.Collections.singletonList(plugin.getMainConfigManager().getGuiTime1dLore())));
+            
+        gui.setItem(14, createItem(Material.ORANGE_DYE, plugin.getMainConfigManager().getGuiTime7dName(), 
+            java.util.Collections.singletonList(plugin.getMainConfigManager().getGuiTime7dLore())));
+            
+        gui.setItem(16, createItem(Material.RED_DYE, plugin.getMainConfigManager().getGuiTimePermName(), 
+            java.util.Collections.singletonList(plugin.getMainConfigManager().getGuiTimePermLore())));
 
-        gui.setItem(26, createItem(Material.ARROW, "&cVolver", "back"));
+        gui.setItem(26, createItem(Material.ARROW, plugin.getMainConfigManager().getGuiBackName(), 
+            new java.util.ArrayList<>())); // Lore vacío para el botón volver
 
         player.openInventory(gui);
     }
 
-    private ItemStack createItem(Material mat, String name, String... lore) {
+    private ItemStack createItem(Material mat, String name, List<String> lore) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtils.getColoredMessage(name));
-        if (lore.length > 0) {
+        if (lore != null && !lore.isEmpty()) {
             List<String> loreList = new java.util.ArrayList<>();
             for (String l : lore) loreList.add(MessageUtils.getColoredMessage(l));
             meta.setLore(loreList);
@@ -75,7 +96,7 @@ public class GuiManager {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setDisplayName(MessageUtils.getColoredMessage("&a" + p.getName()));
         meta.setOwningPlayer(p);
-        meta.setLore(Arrays.asList(MessageUtils.getColoredMessage("&7Clic para teletransportarte")));
+        meta.setLore(Arrays.asList(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
         item.setItemMeta(meta);
         return item;
     }
