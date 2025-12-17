@@ -6,7 +6,7 @@ messages:
   plugin-reload: "&aConfiguration successfully reloaded."
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
-
+  player-click-pls: "&cPlease right-click on a player to sanction them."
 # Staff Mode Configuration
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
