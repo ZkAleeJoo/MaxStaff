@@ -2,54 +2,46 @@ package org.zkaleejoo.config;
 
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.utils.MessageUtils;
 
 public class MainConfigManager {
     
     private CustomConfig configFile;
     private MaxStaff plugin;
-
     private String prefix;
     private String noPermission;
     private String pluginReload;
     private String subcommandInvalid;
     private String subcommandSpecified;
-
     private String staffModeEnabled;
     private String staffModeDisabled;
     private String inventorySaved;
     private String inventoryRestored;
     private String cannotDrop;  
     private String cannotPlace; 
-    
     private String msgInspect;
     private String msgVanishOn;
     private String msgVanishOff;
     private String msgPunish;
     private String msgPlayers;
-
     private String msgFreezeStaff;
     private String msgUnfreezeStaff;
     private java.util.List<String> msgTargetFrozen; 
     private String msgTargetUnfrozen;
-
     private String msgConsole;
     private String noReason;
     private String playerMuted;
-
     private String TitleOnlinePlayers;
     private String playerNoOnline;
     private String tpPlayer;
-
     private String sanctionMenuTitle;
     private String kickedMessage;
-
     private String TitleDuration;
     private String SactionsMenu;
-
     private String playerClickPls;
-
     private String guiPlayersTitle;
     private String guiHeadLore;
     private String guiSanctionsTitle;
@@ -62,7 +54,6 @@ public class MainConfigManager {
     private String guiTime7dName; private String guiTime7dLore;
     private String guiTimePermName; private String guiTimePermLore;
     private String guiBackName;
-
     private String defaultReason;
     private String bcBan;
     private String bcMute;
@@ -77,14 +68,18 @@ public class MainConfigManager {
     private String msgUnbanSuccess;
     private String msgUnmuteSuccess;
     private String msgUsage;
-
     private String itemNamePunish;
     private String itemNameFreeze;
     private String itemNamePlayers;
     private String itemNameInspect;
     private String itemNameVanish;
-
+    private Material matPunish;
+    private Material matFreeze;
+    private Material matPlayers;
+    private Material matInspect;
+    private Material matVanish;
     private boolean isBroadcastEnabled;
+    private String msgInvalidMaterial;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -101,20 +96,17 @@ public class MainConfigManager {
         pluginReload = config.getString("messages.plugin-reload");
         subcommandInvalid = config.getString("messages.subcommand-invalid");
         subcommandSpecified = config.getString("messages.subcommand-specified");
-
         staffModeEnabled = config.getString("staff-mode.enabled");
         staffModeDisabled = config.getString("staff-mode.disabled");
         inventorySaved = config.getString("staff-mode.inventory-saved");
         inventoryRestored = config.getString("staff-mode.inventory-restored");
         cannotDrop = config.getString("staff-mode.cannot-drop");
         cannotPlace = config.getString("staff-mode.cannot-place");
-
         msgInspect = config.getString("staff-mode.items.inspect.message");
         msgVanishOn = config.getString("staff-mode.items.vanish.message-on");
         msgVanishOff = config.getString("staff-mode.items.vanish.message-off");
         msgPunish = config.getString("staff-mode.items.punish.message");
         msgPlayers = config.getString("staff-mode.items.players.message");
-
         msgFreezeStaff = config.getString("staff-mode.items.freeze.message-freeze");
         msgUnfreezeStaff = config.getString("staff-mode.items.freeze.message-unfreeze");
         msgTargetFrozen = config.getStringList("staff-mode.items.freeze.target-frozen");
@@ -127,11 +119,9 @@ public class MainConfigManager {
         tpPlayer = config.getString("online-players.tp-player");
         sanctionMenuTitle = config.getString("sanctions-players.title");
         kickedMessage = config.getString("sanctions-players.kicked-message");
-
         TitleDuration = config.getString("title-duration");
         SactionsMenu = config.getString("sanctions-menu");
         playerClickPls = config.getString("messages.player-click-pls");
-
         guiPlayersTitle = config.getString("gui.players.title");
         guiHeadLore = config.getString("gui.players.head-lore");
         guiSanctionsTitle = config.getString("gui.sanctions.title");
@@ -141,7 +131,6 @@ public class MainConfigManager {
         guiItemMuteLore = config.getStringList("gui.sanctions.items.mute.lore");
         guiItemKickName = config.getString("gui.sanctions.items.kick.name");
         guiItemKickLore = config.getStringList("gui.sanctions.items.kick.lore");
-        
         guiDurationTitle = config.getString("gui.duration.title");
         guiTime1hName = config.getString("gui.duration.items.1h.name");
         guiTime1hLore = config.getString("gui.duration.items.1h.lore");
@@ -152,7 +141,6 @@ public class MainConfigManager {
         guiTimePermName = config.getString("gui.duration.items.perm.name");
         guiTimePermLore = config.getString("gui.duration.items.perm.lore");
         guiBackName = config.getString("gui.duration.items.back");
-
         defaultReason = config.getString("punishments.default-reason");
         bcBan = config.getString("punishments.broadcasts.ban");
         bcMute = config.getString("punishments.broadcasts.mute");
@@ -167,20 +155,44 @@ public class MainConfigManager {
         msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
         msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
         msgUsage = config.getString("punishments.feedback.usage");
-
         isBroadcastEnabled = config.getBoolean("punishments.broadcast");
-
         itemNamePunish = config.getString("staff-mode.items.punish.name");
         itemNameFreeze = config.getString("staff-mode.items.freeze.name");
         itemNamePlayers = config.getString("staff-mode.items.players.name");
         itemNameInspect = config.getString("staff-mode.items.inspect.name");
         itemNameVanish = config.getString("staff-mode.items.vanish.name");
+        matPunish = loadMaterial(config.getString("staff-mode.items.punish.material"), Material.NETHERITE_HOE);
+        matFreeze = loadMaterial(config.getString("staff-mode.items.freeze.material"), Material.PACKED_ICE);
+        matPlayers = loadMaterial(config.getString("staff-mode.items.players.material"), Material.CLOCK);
+        matInspect = loadMaterial(config.getString("staff-mode.items.inspect.material"), Material.CHEST);
+        matVanish = loadMaterial(config.getString("staff-mode.items.vanish.material"), Material.NETHER_STAR);
+        msgInvalidMaterial = config.getString("messages.invalid-material", "&cInvalid material: {path}. Using {default}");
+
     }
 
     public void reloadConfig(){
         configFile.reloadConfig();
         loadConfig();
     }
+
+    private Material loadMaterial(String materialName, Material defaultMat) {
+    if (materialName == null) return defaultMat;
+    
+    Material matched = Material.matchMaterial(materialName);
+    
+    if (matched == null) {
+        String finalMsg = msgInvalidMaterial
+            .replace("{path}", materialName)
+            .replace("{default}", defaultMat.name());
+        
+        plugin.getServer().getConsoleSender().sendMessage(
+            MessageUtils.getColoredMessage(prefix + finalMsg)
+        );
+        
+        return defaultMat;
+    }
+    return matched;
+}
     
     public String getPrefix() { return prefix; }
     public String getNoPermission() { return noPermission; }
@@ -257,5 +269,11 @@ public class MainConfigManager {
     public String getItemNamePlayers() { return itemNamePlayers; }
     public String getItemNameInspect() { return itemNameInspect; }
     public String getItemNameVanish() { return itemNameVanish; }
+
+    public Material getMatPunish() { return matPunish; }
+    public Material getMatFreeze() { return matFreeze; }
+    public Material getMatPlayers() { return matPlayers; }
+    public Material getMatInspect() { return matInspect; }
+    public Material getMatVanish() { return matVanish; }
 
 }
