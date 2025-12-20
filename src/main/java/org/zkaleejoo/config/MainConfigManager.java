@@ -78,6 +78,12 @@ public class MainConfigManager {
     private String msgUnmuteSuccess;
     private String msgUsage;
 
+    private String itemNamePunish;
+    private String itemNameFreeze;
+    private String itemNamePlayers;
+    private String itemNameInspect;
+    private String itemNameVanish;
+
     private boolean isBroadcastEnabled;
 
     public MainConfigManager(MaxStaff plugin){
@@ -163,6 +169,12 @@ public class MainConfigManager {
         msgUsage = config.getString("punishments.feedback.usage");
 
         isBroadcastEnabled = config.getBoolean("punishments.broadcast");
+
+        itemNamePunish = config.getString("staff-mode.items.punish.name");
+        itemNameFreeze = config.getString("staff-mode.items.freeze.name");
+        itemNamePlayers = config.getString("staff-mode.items.players.name");
+        itemNameInspect = config.getString("staff-mode.items.inspect.name");
+        itemNameVanish = config.getString("staff-mode.items.vanish.name");
     }
 
     public void reloadConfig(){
@@ -239,5 +251,11 @@ public class MainConfigManager {
     public String getMsgUsage() { return msgUsage; }
     
     public boolean isBroadcastEnabled() { return isBroadcastEnabled; }
+
+    public String getItemNamePunish() { return itemNamePunish; }
+    public String getItemNameFreeze() { return itemNameFreeze; }
+    public String getItemNamePlayers() { return itemNamePlayers; }
+    public String getItemNameInspect() { return itemNameInspect; }
+    public String getItemNameVanish() { return itemNameVanish; }
 
 }
