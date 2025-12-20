@@ -81,6 +81,10 @@ public class MainConfigManager {
     private Material matVanish;
     private boolean isBroadcastEnabled;
     private String msgInvalidMaterial;
+    private Material borderMaterial;
+    private String navBackName;
+    private String navNextName;
+    private String navPrevName;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -168,6 +172,10 @@ public class MainConfigManager {
         matInspect = loadMaterial(config.getString("staff-mode.items.inspect.material"), Material.CHEST);
         matVanish = loadMaterial(config.getString("staff-mode.items.vanish.material"), Material.NETHER_STAR);
         msgInvalidMaterial = config.getString("messages.invalid-material", "&cInvalid material: {path}. Using {default}");
+        this.borderMaterial = loadMaterial(config.getString("gui-style.border-material"), Material.BLACK_STAINED_GLASS_PANE);
+        this.navBackName = config.getString("gui-style.navigation.back-name", "&c« Volver");
+        this.navNextName = config.getString("gui-style.navigation.next-name", "&aPágina Siguiente »");
+        this.navPrevName = config.getString("gui-style.navigation.prev-name", "&e« Página Anterior");
 
     }
 
@@ -293,5 +301,10 @@ public class MainConfigManager {
     public Material getMatPlayers() { return matPlayers; }
     public Material getMatInspect() { return matInspect; }
     public Material getMatVanish() { return matVanish; }
+
+    public Material getBorderMaterial() { return borderMaterial; }
+    public String getNavBackName() { return navBackName; }
+    public String getNavNextName() { return navNextName; }
+    public String getNavPrevName() { return navPrevName; }
 
 }

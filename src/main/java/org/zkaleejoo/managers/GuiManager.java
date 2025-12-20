@@ -5,12 +5,14 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -152,5 +154,59 @@ public class GuiManager {
             player.openInventory(gui);
         }
 
+
+        private void setupProfessionalBorder(Inventory inv) {
+        ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null);
+        int size = inv.getSize();
         
+            for (int i = 0; i < 9; i++) {
+                inv.setItem(i, border);
+                inv.setItem(size - 9 + i, border);
+            }
+            for (int i = 0; i < size; i += 9) {
+                inv.setItem(i, border);
+                inv.setItem(i + 8, border);
+            }
+        }
+
+
+    public void openReasonsMenu(Player player, String targetName, String type, int page) {
+    String title = MessageUtils.getColoredMessage("&8Motivos " + type + " (Pág. " + (page + 1) + ")");
+    Inventory gui = Bukkit.createInventory(null, 54, title); 
+    
+    setupProfessionalBorder(gui);
+    
+    ConfigurationSection reasonsSection = plugin.getMainConfigManager().getReasons(type);
+    List<String> keys = new ArrayList<>(reasonsSection.getKeys(false));
+    
+    int itemsPerPage = 28;
+    int start = page * itemsPerPage;
+    int end = Math.min(start + itemsPerPage, keys.size());
+    
+    int[] centralSlots = {
+        10, 11, 12, 13, 14, 15, 16,
+        19, 20, 21, 22, 23, 24, 25,
+        28, 29, 30, 31, 32, 33, 34,
+        37, 38, 39, 40, 41, 42, 43
+    };
+
+    for (int i = start; i < end; i++) {
+        String key = keys.get(i);
+        ItemStack item = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getReasonName(type, key)));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES); 
+        item.setItemMeta(meta);
+        
+        gui.setItem(centralSlots[i - start], item);
+    }
+
+    gui.setItem(45, createItem(Material.ARROW, "&c« Volver al Menú Principal", null));
+    if (page > 0) gui.setItem(48, createItem(Material.PAPER, "&ePágina Anterior", null));
+    if (end < keys.size()) gui.setItem(50, createItem(Material.PAPER, "&aPágina Siguiente", null));
+    
+    player.openInventory(gui);
+}
+
+
 }

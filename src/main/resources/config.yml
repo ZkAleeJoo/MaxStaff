@@ -118,6 +118,19 @@ punishments:
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
 
+# Visual Menu Configuration
+gui-style:
+  border-material: "BLACK_STAINED_GLASS_PANE"
+  background-material: "GRAY_STAINED_GLASS_PANE"
+  navigation:
+    back-name: "&c« Volver"
+    back-material: "ARROW"
+    next-name: "&aPágina Siguiente »"
+    next-material: "PLAYER_HEAD" 
+    prev-name: "&e« Página Anterior"
+    prev-material: "PLAYER_HEAD"
+
+
 #Reasons and Days Section
 punishment-reasons:
   BAN:

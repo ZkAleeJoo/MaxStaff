@@ -157,4 +157,36 @@ public class GuiListener implements Listener {
     }
 
     }
+
+
+
+    @EventHandler
+    public void onGuiClick(InventoryClickEvent event) {
+        if (event.getCurrentItem() == null) return;
+        
+        String title = event.getView().getTitle();
+        ItemStack item = event.getCurrentItem();
+        Player player = (Player) event.getWhoClicked();
+
+        // 1. Cancelar todo clic en cristal decorativo
+        if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // 2. Manejar Paginación y Navegación
+        if (title.contains("Motivos")) {
+            event.setCancelled(true);
+            String type = title.contains("BAN") ? "BAN" : "MUTE";
+            int currentPage = Integer.parseInt(title.split("Pág. ")[1].replace(")", "")) - 1;
+            
+            if (item.getItemMeta().getDisplayName().contains("Siguiente")) {
+                plugin.getGuiManager().openReasonsMenu(player, "target", type, currentPage + 1);
+            } else if (item.getItemMeta().getDisplayName().contains("Anterior")) {
+                plugin.getGuiManager().openReasonsMenu(player, "target", type, currentPage - 1);
+            } else if (item.getItemMeta().getDisplayName().contains("Volver")) {
+                plugin.getGuiManager().openSanctionMenu(player, "target");
+            }
+        }
+    }
 }
