@@ -76,15 +76,14 @@ public class StaffManager {
     }
 
     private void giveStaffItems(Player player) {
-        
+
         MainConfigManager config = plugin.getMainConfigManager();
 
-        player.getInventory().setItem(0, createItem(Material.NETHERITE_HOE, "&c&lSanctions"));
-
-        player.getInventory().setItem(1, createItem(Material.PACKED_ICE, config.getItemNameFreeze()));
-        player.getInventory().setItem(4, createItem(Material.CLOCK, config.getItemNamePlayers()));
-        player.getInventory().setItem(7, createItem(Material.CHEST, config.getItemNameInspect()));
-        player.getInventory().setItem(8, createItem(Material.NETHER_STAR, config.getItemNameVanish()));
+        player.getInventory().setItem(0, createItem(config.getMatPunish(), config.getItemNamePunish()));
+        player.getInventory().setItem(1, createItem(config.getMatFreeze(), config.getItemNameFreeze()));
+        player.getInventory().setItem(4, createItem(config.getMatPlayers(), config.getItemNamePlayers()));
+        player.getInventory().setItem(7, createItem(config.getMatInspect(), config.getItemNameInspect()));
+        player.getInventory().setItem(8, createItem(config.getMatVanish(), config.getItemNameVanish()));
     }
 
     private ItemStack createItem(Material material, String name) {
