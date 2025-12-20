@@ -3,6 +3,7 @@ package org.zkaleejoo.config;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
@@ -192,7 +193,24 @@ public class MainConfigManager {
         return defaultMat;
     }
     return matched;
-}
+    }
+
+    public ConfigurationSection getReasons(String type) {
+    return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
+    }
+
+    public String getReasonName(String type, String reasonId) {
+        return configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".name");
+    }
+
+    public List<String> getReasonDurations(String type, String reasonId) {
+        return configFile.getConfig().getStringList("punishment-reasons." + type + "." + reasonId + ".durations");
+    }
+
+    public Material getReasonMaterial(String type, String reasonId) {
+        String matName = configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".material");
+        return Material.matchMaterial(matName != null ? matName : "PAPER");
+    }
     
     public String getPrefix() { return prefix; }
     public String getNoPermission() { return noPermission; }
