@@ -19,11 +19,9 @@ staff-mode:
   items:
     punish:
       name: "&c&lPunish &7(Right Click)"
-      slot: 0
       message: "&eOpening punishment menu..."
     freeze:
       name: "&b&lFreeze &7(Click Player)"
-      slot: 1
       message-freeze: "&fYou have frozen &b{player}"
       message-unfreeze: "&fYou have unfrozen &b{player}"
       # Messages the victim sees when frozen
@@ -34,11 +32,9 @@ staff-mode:
       target-unfrozen: "&aYou have been unfrozen!"
     players:
       name: "&b&lOnline Players &7(Right Click)"
-      slot: 4
       message: "&eOpening player list..."
     inspect:
       name: "&6&lInspect Inventory &7(Click Player)"
-      slot: 7
       message: "&6Inspecting: &f{player}"
     vanish:
       name: "&a&lVanish &7(Click to toggle)"
@@ -46,7 +42,6 @@ staff-mode:
       off-name: "&7&lVanish: DISABLED"
       message-on: "&aVanish: &lENABLED &7(You are invisible)"
       message-off: "&cVanish: &lDISABLED &7(You are visible)"
-      slot: 8
 
 # GUI (Menus) Configuration
 gui:
