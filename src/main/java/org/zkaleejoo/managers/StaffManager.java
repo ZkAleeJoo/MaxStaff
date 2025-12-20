@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.HashMap;
@@ -75,15 +76,15 @@ public class StaffManager {
     }
 
     private void giveStaffItems(Player player) {
-        player.getInventory().setItem(0, createItem(Material.BOOK, "&c&lSanctions"));
+        
+        MainConfigManager config = plugin.getMainConfigManager();
 
-        player.getInventory().setItem(1, createItem(Material.PACKED_ICE, "&b&lFreeze"));
-        
-        player.getInventory().setItem(4, createItem(Material.CLOCK, "&b&lOnline Players"));
-        
-        player.getInventory().setItem(7, createItem(Material.CHEST, "&6&lInspect Inventory"));
-        
-        player.getInventory().setItem(8, createItem(Material.NETHER_STAR, "&a&lVanish (Alternate)"));
+        player.getInventory().setItem(0, createItem(Material.NETHERITE_HOE, "&c&lSanctions"));
+
+        player.getInventory().setItem(1, createItem(Material.PACKED_ICE, config.getItemNameFreeze()));
+        player.getInventory().setItem(4, createItem(Material.CLOCK, config.getItemNamePlayers()));
+        player.getInventory().setItem(7, createItem(Material.CHEST, config.getItemNameInspect()));
+        player.getInventory().setItem(8, createItem(Material.NETHER_STAR, config.getItemNameVanish()));
     }
 
     private ItemStack createItem(Material material, String name) {
