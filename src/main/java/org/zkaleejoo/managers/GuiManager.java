@@ -79,15 +79,21 @@ public class GuiManager {
     }
 
     private ItemStack createItem(Material mat, String name, List<String> lore) {
-        ItemStack item = new ItemStack(mat);
-        ItemMeta meta = item.getItemMeta();
+    ItemStack item = new ItemStack(mat);
+    ItemMeta meta = item.getItemMeta();
+    if (meta != null) {
         meta.setDisplayName(MessageUtils.getColoredMessage(name));
         if (lore != null && !lore.isEmpty()) {
             List<String> loreList = new java.util.ArrayList<>();
             for (String l : lore) loreList.add(MessageUtils.getColoredMessage(l));
             meta.setLore(loreList);
         }
+        
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+        
         item.setItemMeta(meta);
+        }
         return item;
     }
 
