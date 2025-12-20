@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 public class GuiListener implements Listener {
@@ -24,6 +25,7 @@ public class GuiListener implements Listener {
         
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
+        MainConfigManager config = plugin.getMainConfigManager();
 
         String configPlayersTitle = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle());
         
@@ -111,33 +113,47 @@ public class GuiListener implements Listener {
             player.closeInventory();
         }
 
-        if (title.startsWith(MessageUtils.getColoredMessage("&8Motivos "))) {
+        // 1. MENÚ PRINCIPAL DE SANCIONES (Ban/Mute/Kick)
+    if (title.startsWith(MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().split("\\{target}")[0]))) {
         event.setCancelled(true);
-        String cleanTitle = ChatColor.stripColor(title);
+        String targetName = org.bukkit.ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
+        String clickedName = event.getCurrentItem().getItemMeta().getDisplayName();
+
+        if (clickedName.equals(MessageUtils.getColoredMessage(config.getGuiItemBanName()))) { 
+            plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN"); 
+        } 
+        else if (clickedName.equals(MessageUtils.getColoredMessage(config.getGuiItemMuteName()))) { 
+            plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE"); 
+        }
+    }
+
+    // 2. MENÚ DE MOTIVOS 
+    else if (title.startsWith(MessageUtils.getColoredMessage("&8Motivos "))) {
+        event.setCancelled(true);
+        String cleanTitle = org.bukkit.ChatColor.stripColor(title);
         String type = cleanTitle.split(" ")[1].replace(":", "");
         String targetName = cleanTitle.split(": ")[1];
         
-        String reasonId = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0)).replace("ID: ", "");
-        
+        String reasonId = org.bukkit.ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0)).replace("ID: ", "");
         plugin.getGuiManager().openReasonDurationMenu(player, targetName, type, reasonId);
     }
 
     else if (title.contains(" - ")) { 
-    event.setCancelled(true);
-    String cleanTitle = ChatColor.stripColor(title);
-    String type = cleanTitle.split(" - ")[0]; 
-    String reasonId = cleanTitle.split(" - ")[1].split(": ")[0];
-    String targetName = cleanTitle.split(": ")[1];
-    
-    String duration = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).replace("Duración: ", "");
-    String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
+        event.setCancelled(true);
+        String cleanTitle = org.bukkit.ChatColor.stripColor(title);
+        String type = cleanTitle.split(" - ")[0]; 
+        String reasonId = cleanTitle.split(" - ")[1].split(": ")[0];
+        String targetName = cleanTitle.split(": ")[1];
+        
+        String duration = org.bukkit.ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).replace("Duración: ", "");
+        String reasonName = config.getReasonName(type, reasonId);
 
-    if (type.equals("BAN")) {
-        plugin.getPunishmentManager().banPlayer(player, targetName, reasonName, duration);
-    } else {
-        plugin.getPunishmentManager().mutePlayer(player, targetName, reasonName, duration);
-    }
-    player.closeInventory();
+        if (type.equals("BAN")) {
+            plugin.getPunishmentManager().banPlayer(player, targetName, reasonName, duration);
+        } else {
+            plugin.getPunishmentManager().mutePlayer(player, targetName, reasonName, duration);
+        }
+        player.closeInventory();
     }
 
     }

@@ -109,42 +109,48 @@ public class GuiManager {
     }
 
 
-    public void openReasonsMenu(Player player, String targetName, String type) {
-        String title = MessageUtils.getColoredMessage("&8Motivos " + type + ": &0" + targetName);
-        Inventory gui = Bukkit.createInventory(null, 27, title);
+        public void openReasonsMenu(Player player, String targetName, String type) {
+            String title = MessageUtils.getColoredMessage("&8Motivos " + type + ": &0" + targetName);
+            Inventory gui = Bukkit.createInventory(null, 27, title);
 
-        ConfigurationSection reasons = plugin.getMainConfigManager().getReasons(type);
-        if (reasons != null) {
-            int slot = 0;
-            for (String key : reasons.getKeys(false)) {
-                if (slot >= 10 && slot < 10) slot = 10; 
-                
-                ItemStack item = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getReasonName(type, key)));
-                meta.setLore(Arrays.asList(MessageUtils.getColoredMessage("&7ID: &f" + key), MessageUtils.getColoredMessage("&eClick para ver duraciones")));
-                item.setItemMeta(meta);
-                
-                gui.setItem(slot + 1, item); 
-                slot++;
+            org.bukkit.configuration.ConfigurationSection reasons = plugin.getMainConfigManager().getReasons(type);
+            if (reasons != null) {
+                int slot = 0;
+                for (String key : reasons.getKeys(false)) {
+                    if (slot >= 10) break; 
+                    
+                    ItemStack item = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getReasonName(type, key)));
+                    meta.setLore(Arrays.asList(
+                        MessageUtils.getColoredMessage("&7ID: &f" + key), 
+                        MessageUtils.getColoredMessage("&eClick para ver duraciones")
+                    ));
+                    meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
+                    item.setItemMeta(meta);
+                    
+                    gui.setItem(slot + (slot < 9 ? 0 : 1), item); 
+                    slot++;
+                }
             }
+            player.openInventory(gui);
         }
-        player.openInventory(gui);
-    }
 
-    public void openReasonDurationMenu(Player player, String targetName, String type, String reasonId) {
-        String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
-        String title = MessageUtils.getColoredMessage("&8" + type + " - " + reasonId + ": &0" + targetName);
-        Inventory gui = Bukkit.createInventory(null, 27, title);
+        public void openReasonDurationMenu(Player player, String targetName, String type, String reasonId) {
+            String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
+            String title = MessageUtils.getColoredMessage("&8" + type + " - " + reasonId + ": &0" + targetName);
+            Inventory gui = Bukkit.createInventory(null, 27, title);
 
-        List<String> times = plugin.getMainConfigManager().getReasonDurations(type, reasonId);
-        int[] slots = {10, 12, 14, 16}; 
+            List<String> times = plugin.getMainConfigManager().getReasonDurations(type, reasonId);
+            int[] slots = {10, 12, 14, 16}; 
 
-        for (int i = 0; i < 4; i++) {
-            String duration = (i < times.size()) ? times.get(i) : "perm";
-            gui.setItem(slots[i], createItem(Material.CLOCK, "&aDuración: &f" + duration, 
-                Arrays.asList("&7Sanción por: " + reasonName, "&eClick para aplicar")));
+            for (int i = 0; i < 4; i++) {
+                String duration = (i < times.size()) ? times.get(i) : "perm";
+                gui.setItem(slots[i], createItem(Material.CLOCK, "&aDuración: &f" + duration, 
+                    Arrays.asList("&7Sanción por: " + reasonName, "&eClick para aplicar")));
+            }
+            player.openInventory(gui);
         }
-        player.openInventory(gui);
-    }
+
+        
 }
