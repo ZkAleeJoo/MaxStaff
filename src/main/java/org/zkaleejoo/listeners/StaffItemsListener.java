@@ -44,9 +44,9 @@ public class StaffItemsListener implements Listener {
     // --- INTERACCIÓN: Clic al aire/bloque ---
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
+    if (event.getHand() != EquipmentSlot.HAND) return; 
         Player player = event.getPlayer();
-        if (!plugin.getStaffManager().isInStaffMode(player)) return;
+        if (!plugin.getStaffManager().isInStaffMode(player)) return; 
 
         ItemStack item = event.getItem();
         if (item == null || item.getType() == Material.AIR) return;
@@ -65,11 +65,23 @@ public class StaffItemsListener implements Listener {
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
             }
             else if (item.getType() == config.getMatPunish()) {
-                event.setCancelled(true);
-                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
+            event.setCancelled(true);
+
+            org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
+                player.getEyeLocation(), 
+                player.getEyeLocation().getDirection(), 
+                5, 
+                entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
+            );
+
+            if (ray != null && ray.getHitEntity() != null) {
+                return;
             }
+
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
         }
     }
+}
 
     // --- INTERACCIÓN: Clic a entidad (Jugador) ---
     @EventHandler
