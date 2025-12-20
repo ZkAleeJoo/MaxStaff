@@ -110,5 +110,35 @@ public class GuiListener implements Listener {
 
             player.closeInventory();
         }
+
+        if (title.startsWith(MessageUtils.getColoredMessage("&8Motivos "))) {
+        event.setCancelled(true);
+        String cleanTitle = ChatColor.stripColor(title);
+        String type = cleanTitle.split(" ")[1].replace(":", "");
+        String targetName = cleanTitle.split(": ")[1];
+        
+        String reasonId = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0)).replace("ID: ", "");
+        
+        plugin.getGuiManager().openReasonDurationMenu(player, targetName, type, reasonId);
+    }
+
+    else if (title.contains(" - ")) { 
+    event.setCancelled(true);
+    String cleanTitle = ChatColor.stripColor(title);
+    String type = cleanTitle.split(" - ")[0]; 
+    String reasonId = cleanTitle.split(" - ")[1].split(": ")[0];
+    String targetName = cleanTitle.split(": ")[1];
+    
+    String duration = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).replace("Duración: ", "");
+    String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
+
+    if (type.equals("BAN")) {
+        plugin.getPunishmentManager().banPlayer(player, targetName, reasonName, duration);
+    } else {
+        plugin.getPunishmentManager().mutePlayer(player, targetName, reasonName, duration);
+    }
+    player.closeInventory();
+    }
+
     }
 }
