@@ -91,6 +91,8 @@ public class StaffManager {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(MessageUtils.getColoredMessage(name));
+            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
+            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }
         return item;
@@ -102,11 +104,9 @@ public class StaffManager {
 
         if (isVanished(player)) {
             setVanish(player, false);
-            // Mensaje Configurable OFF
             player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOff()));
         } else {
             setVanish(player, true);
-            // Mensaje Configurable ON
             player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOn()));
         }
     }
