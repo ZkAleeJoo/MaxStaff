@@ -7,6 +7,7 @@ messages:
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
   player-click-pls: "&cPlease right-click on a player to sanction them."
+  invalid-material: "&c[Error] &fMaterial '&e{path}&f' It doesn't exist. Using: &b{default}"
 # Staff Mode Configuration
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
@@ -18,9 +19,11 @@ staff-mode:
   
   items:
     punish:
+      material: "NETHERITE_HOE"
       name: "&c&lPunish &7(Right Click)"
       message: "&eOpening punishment menu..."
     freeze:
+      material: "PACKED_ICE"
       name: "&b&lFreeze &7(Click Player)"
       message-freeze: "&fYou have frozen &b{player}"
       message-unfreeze: "&fYou have unfrozen &b{player}"
@@ -31,12 +34,15 @@ staff-mode:
         - "&7If you disconnect, you will be banned."
       target-unfrozen: "&aYou have been unfrozen!"
     players:
+      material: "CLOCK"
       name: "&b&lOnline Players &7(Right Click)"
       message: "&eOpening player list..."
     inspect:
+      material: "CHEST"
       name: "&6&lInspect Inventory &7(Click Player)"
       message: "&6Inspecting: &f{player}"
     vanish:
+      material: "NETHER_STAR"
       name: "&a&lVanish &7(Click to toggle)"
       on-name: "&a&lVanish: ENABLED"
       off-name: "&7&lVanish: DISABLED"
