@@ -118,7 +118,7 @@ punishments:
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
 
-# Nueva sección de Motivos (Configurable)
+#Reasons and Days Section
 punishment-reasons:
   BAN:
     xray:
