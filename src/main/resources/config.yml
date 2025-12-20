@@ -117,3 +117,89 @@ punishments:
     unban-success: "&aYou have unbanned &e{target}"
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
+
+# Nueva sección de Motivos (Configurable)
+punishment-reasons:
+  BAN:
+    xray:
+      name: "&6X-Ray / Wallhack"
+      material: "DIAMOND_ORE"
+      durations: ["7d", "14d", "30d", "perm"]
+    combat:
+      name: "&cCombat Hacks (Killaura/Reach)"
+      material: "NETHERITE_SWORD"
+      durations: ["30d", "60d", "90d", "perm"]
+    movement:
+      name: "&bMovement Hacks (Fly/Speed)"
+      material: "FEATHER"
+      durations: ["14d", "30d", "60d", "perm"]
+    scripts:
+      name: "&eAuto-Mining / Scripts"
+      material: "NETHERITE_PICKAXE"
+      durations: ["7d", "14d", "30d", "perm"]
+    griefing:
+      name: "&aGriefing Masivo"
+      material: "TNT"
+      durations: ["14d", "30d", "perm", "perm"]
+    theft:
+      name: "&7Robo de ítems"
+      material: "CHEST"
+      durations: ["7d", "14d", "30d", "perm"]
+    toxicity:
+      name: "&4Toxicidad Grave"
+      material: "WITHER_SKELETON_SKULL"
+      durations: ["14d", "30d", "perm", "perm"]
+    bugs:
+      name: "&dAbuso de Bugs"
+      material: "BEDROCK"
+      durations: ["7d", "30d", "perm", "perm"]
+    advertising:
+      name: "&9Publicidad (IPs/Links)"
+      material: "PAPER"
+      durations: ["perm", "perm", "perm", "perm"]
+    evasion:
+      name: "&fEvasión de Sanciones"
+      material: "IRON_BARS"
+      durations: ["perm", "perm", "perm", "perm"]
+
+  MUTE:
+    insults:
+      name: "&eInsultos / Falta de respeto"
+      material: "WRITABLE_BOOK"
+      durations: ["1h", "12h", "1d", "7d"]
+    spam:
+      name: "&bSpam constante"
+      material: "RECOVERY_COMPASS"
+      durations: ["30m", "1h", "6h", "1d"]
+    flood:
+      name: "&3Flood (Repetición)"
+      material: "WATER_BUCKET"
+      durations: ["15m", "30m", "1h", "12h"]
+    toxic_chat:
+      name: "&cToxicidad en el Chat"
+      material: "POISONOUS_POTATO"
+      durations: ["1h", "6h", "1d", "7d"]
+    language:
+      name: "&7Lenguaje Inapropiado"
+      material: "SPORE_BLOSSOM"
+      durations: ["1h", "2h", "6h", "12h"]
+    ads:
+      name: "&9Publicidad Menor"
+      material: "MAP"
+      durations: ["12h", "1d", "7d", "30d"]
+    provocation:
+      name: "&6Provocación al Staff"
+      material: "CAMPFIRE"
+      durations: ["2h", "6h", "1d", "7d"]
+    discussions:
+      name: "&8Discusiones absurdas"
+      material: "SCULK_SENSOR"
+      durations: ["1h", "3h", "12h", "1d"]
+    caps:
+      name: "&fUso excesivo de Mayúsculas"
+      material: "WHITE_WOOL"
+      durations: ["15m", "30m", "1h", "3h"]
+    annoyance:
+      name: "&dComportamiento Molesto"
+      material: "GOAT_HORN"
+      durations: ["1h", "12h", "1d", "7d"]
