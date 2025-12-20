@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 public class StaffItemsListener implements Listener {
@@ -44,31 +45,28 @@ public class StaffItemsListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
-
         Player player = event.getPlayer();
-
         if (!plugin.getStaffManager().isInStaffMode(player)) return;
 
         ItemStack item = event.getItem();
         if (item == null || item.getType() == Material.AIR) return;
 
+        MainConfigManager config = plugin.getMainConfigManager();
+
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             
-            // Vanish
-            if (item.getType() == Material.NETHER_STAR) {
+            if (item.getType() == config.getMatVanish()) {
                 event.setCancelled(true); 
                 plugin.getStaffManager().toggleVanish(player);
             }
-            // Reloj
-            else if (item.getType() == Material.CLOCK) {
+            else if (item.getType() == config.getMatPlayers()) {
                 event.setCancelled(true);
                 plugin.getGuiManager().openPlayersMenu(player);
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgPlayers()));
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
             }
-            // Libro
-            else if (item.getType() == Material.BOOK) {
+            else if (item.getType() == config.getMatPunish()) {
                 event.setCancelled(true);
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerClickPls()));
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
             }
         }
     }
@@ -77,33 +75,28 @@ public class StaffItemsListener implements Listener {
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
-
         Player player = event.getPlayer();
-
         if (!plugin.getStaffManager().isInStaffMode(player)) return;
-        
         if (!(event.getRightClicked() instanceof Player)) return;
 
         Player target = (Player) event.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
+        MainConfigManager config = plugin.getMainConfigManager();
 
-        // Cofre
-        if (item.getType() == Material.CHEST) {
+        if (item.getType() == config.getMatInspect()) {
             event.setCancelled(true);
-            String msg = plugin.getMainConfigManager().getMsgInspect().replace("{player}", target.getName());
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+            String msg = config.getMsgInspect().replace("{player}", target.getName());
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + msg));
             player.openInventory(target.getInventory());
         }
         
-        // Libro
-        else if (item.getType() == Material.BOOK) {
+        else if (item.getType() == config.getMatPunish()) {
             event.setCancelled(true);
             plugin.getGuiManager().openSanctionMenu(player, target.getName());
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgPunish()));
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPunish()));
         }
 
-        // Hielo
-        else if (item.getType() == Material.PACKED_ICE) {
+        else if (item.getType() == config.getMatFreeze()) {
             event.setCancelled(true);
             plugin.getFreezeManager().toggleFreeze(player, target);
         }   
