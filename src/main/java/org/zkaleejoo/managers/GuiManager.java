@@ -57,18 +57,18 @@ public class GuiManager {
     }
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
-        ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
-        if (section == null) return;
+    ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
+    if (section == null) return;
 
         List<String> keys = new ArrayList<>(section.getKeys(false));
         int totalPages = (int) Math.ceil(keys.size() / 4.0);
         
-        String titleTemplate = plugin.getConfig().getString("gui.reasons.title", "&8Sancionar [{type}] - {target} ({page}/{total})");
+        String titleTemplate = plugin.getMainConfigManager().getGuiReasonsTitle();
         String title = MessageUtils.getColoredMessage(titleTemplate
-                .replace("{type}", type)
-                .replace("{target}", targetName)
-                .replace("{page}", String.valueOf(page + 1))
-                .replace("{total}", String.valueOf(totalPages == 0 ? 1 : totalPages))); 
+            .replace("{type}", type)
+            .replace("{target}", targetName)
+            .replace("{page}", String.valueOf(page + 1))
+            .replace("{total}", String.valueOf(totalPages == 0 ? 1 : totalPages)));
         
         Inventory gui = Bukkit.createInventory(null, 54, title);
         setupBorder(gui);
@@ -153,7 +153,7 @@ public class GuiManager {
         }
         return item;
     }
-    
+
     private ItemStack createPlayerHead(Player p) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
