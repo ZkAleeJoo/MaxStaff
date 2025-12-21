@@ -27,7 +27,7 @@ public class MainConfigManager {
     private String msgTargetUnfrozen;
     private String itemNamePunish, itemNameFreeze, itemNamePlayers, itemNameInspect, itemNameVanish;
     private Material matPunish, matFreeze, matPlayers, matInspect, matVanish;
-
+ 
     // GUI General
     private String guiPlayersTitle, guiHeadLore, guiSanctionsTitle;
     private String guiItemBanName; private List<String> guiItemBanLore;

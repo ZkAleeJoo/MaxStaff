@@ -75,7 +75,7 @@ gui:
         name: "&c&lBAN"
         lore: ["&7Click to select reason and duration"]
       mute: 
-        name: "&e&lMUTE"
+        name: "&e&lMUTE" 
         lore: ["&7Click to select reason and duration"]
       kick: 
         name: "&b&lKICK"
