@@ -17,6 +17,7 @@ public class MainConfigManager {
     private String msgConsole, noReason, playerMuted, msgTeleport, helpTitle, msgUsage;
     private List<String> helpLines;
     private String msgOffline, msgNotMuted, msgUnbanSuccess, msgUnmuteSuccess, msgInvalidMaterial;
+    private String playerClickPls;
 
     // Staff Mode
     private String staffModeEnabled, staffModeDisabled, inventorySaved, inventoryRestored;
@@ -145,6 +146,7 @@ public class MainConfigManager {
         msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
         msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
         msgUsage = config.getString("punishments.feedback.usage");
+        playerClickPls = config.getString("messages.player-click-pls");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -238,6 +240,7 @@ public class MainConfigManager {
     public Material getNavNextMat() { return navNextMat; }
     public Material getNavPrevMat() { return navPrevMat; }
     public Material getDurationDye(int index) { return durationDyes[index]; }
+    public String getPlayerClickPls() {return playerClickPls;}
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
