@@ -51,7 +51,7 @@ public class GuiManager {
         player.openInventory(gui);
     }
 
-    // --- MENÚ 2: SELECCIÓN DE CATEGORÍA (BAN/MUTE/KICK) ---
+    // --- MENÚ 2: SELECCIÓN DE CATEGORÍA ---
     public void openSanctionMenu(Player player, String targetName) {
         String title = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", targetName));
         Inventory gui = Bukkit.createInventory(null, 36, title);
@@ -72,9 +72,9 @@ public class GuiManager {
         player.openInventory(gui);
     }
 
-    // --- MENÚ 3: MOTIVOS CON PAGINACIÓN ---
+    // --- MENÚ 3: MOTIVOS CON TIEMPOS ---
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
-        String title = MessageUtils.getColoredMessage("&8Sancionar - " + targetName + " (" + type + ")");
+        String title = MessageUtils.getColoredMessage("&8Sancionar - " + targetName + " (" + (page + 1) + "/3)");
         Inventory gui = Bukkit.createInventory(null, 54, title);
         setupBorder(gui);
         
@@ -82,63 +82,77 @@ public class GuiManager {
         if (section == null) return;
 
         List<String> keys = new ArrayList<>(section.getKeys(false));
-        int itemsPerPage = 28;
+        int itemsPerPage = 4; 
         int start = page * itemsPerPage;
         int end = Math.min(start + itemsPerPage, keys.size());
 
-        int[] centralSlots = {
-            10, 11, 12, 13, 14, 15, 16,
-            19, 20, 21, 22, 23, 24, 25,
-            28, 29, 30, 31, 32, 33, 34,
-            37, 38, 39, 40, 41, 42, 43
-        };
+        int[] rowStarts = {10, 19, 28, 37};
 
         for (int i = start; i < end; i++) {
             String key = keys.get(i);
-            ItemStack item = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getReasonName(type, key)));
+            int rowIdx = i - start;
+            int baseSlot = rowStarts[rowIdx];
             
-            List<String> lore = new ArrayList<>();
-            lore.add(MessageUtils.getColoredMessage("&7ID: &f" + key));
-            lore.add("");
-            lore.add(MessageUtils.getColoredMessage("&eClick para ver duraciones"));
-            meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            item.setItemMeta(meta);
-            
-            gui.setItem(centralSlots[i - start], item);
+            ItemStack reasonItem = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
+            ItemMeta rMeta = reasonItem.getItemMeta();
+            rMeta.setDisplayName(MessageUtils.getColoredMessage("&c&lSanción #" + (i + 1)));
+            rMeta.setLore(Arrays.asList(
+                MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)),
+                MessageUtils.getColoredMessage("&8ID: " + key)
+            ));
+            rMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            reasonItem.setItemMeta(rMeta);
+            gui.setItem(baseSlot, reasonItem);
+
+            List<String> durations = plugin.getMainConfigManager().getReasonDurations(type, key);
+            int[] dyeOffsets = {2, 3, 4, 5}; 
+
+            for (int d = 0; d < 4; d++) {
+                String duration = (d < durations.size()) ? durations.get(d) : "perm";
+                
+                Material dyeMat = getDyeColor(duration);
+                
+                ItemStack dye = new ItemStack(dyeMat);
+                ItemMeta dMeta = dye.getItemMeta();
+                dMeta.setDisplayName(MessageUtils.getColoredMessage("&eTiempo: &f" + duration));
+                dMeta.setLore(Arrays.asList(
+                    MessageUtils.getColoredMessage("&7Tipo: &6" + type),
+                    MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)),
+                    MessageUtils.getColoredMessage("&8ID: " + key),
+                    MessageUtils.getColoredMessage("&8TimeValue: " + duration),
+                    "",
+                    MessageUtils.getColoredMessage("&eClick para aplicar sanción")
+                ));
+                dye.setItemMeta(dMeta);
+                gui.setItem(baseSlot + dyeOffsets[d], dye);
+            }
         }
 
-        gui.setItem(45, createItem(Material.ARROW, plugin.getMainConfigManager().getNavBackName(), null));
-        if (page > 0) gui.setItem(48, createItem(Material.PAPER, plugin.getMainConfigManager().getNavPrevName(), null));
-        if (end < keys.size()) gui.setItem(50, createItem(Material.PAPER, plugin.getMainConfigManager().getNavNextName(), null));
+        gui.setItem(49, createItem(Material.BOOK, "&c&l« Volver", Arrays.asList("&7Regresar a categorías")));
+
+        if (page > 0) {
+            gui.setItem(45, createItem(Material.ARROW, "&e« Anterior", Arrays.asList("&7Página " + page)));
+        }
+        if (end < keys.size()) {
+            gui.setItem(53, createItem(Material.ARROW, "&aSiguiente »", Arrays.asList("&7Página " + (page + 2))));
+        }
         
         player.openInventory(gui);
     }
 
-    // --- MENÚ 4: SELECCIÓN DE TIEMPO ESPECÍFICO ---
+    private Material getDyeColor(String duration) {
+        String d = duration.toLowerCase();
+        if (d.contains("m") || d.contains("h")) return Material.LIME_DYE;      
+        if (d.equals("1d") || d.equals("2d")) return Material.YELLOW_DYE;    
+        if (d.contains("d") || d.contains("w")) return Material.ORANGE_DYE; 
+        if (d.contains("perm") || d.contains("permanent")) return Material.RED_DYE; 
+        return Material.GRAY_DYE;
+    }
+
     public void openReasonDurationMenu(Player player, String targetName, String type, String reasonId) {
-        String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
-        String title = MessageUtils.getColoredMessage("&8Tiempo: " + type + " - " + reasonId + " : " + targetName);
-        Inventory gui = Bukkit.createInventory(null, 27, title);
-        setupBorder(gui);
-
-        List<String> times = plugin.getMainConfigManager().getReasonDurations(type, reasonId);
-        int[] slots = {10, 12, 14, 16}; 
-
-        for (int i = 0; i < 4; i++) {
-            String duration = (i < times.size()) ? times.get(i) : "perm";
-            gui.setItem(slots[i], createItem(Material.CLOCK, "&a&lDuración: &f" + duration, 
-                Arrays.asList("&7Sanción por: " + reasonName, "", "&eClick para aplicar sanción")));
-        }
-        
-        gui.setItem(22, createItem(Material.ARROW, "&c« Volver a Motivos", null));
-
-        player.openInventory(gui);
+        openReasonsMenu(player, targetName, type, 0);
     }
 
-    // --- UTILIDADES ---
     private ItemStack createItem(Material mat, String name, List<String> lore) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
