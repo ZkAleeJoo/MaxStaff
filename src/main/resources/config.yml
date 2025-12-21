@@ -8,6 +8,7 @@ messages:
   subcommand-specified: "&cPlease specify a subcommand."
   player-click-pls: "&cPlease right-click on a player to sanction them."
   invalid-material: "&c[Error] &fMaterial '&e{path}&f' It doesn't exist. Using: &b{default}"
+
 # Staff Mode Configuration
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
@@ -27,7 +28,6 @@ staff-mode:
       name: "&b&lFreeze &7(Click Player)"
       message-freeze: "&fYou have frozen &b{player}"
       message-unfreeze: "&fYou have unfrozen &b{player}"
-      # Messages the victim sees when frozen
       target-frozen: 
         - "&c&lYOU HAVE BEEN FROZEN!"
         - "&ePlease wait for a Staff member to assist you."
@@ -49,68 +49,48 @@ staff-mode:
       message-on: "&aVanish: &lENABLED &7(You are invisible)"
       message-off: "&cVanish: &lDISABLED &7(You are visible)"
 
-# GUI (Menus) Configuration
+# GUI Configuration
 gui:
-  # Online Players Menu
   players:
     title: "&8Online Players"
     head-lore: "&7Click to teleport"
-  
-  # Sanctions Main Menu
   sanctions:
     title: "&8Punish: &0{target}"
     items:
-      ban:
-        name: "&c&lBAN"
-        lore: 
-          - "&7Click to select duration"
-      mute:
-        name: "&e&lMUTE"
-        lore: 
-          - "&7Click to select duration"
-      kick:
-        name: "&b&lKICK"
-        lore: 
-          - "&7Click to kick now"
+      ban: { name: "&c&lBAN", lore: ["&7Click to select duration"] }
+      mute: { name: "&e&lMUTE", lore: ["&7Click to select duration"] }
+      kick: { name: "&b&lKICK", lore: ["&7Click to kick now"] }
 
-  # Duration Selection Menu
-  duration:
-    title: "&8Duration {type}: &0{target}"
-    items:
-      1h:
-        name: "&a1 Hour"
-        lore: "&7Duration: 1h"
-      1d:
-        name: "&e1 Day"
-        lore: "&7Duration: 1d"
-      7d:
-        name: "&67 Days"
-        lore: "&7Duration: 7d"
-      perm:
-        name: "&4Permanent"
-        lore: "&7Duration: Perm"
-      back: "&cBack"
+# Menu section
+gui-style:
+  border-material: "BLACK_STAINED_GLASS_PANE"
+  navigation:
+    back-name: "&c« Volver"
+    back-material: "BOOK"
+    next-name: "&aPágina Siguiente »"
+    next-material: "ARROW" 
+    prev-name: "&e« Página Anterior"
+    prev-material: "ARROW"
+  # Colors of the time buttons according to their position
+  unified-menu:
+    duration-1-material: "LIME_DYE"    # Short time
+    duration-2-material: "YELLOW_DYE"  # Average time
+    duration-3-material: "ORANGE_DYE"  # long time
+    duration-4-material: "RED_DYE"     # Permanent
 
-# Punishment Configuration (Ban/Mute/Kick)
 punishments:
   broadcast: true
   default-reason: "No reason provided"
-  
-  # Public Broadcast Messages (Sent to everyone)
   broadcasts:
     ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
     mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
     kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
-  
-  # Messages sent to the victim (Screen/Chat)
   screens:
     ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
     kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
-    mute: "&cYou have been muted by {staff}!"
+    mute: "&cYou are muted by {staff}!"
     unmute: "&aYou may now speak again!"
     muted-chat: "&cYou are muted! You cannot speak."
-  
-  # Feedback messages for Staff
   feedback:
     player-offline: "&cThat player is not online."
     not-muted: "&cThat player is not muted."
@@ -118,101 +98,27 @@ punishments:
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
 
-# Visual Menu Configuration
-gui-style:
-  border-material: "BLACK_STAINED_GLASS_PANE"
-  background-material: "GRAY_STAINED_GLASS_PANE"
-  navigation:
-    back-name: "&c« Volver"
-    back-material: "ARROW"
-    next-name: "&aPágina Siguiente »"
-    next-material: "PLAYER_HEAD" 
-    prev-name: "&e« Página Anterior"
-    prev-material: "PLAYER_HEAD"
-
-
-#Reasons and Days Section
+# Reasons Section
 punishment-reasons:
   BAN:
-    xray:
-      name: "&6X-Ray / Wallhack"
-      material: "DIAMOND_ORE"
-      durations: ["7d", "14d", "30d", "perm"]
-    combat:
-      name: "&cCombat Hacks (Killaura/Reach)"
-      material: "NETHERITE_SWORD"
-      durations: ["30d", "60d", "90d", "perm"]
-    movement:
-      name: "&bMovement Hacks (Fly/Speed)"
-      material: "FEATHER"
-      durations: ["14d", "30d", "60d", "perm"]
-    scripts:
-      name: "&eAuto-Mining / Scripts"
-      material: "NETHERITE_PICKAXE"
-      durations: ["7d", "14d", "30d", "perm"]
-    griefing:
-      name: "&aGriefing Masivo"
-      material: "TNT"
-      durations: ["14d", "30d", "perm", "perm"]
-    theft:
-      name: "&7Robo de ítems"
-      material: "CHEST"
-      durations: ["7d", "14d", "30d", "perm"]
-    toxicity:
-      name: "&4Toxicidad Grave"
-      material: "WITHER_SKELETON_SKULL"
-      durations: ["14d", "30d", "perm", "perm"]
-    bugs:
-      name: "&dAbuso de Bugs"
-      material: "BEDROCK"
-      durations: ["7d", "30d", "perm", "perm"]
-    advertising:
-      name: "&9Publicidad (IPs/Links)"
-      material: "PAPER"
-      durations: ["perm", "perm", "perm", "perm"]
-    evasion:
-      name: "&fEvasión de Sanciones"
-      material: "IRON_BARS"
-      durations: ["perm", "perm", "perm", "perm"]
-
+    xray: { name: "&6X-Ray", material: "DIAMOND_ORE", durations: ["7d", "14d", "30d", "perm"] }
+    combat: { name: "&cCombat Hacks", material: "NETHERITE_SWORD", durations: ["30d", "60d", "90d", "perm"] }
+    movement: { name: "&bMovement Hacks", material: "FEATHER", durations: ["14d", "30d", "60d", "perm"] }
+    scripts: { name: "&eScripts", material: "NETHERITE_PICKAXE", durations: ["7d", "14d", "30d", "perm"] }
+    griefing: { name: "&aGriefing", material: "TNT", durations: ["14d", "30d", "perm", "perm"] }
+    theft: { name: "&7Theft", material: "CHEST", durations: ["7d", "14d", "30d", "perm"] }
+    toxicity: { name: "&4Toxicity", material: "WITHER_SKELETON_SKULL", durations: ["14d", "30d", "perm", "perm"] }
+    bugs: { name: "&dBugs", material: "BEDROCK", durations: ["7d", "30d", "perm", "perm"] }
+    advertising: { name: "&9Advertising", material: "PAPER", durations: ["perm", "perm", "perm", "perm"] }
+    evasion: { name: "&fEvasion", material: "IRON_BARS", durations: ["perm", "perm", "perm", "perm"] }
   MUTE:
-    insults:
-      name: "&eInsultos / Falta de respeto"
-      material: "WRITABLE_BOOK"
-      durations: ["1h", "12h", "1d", "7d"]
-    spam:
-      name: "&bSpam constante"
-      material: "RECOVERY_COMPASS"
-      durations: ["30m", "1h", "6h", "1d"]
-    flood:
-      name: "&3Flood (Repetición)"
-      material: "WATER_BUCKET"
-      durations: ["15m", "30m", "1h", "12h"]
-    toxic_chat:
-      name: "&cToxicidad en el Chat"
-      material: "POISONOUS_POTATO"
-      durations: ["1h", "6h", "1d", "7d"]
-    language:
-      name: "&7Lenguaje Inapropiado"
-      material: "SPORE_BLOSSOM"
-      durations: ["1h", "2h", "6h", "12h"]
-    ads:
-      name: "&9Publicidad Menor"
-      material: "MAP"
-      durations: ["12h", "1d", "7d", "30d"]
-    provocation:
-      name: "&6Provocación al Staff"
-      material: "CAMPFIRE"
-      durations: ["2h", "6h", "1d", "7d"]
-    discussions:
-      name: "&8Discusiones absurdas"
-      material: "SCULK_SENSOR"
-      durations: ["1h", "3h", "12h", "1d"]
-    caps:
-      name: "&fUso excesivo de Mayúsculas"
-      material: "WHITE_WOOL"
-      durations: ["15m", "30m", "1h", "3h"]
-    annoyance:
-      name: "&dComportamiento Molesto"
-      material: "GOAT_HORN"
-      durations: ["1h", "12h", "1d", "7d"]
+    insults: { name: "&eInsults", material: "WRITABLE_BOOK", durations: ["1h", "12h", "1d", "7d"] }
+    spam: { name: "&bSpam", material: "RECOVERY_COMPASS", durations: ["30m", "1h", "6h", "1d"] }
+    flood: { name: "&3Flood", material: "WATER_BUCKET", durations: ["15m", "30m", "1h", "12h"] }
+    toxic_chat: { name: "&cChat Toxicity", material: "POISONOUS_POTATO", durations: ["1h", "6h", "1d", "7d"] }
+    language: { name: "&7Language", material: "SPORE_BLOSSOM", durations: ["1h", "2h", "6h", "12h"] }
+    ads: { name: "&9Ads", material: "MAP", durations: ["12h", "1d", "7d", "30d"] }
+    provocation: { name: "&6Provocation", material: "CAMPFIRE", durations: ["2h", "6h", "1d", "7d"] }
+    discussions: { name: "&8Discussions", material: "SCULK_SENSOR", durations: ["1h", "3h", "12h", "1d"] }
+    caps: { name: "&fCaps", material: "WHITE_WOOL", durations: ["15m", "30m", "1h", "3h"] }
+    annoyance: { name: "&dAnnoyance", material: "GOAT_HORN", durations: ["1h", "12h", "1d", "7d"] }
