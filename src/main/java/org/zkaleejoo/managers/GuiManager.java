@@ -20,7 +20,9 @@ public class GuiManager {
 
     private final MaxStaff plugin;
 
-    public GuiManager(MaxStaff plugin) { this.plugin = plugin; }
+    public GuiManager(MaxStaff plugin) { 
+        this.plugin = plugin; 
+    }
 
     private void setupBorder(Inventory inv) {
         ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null);
@@ -37,37 +39,43 @@ public class GuiManager {
     public void openPlayersMenu(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
         setupBorder(gui);
-        for (Player target : Bukkit.getOnlinePlayers()) gui.addItem(createPlayerHead(target));
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            gui.addItem(createPlayerHead(target));
+        }
         player.openInventory(gui);
     }
 
     public void openSanctionMenu(Player player, String targetName) {
         Inventory gui = Bukkit.createInventory(null, 36, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", targetName)));
         setupBorder(gui);
+        
         gui.setItem(11, createItem(Material.IRON_SWORD, plugin.getMainConfigManager().getGuiItemBanName(), plugin.getMainConfigManager().getGuiItemBanLore()));
         gui.setItem(13, createItem(Material.PAPER, plugin.getMainConfigManager().getGuiItemMuteName(), plugin.getMainConfigManager().getGuiItemMuteLore()));
         gui.setItem(15, createItem(Material.FEATHER, plugin.getMainConfigManager().getGuiItemKickName(), plugin.getMainConfigManager().getGuiItemKickLore()));
+        
         player.openInventory(gui);
     }
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
-        String titleTemplate = plugin.getConfig().getString("sanctions-menu", "&8Sancionar [{type}] - {target} ({page}/{total})");
-        String title = MessageUtils.getColoredMessage(titleTemplate
-                .replace("{type}", type)
-                .replace("{target}", targetName)
-                .replace("{page}", String.valueOf(page + 1))
-                .replace("{total}", "3")); 
-        
-        Inventory gui = Bukkit.createInventory(null, 54, title);
-        setupBorder(gui);
-        
         ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
         if (section == null) return;
 
         List<String> keys = new ArrayList<>(section.getKeys(false));
+        int totalPages = (int) Math.ceil(keys.size() / 4.0);
+        
+        String titleTemplate = plugin.getConfig().getString("gui.reasons.title", "&8Sancionar [{type}] - {target} ({page}/{total})");
+        String title = MessageUtils.getColoredMessage(titleTemplate
+                .replace("{type}", type)
+                .replace("{target}", targetName)
+                .replace("{page}", String.valueOf(page + 1))
+                .replace("{total}", String.valueOf(totalPages == 0 ? 1 : totalPages))); 
+        
+        Inventory gui = Bukkit.createInventory(null, 54, title);
+        setupBorder(gui);
+        
         int start = page * 4;
         int end = Math.min(start + 4, keys.size());
-        int[] rowStarts = {10, 19, 28, 37};
+        int[] rowStarts = {10, 19, 28, 37}; 
 
         for (int i = start; i < end; i++) {
             String key = keys.get(i);
@@ -92,8 +100,12 @@ public class GuiManager {
             gui.setItem(baseSlot, rItem);
 
             List<String> durations = plugin.getMainConfigManager().getReasonDurations(type, key);
-            for (int d = 0; d < 4; d++) {
-                String dur = (d < durations.size()) ? durations.get(d) : "perm";
+            
+            int maxDurationsToShow = type.equals("KICK") ? 1 : 4;
+
+            for (int d = 0; d < maxDurationsToShow; d++) {
+                String dur = (d < durations.size()) ? durations.get(d) : (type.equals("KICK") ? "Ahora" : "perm");
+                
                 ItemStack dye = new ItemStack(plugin.getMainConfigManager().getDurationDye(d));
                 ItemMeta dMeta = dye.getItemMeta();
                 
@@ -116,8 +128,13 @@ public class GuiManager {
         }
 
         gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar"))));
-        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Página " + page))));
-        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Página " + (page + 2)))));
+        if (page > 0) {
+            gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page))));
+        }
+        if (end < keys.size()) {
+            gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2)))));
+        }
+        
         player.openInventory(gui);
     }
 
@@ -136,14 +153,16 @@ public class GuiManager {
         }
         return item;
     }
-
+    
     private ItemStack createPlayerHead(Player p) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getColoredMessage("&a" + p.getName()));
-        meta.setOwningPlayer(p);
-        meta.setLore(Arrays.asList(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
-        item.setItemMeta(meta);
+        if (meta != null) {
+            meta.setDisplayName(MessageUtils.getColoredMessage("&a" + p.getName()));
+            meta.setOwningPlayer(p);
+            meta.setLore(Arrays.asList(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
+            item.setItemMeta(meta);
+        }
         return item;
     }
 }
