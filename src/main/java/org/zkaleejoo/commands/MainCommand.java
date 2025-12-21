@@ -63,10 +63,19 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     public void help(CommandSender sender){
-        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&fList of commands: &b" + plugin.getDescription().getVersion()));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Activate/Deactivate staff mode"));
-        sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
+        String titleTemplate = plugin.getConfig().getString("messages.command-help-title", "&fList of commands: &b{version}");
+        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + titleTemplate.replace("{version}", plugin.getDescription().getVersion())));
+        
+        List<String> helpLines = plugin.getConfig().getStringList("messages.command-help-list");
+        if (helpLines == null || helpLines.isEmpty()) {
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Toggle staff mode"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
+        } else {
+            for (String line : helpLines) {
+                sender.sendMessage(MessageUtils.getColoredMessage(line));
+            }
+        }
     }
 
     @Override

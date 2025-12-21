@@ -1,5 +1,8 @@
 package org.zkaleejoo.utils;
 
+import org.bukkit.Bukkit;
+import org.zkaleejoo.MaxStaff;
+
 public class TimeUtils {
 
     public static long parseDuration(String arg) {
@@ -25,15 +28,18 @@ public class TimeUtils {
     }
 
     public static String getDurationString(long duration) {
-        if (duration == -1) return "Permanente";
+        MaxStaff plugin = (MaxStaff) Bukkit.getPluginManager().getPlugin("MaxStaff");
+        
+        if (duration == -1) return plugin.getConfig().getString("time-units.permanent", "Permanente");
+        
         long seconds = duration / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
         long days = hours / 24;
         
-        if (days > 0) return days + " días";
-        if (hours > 0) return hours + " horas";
-        if (minutes > 0) return minutes + " minutos";
-        return seconds + " segundos";
+        if (days > 0) return days + " " + plugin.getConfig().getString("time-units.days", "días");
+        if (hours > 0) return hours + " " + plugin.getConfig().getString("time-units.hours", "horas");
+        if (minutes > 0) return minutes + " " + plugin.getConfig().getString("time-units.minutes", "minutos");
+        return seconds + " " + plugin.getConfig().getString("time-units.seconds", "segundos");
     }
 }

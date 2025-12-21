@@ -24,20 +24,20 @@ public class PunishmentCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(MessageUtils.getColoredMessage("&cUse: /" + label + " <jugador> [tiempo] [razón]"));
+            String usage = plugin.getMainConfigManager().getMsgUsage()
+                    .replace("{command}", label);
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + usage));
             return true;
         }
 
         String target = args[0];
         
-        // KICK
         if (label.equalsIgnoreCase("kick")) {
             String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : plugin.getMainConfigManager().getNoReason();
             plugin.getPunishmentManager().kickPlayer(sender, target, reason);
             return true;
         }
 
-        // UNBAN / UNMUTE
         if (label.equalsIgnoreCase("unban")) {
             plugin.getPunishmentManager().unbanPlayer(sender, target);
             return true;

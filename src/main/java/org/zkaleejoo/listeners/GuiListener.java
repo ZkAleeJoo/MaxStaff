@@ -30,30 +30,33 @@ public class GuiListener implements Listener {
             return;
         }
 
-        if (title.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle())))) {
+        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
+        if (title.contains(playersTitle)) {
             event.setCancelled(true);
             if (item.getType() == Material.PLAYER_HEAD) {
                 Player target = plugin.getServer().getPlayer(itemName);
                 if (target != null) {
                     player.teleport(target);
-                    player.sendMessage(MessageUtils.getColoredMessage("&aTeletransportado a " + target.getName()));
+                    String tpMsg = plugin.getConfig().getString("messages.teleport-success", "&aTeletransportado a {player}");
+                    player.sendMessage(MessageUtils.getColoredMessage(tpMsg.replace("{player}", target.getName())));
                 }
                 player.closeInventory();
             }
         }
 
-        else if (title.startsWith("Punish:")) {
+        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
+        if (title.contains(sanctionsTitle)) {
             event.setCancelled(true);
-            String target = title.split(": ")[1];
+            String target = title.replace(sanctionsTitle, "").trim();
             if (item.getType() == Material.IRON_SWORD) plugin.getGuiManager().openReasonsMenu(player, target, "BAN", 0);
             else if (item.getType() == Material.PAPER) plugin.getGuiManager().openReasonsMenu(player, target, "MUTE", 0);
             else if (item.getType() == Material.FEATHER) {
-                plugin.getPunishmentManager().kickPlayer(player, target, "Expulsado vía GUI");
+                plugin.getPunishmentManager().kickPlayer(player, target, plugin.getMainConfigManager().getNoReason());
                 player.closeInventory();
             }
         }
 
-        else if (title.startsWith("Sancionar")) {
+        if (title.contains("Sancionar")) { 
             event.setCancelled(true);
             String type = title.contains("[BAN]") ? "BAN" : "MUTE";
             String target = title.split(" - ")[1].split(" \\(")[0];
@@ -62,10 +65,10 @@ public class GuiListener implements Listener {
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
                 plugin.getGuiManager().openSanctionMenu(player, target);
             }
-            else if (item.getType() == plugin.getMainConfigManager().getNavNextMat() && itemName.contains("Siguiente")) {
+            else if (item.getType() == plugin.getMainConfigManager().getNavNextMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page + 1);
             }
-            else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains("Anterior")) {
+            else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
