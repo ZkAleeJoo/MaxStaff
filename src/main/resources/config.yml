@@ -1,20 +1,29 @@
+# ==========================================
+#        MaxStaff - General Configuration
+# ==========================================
+
 general:
   prefix: "&4&lMaxStaff &8» "
 
-# Messages Configuration
+# All plugin messages
 messages:
   no-permission: "&cYou do not have permission to use this command."
   plugin-reload: "&aConfiguration successfully reloaded."
   subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
   subcommand-specified: "&cPlease specify a subcommand."
   player-click-pls: "&cPlease right-click on a player to sanction them."
-  invalid-material: "&c[Error] &fMaterial '&e{path}&f' It doesn't exist. Using: &b{default}"
-  teleport-success: "&aHas sido teletransportado a &e{player}"
-  command-help-title: "&4&lMaxStaff &fLista de Comandos: &b{version}"
+  invalid-material: "&c[Error] &fMaterial '&e{path}&f' doesn't exist. Using: &b{default}"
+  teleport-success: "&aYou have been teleported to &e{player}"
+  message-console: "&cThis command can only be executed by players."
+  no-reason: "No reason provided"
+  player-muted: "&cYou are muted! You cannot speak."
+  
+  # Command help messages
+  command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
   command-help-list:
-    - "&9> &a/maxstaff reload &7- Recargar configuración"
-    - "&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"
-    - "&9> &a/maxstaff help &7- Ver lista de comandos"
+    - "&9> &a/maxstaff reload &7- Reload configuration"
+    - "&9> &a/maxstaff mode &7- Enable/Disable staff mode"
+    - "&9> &a/maxstaff help &7- View command list"
 
 # Staff Mode Configuration
 staff-mode:
@@ -25,7 +34,6 @@ staff-mode:
   cannot-drop: "&cYou cannot drop items while in staff mode."
   cannot-place: "&cYou cannot place blocks while in staff mode."
   
-# Staff Mode Items Configuration
   items:
     punish:
       material: "NETHERITE_HOE"
@@ -47,13 +55,11 @@ staff-mode:
       message: "&eOpening player list..."
     inspect:
       material: "CHEST"
-      name: "&6&lInspect Inventory &7(Click Player)"
+      name: "&6&lInspect &7(Click Player)"
       message: "&6Inspecting: &f{player}"
     vanish:
       material: "NETHER_STAR"
       name: "&a&lVanish &7(Click to toggle)"
-      on-name: "&a&lVanish: ENABLED"
-      off-name: "&7&lVanish: DISABLED"
       message-on: "&aVanish: &lENABLED &7(You are invisible)"
       message-off: "&cVanish: &lDISABLED &7(You are visible)"
 
@@ -65,52 +71,60 @@ gui:
   sanctions:
     title: "&8Punish: &0{target}"
     items:
-      ban: { name: "&c&lBAN", lore: ["&7Click to select duration"] }
-      mute: { name: "&e&lMUTE", lore: ["&7Click to select duration"] }
-      kick: { name: "&b&lKICK", lore: ["&7Click to kick now"] }
+      ban: 
+        name: "&c&lBAN"
+        lore: ["&7Click to select reason and duration"]
+      mute: 
+        name: "&e&lMUTE"
+        lore: ["&7Click to select reason and duration"]
+      kick: 
+        name: "&b&lKICK"
+        lore: ["&7Click to kick now"]
+  
+  # Punishment reasons menu configuration
   reasons:
-      title: "&8Sancionar [{type}] - {target}"
-      item-name: "&c&lSanción #{number}"
-      item-lore:
-        - "&7Motivo: &f{reason}"
-        - "&8ID: {id}"
-      dye-name: "&eTiempo: &f{duration}"
-      dye-lore:
-        - "&7Tipo: &6{type}"
-        - "&7Motivo: &f{reason}"
-        - "&8ID: {id}"
-        - ""
-        - "&eClick para aplicar sanción"
-      navigation:
-        lore-back: "&7Regresar al menú"
-        lore-page: "&7Ir a la página {page}"
+    title: "&8Sanction [{type}] - {target} ({page}/3)"
+    item-name: "&c&lSanction #{number}"
+    item-lore:
+      - "&7Reason: &f{reason}"
+      - "&8ID: {id}"
+    dye-name: "&eDuration: &f{duration}"
+    dye-lore:
+      - "&7Type: &6{type}"
+      - "&7Reason: &f{reason}"
+      - "&8ID: {id}"
+      - "&8TimeValue: {duration}"
+      - ""
+      - "&eClick to apply sanction"
+    navigation:
+      lore-back: "&7Return to previous menu"
+      lore-page: "&7Go to page {page}"
 
-# Menu section
+# GUI Style & Navigation
 gui-style:
   border-material: "BLACK_STAINED_GLASS_PANE"
   navigation:
-    back-name: "&c« Volver"
+    back-name: "&c« Back"
     back-material: "BOOK"
-    next-name: "&aPágina Siguiente »"
+    next-name: "&aNext Page »"
     next-material: "ARROW" 
-    prev-name: "&e« Página Anterior"
+    prev-name: "&e« Previous Page"
     prev-material: "ARROW"
-  # Colors of the time buttons according to their position
   unified-menu:
     duration-1-material: "LIME_DYE"    # Short time
-    duration-2-material: "YELLOW_DYE"  # Average time
-    duration-3-material: "ORANGE_DYE"  # long time
+    duration-2-material: "YELLOW_DYE"  # Medium time
+    duration-3-material: "ORANGE_DYE"  # Long time
     duration-4-material: "RED_DYE"     # Permanent
 
-# Time Units Section
+# Time Units Configuration
 time-units:
-  permanent: "Permanente"
-  days: "días"
-  hours: "horas"
-  minutes: "minutos"
-  seconds: "segundos"
+  permanent: "Permanent"
+  days: "days"
+  hours: "hours"
+  minutes: "minutes"
+  seconds: "seconds"
 
-# Punishments Section
+# Punishments Configuration
 punishments:
   broadcast: true
   default-reason: "No reason provided"
@@ -131,7 +145,7 @@ punishments:
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
 
-# Reasons Section
+# All Sanction Reasons
 punishment-reasons:
   BAN:
     xray: { name: "&6X-Ray", material: "DIAMOND_ORE", durations: ["7d", "14d", "30d", "perm"] }
