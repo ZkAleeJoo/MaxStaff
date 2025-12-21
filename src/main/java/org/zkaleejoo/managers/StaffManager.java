@@ -20,6 +20,8 @@ public class StaffManager {
     private final Map<UUID, ItemStack[]> savedInventory = new HashMap<>();
     private final Map<UUID, ItemStack[]> savedArmor = new HashMap<>();
     
+    private final Map<UUID, GameMode> savedGameMode = new HashMap<>();
+
     private final Map<UUID, Boolean> staffModePlayers = new HashMap<>();
     private final java.util.List<UUID> vanishedPlayers = new java.util.ArrayList<>();
 
@@ -35,30 +37,34 @@ public class StaffManager {
         }
     }
 
-    public void enableStaffMode(Player player) {
-        MainConfigManager config = plugin.getMainConfigManager(); //
-        
-        savedInventory.put(player.getUniqueId(), player.getInventory().getContents());
-        savedArmor.put(player.getUniqueId(), player.getInventory().getArmorContents());
-        
-        player.getInventory().clear();
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setAllowFlight(true);
-        player.setFlying(true);
-        player.setInvulnerable(true);
-        
-        giveStaffItems(player);
-        
-        staffModePlayers.put(player.getUniqueId(), true);
-        
-        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
-        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
-    }
+        public void enableStaffMode(Player player) {
+            MainConfigManager config = plugin.getMainConfigManager();
+            
+            savedInventory.put(player.getUniqueId(), player.getInventory().getContents());
+            savedArmor.put(player.getUniqueId(), player.getInventory().getArmorContents());
+            savedGameMode.put(player.getUniqueId(), player.getGameMode());
+            
+            player.getInventory().clear();
+            
+
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            player.setInvulnerable(true);
+            
+            giveStaffItems(player);
+            
+            staffModePlayers.put(player.getUniqueId(), true);
+            
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
+        }
 
     public void disableStaffMode(Player player) {
-        MainConfigManager config = plugin.getMainConfigManager(); //
+        MainConfigManager config = plugin.getMainConfigManager();
         player.getInventory().clear();
         
+        // Restaurar Inventario y Armadura
         if (savedInventory.containsKey(player.getUniqueId())) {
             player.getInventory().setContents(savedInventory.get(player.getUniqueId()));
             player.getInventory().setArmorContents(savedArmor.get(player.getUniqueId()));
@@ -67,8 +73,11 @@ public class StaffManager {
             savedArmor.remove(player.getUniqueId());
         }
         
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setAllowFlight(false);
+        GameMode originalMode = savedGameMode.getOrDefault(player.getUniqueId(), GameMode.SURVIVAL);
+        player.setGameMode(originalMode);
+        savedGameMode.remove(player.getUniqueId()); 
+        
+        player.setAllowFlight(originalMode == GameMode.CREATIVE || originalMode == GameMode.SPECTATOR);
         player.setFlying(false);
         player.setInvulnerable(false);
         
