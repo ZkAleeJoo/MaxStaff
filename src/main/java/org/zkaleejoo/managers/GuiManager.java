@@ -76,11 +76,17 @@ public class GuiManager {
             ItemStack rItem = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
             ItemMeta rMeta = rItem.getItemMeta();
             
-            rMeta.setDisplayName(MessageUtils.getColoredMessage("&c&lSanción #" + (i + 1)));
-            rMeta.setLore(Arrays.asList(
-                MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)), 
-                MessageUtils.getColoredMessage("&8ID: " + key)
-            ));
+            String rName = plugin.getMainConfigManager().getGuiReasonsItemName()
+                    .replace("{number}", String.valueOf(i + 1));
+            rMeta.setDisplayName(MessageUtils.getColoredMessage(rName));
+            
+            List<String> rLore = new ArrayList<>();
+            for (String line : plugin.getMainConfigManager().getGuiReasonsItemLore()) {
+                rLore.add(MessageUtils.getColoredMessage(line
+                        .replace("{reason}", plugin.getMainConfigManager().getReasonName(type, key))
+                        .replace("{id}", key)));
+            }
+            rMeta.setLore(rLore);
             rMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             rItem.setItemMeta(rMeta);
             gui.setItem(baseSlot, rItem);
@@ -90,14 +96,20 @@ public class GuiManager {
                 String dur = (d < durations.size()) ? durations.get(d) : "perm";
                 ItemStack dye = new ItemStack(plugin.getMainConfigManager().getDurationDye(d));
                 ItemMeta dMeta = dye.getItemMeta();
-                dMeta.setDisplayName(MessageUtils.getColoredMessage("&eTiempo: &f" + dur));
-                dMeta.setLore(Arrays.asList(
-                    MessageUtils.getColoredMessage("&7Tipo: &6" + type),
-                    MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)),
-                    MessageUtils.getColoredMessage("&8ID: " + key),
-                    MessageUtils.getColoredMessage("&8TimeValue: " + dur),
-                    "", MessageUtils.getColoredMessage("&eClick para aplicar sanción")
-                ));
+                
+                String dName = plugin.getMainConfigManager().getGuiReasonsDyeName()
+                        .replace("{duration}", dur);
+                dMeta.setDisplayName(MessageUtils.getColoredMessage(dName));
+                
+                List<String> dLore = new ArrayList<>();
+                for (String line : plugin.getMainConfigManager().getGuiReasonsDyeLore()) {
+                    dLore.add(MessageUtils.getColoredMessage(line
+                            .replace("{type}", type)
+                            .replace("{reason}", plugin.getMainConfigManager().getReasonName(type, key))
+                            .replace("{id}", key)
+                            .replace("{duration}", dur)));
+                }
+                dMeta.setLore(dLore);
                 dye.setItemMeta(dMeta);
                 gui.setItem(baseSlot + (d + 2), dye);
             }
