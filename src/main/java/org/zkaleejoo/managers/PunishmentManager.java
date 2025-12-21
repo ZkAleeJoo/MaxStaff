@@ -33,20 +33,11 @@ public class PunishmentManager {
                     .replace("{reason}", reason);
             target.kickPlayer(MessageUtils.getColoredMessage(kickScreen));
             
-            // Broadcast
-            if (Boolean.parseBoolean(plugin.getMainConfigManager().getBcKick())) { 
-                 String bcMsg = plugin.getMainConfigManager().getBcKick()
-                    .replace("{target}", target.getName())
-                    .replace("{staff}", staff.getName())
-                    .replace("{reason}", reason);
-                 broadcast(bcMsg);
-            } else {
-                String bcMsg = plugin.getMainConfigManager().getBcKick()
-                    .replace("{target}", target.getName())
-                    .replace("{staff}", staff.getName())
-                    .replace("{reason}", reason);
-                 broadcast(bcMsg);
-            }
+            String bcMsg = plugin.getMainConfigManager().getBcKick()
+                .replace("{target}", target.getName())
+                .replace("{staff}", staff.getName())
+                .replace("{reason}", reason);
+            broadcast(bcMsg);
         } else {
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgOffline()));
         }
@@ -58,17 +49,21 @@ public class PunishmentManager {
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
         String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
 
-        Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, reason, expiry, staff.getName());
+        String banScreenTemplate = plugin.getMainConfigManager().getScreenBan()
+                .replace("{staff}", staff.getName())
+                .replace("{reason}", reason)
+                .replace("{duration}", timeDisplay);
+        
+        String finalBanMessage = MessageUtils.getColoredMessage(banScreenTemplate);
+
+        Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, finalBanMessage, expiry, staff.getName());
         
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            String banScreen = plugin.getMainConfigManager().getScreenBan()
-                    .replace("{staff}", staff.getName())
-                    .replace("{reason}", reason)
-                    .replace("{duration}", timeDisplay);
-            target.kickPlayer(MessageUtils.getColoredMessage(banScreen));
+            target.kickPlayer(finalBanMessage);
         }
 
+        //MENSAJE AL SERVER
         String bcMsg = plugin.getMainConfigManager().getBcBan()
                 .replace("{target}", targetName)
                 .replace("{staff}", staff.getName())
