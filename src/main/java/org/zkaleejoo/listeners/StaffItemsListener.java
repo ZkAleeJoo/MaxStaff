@@ -15,6 +15,9 @@ import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.entity.Player;
+
 public class StaffItemsListener implements Listener {
 
     private final MaxStaff plugin;
@@ -112,5 +115,18 @@ public class StaffItemsListener implements Listener {
             event.setCancelled(true);
             plugin.getFreezeManager().toggleFreeze(player, target);
         }   
+    }
+
+    // --- No recoger ítems ---
+    @EventHandler
+    public void onPickup(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        Player player = (Player) event.getEntity();
+
+        if (plugin.getStaffManager().isInStaffMode(player)) {
+            event.setCancelled(true); 
+        
+        }
     }
 }
