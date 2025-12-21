@@ -51,7 +51,13 @@ public class GuiManager {
     }
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
-        String title = MessageUtils.getColoredMessage("&8Sancionar [" + type + "] - " + targetName + " (" + (page + 1) + "/3)");
+        String titleTemplate = plugin.getConfig().getString("sanctions-menu", "&8Sancionar [{type}] - {target} ({page}/{total})");
+        String title = MessageUtils.getColoredMessage(titleTemplate
+                .replace("{type}", type)
+                .replace("{target}", targetName)
+                .replace("{page}", String.valueOf(page + 1))
+                .replace("{total}", "3")); 
+        
         Inventory gui = Bukkit.createInventory(null, 54, title);
         setupBorder(gui);
         
@@ -69,13 +75,16 @@ public class GuiManager {
             
             ItemStack rItem = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
             ItemMeta rMeta = rItem.getItemMeta();
+            
             rMeta.setDisplayName(MessageUtils.getColoredMessage("&c&lSanción #" + (i + 1)));
-            rMeta.setLore(Arrays.asList(MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)), MessageUtils.getColoredMessage("&8ID: " + key)));
+            rMeta.setLore(Arrays.asList(
+                MessageUtils.getColoredMessage("&7Motivo: &f" + plugin.getMainConfigManager().getReasonName(type, key)), 
+                MessageUtils.getColoredMessage("&8ID: " + key)
+            ));
             rMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             rItem.setItemMeta(rMeta);
             gui.setItem(baseSlot, rItem);
 
-            // Tintes Configurables
             List<String> durations = plugin.getMainConfigManager().getReasonDurations(type, key);
             for (int d = 0; d < 4; d++) {
                 String dur = (d < durations.size()) ? durations.get(d) : "perm";
@@ -94,9 +103,9 @@ public class GuiManager {
             }
         }
 
-        gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList("&7Regresar")));
-        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList("&7Página " + page)));
-        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList("&7Página " + (page + 2))));
+        gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar"))));
+        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Página " + page))));
+        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Página " + (page + 2)))));
         player.openInventory(gui);
     }
 

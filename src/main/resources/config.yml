@@ -1,6 +1,7 @@
 general:
   prefix: "&4&lMaxStaff &8» "
 
+# Messages Configuration
 messages:
   no-permission: "&cYou do not have permission to use this command."
   plugin-reload: "&aConfiguration successfully reloaded."
@@ -8,6 +9,12 @@ messages:
   subcommand-specified: "&cPlease specify a subcommand."
   player-click-pls: "&cPlease right-click on a player to sanction them."
   invalid-material: "&c[Error] &fMaterial '&e{path}&f' It doesn't exist. Using: &b{default}"
+  teleport-success: "&aHas sido teletransportado a &e{player}"
+  command-help-title: "&4&lMaxStaff &fLista de Comandos: &b{version}"
+  command-help-list:
+    - "&9> &a/maxstaff reload &7- Recargar configuración"
+    - "&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"
+    - "&9> &a/maxstaff help &7- Ver lista de comandos"
 
 # Staff Mode Configuration
 staff-mode:
@@ -18,6 +25,7 @@ staff-mode:
   cannot-drop: "&cYou cannot drop items while in staff mode."
   cannot-place: "&cYou cannot place blocks while in staff mode."
   
+# Staff Mode Items Configuration
   items:
     punish:
       material: "NETHERITE_HOE"
@@ -60,6 +68,22 @@ gui:
       ban: { name: "&c&lBAN", lore: ["&7Click to select duration"] }
       mute: { name: "&e&lMUTE", lore: ["&7Click to select duration"] }
       kick: { name: "&b&lKICK", lore: ["&7Click to kick now"] }
+  reasons:
+      title: "&8Sancionar [{type}] - {target}"
+      item-name: "&c&lSanción #{number}"
+      item-lore:
+        - "&7Motivo: &f{reason}"
+        - "&8ID: {id}"
+      dye-name: "&eTiempo: &f{duration}"
+      dye-lore:
+        - "&7Tipo: &6{type}"
+        - "&7Motivo: &f{reason}"
+        - "&8ID: {id}"
+        - ""
+        - "&eClick para aplicar sanción"
+      navigation:
+        lore-back: "&7Regresar al menú"
+        lore-page: "&7Ir a la página {page}"
 
 # Menu section
 gui-style:
@@ -78,6 +102,15 @@ gui-style:
     duration-3-material: "ORANGE_DYE"  # long time
     duration-4-material: "RED_DYE"     # Permanent
 
+# Time Units Section
+time-units:
+  permanent: "Permanente"
+  days: "días"
+  hours: "horas"
+  minutes: "minutos"
+  seconds: "segundos"
+
+# Punishments Section
 punishments:
   broadcast: true
   default-reason: "No reason provided"

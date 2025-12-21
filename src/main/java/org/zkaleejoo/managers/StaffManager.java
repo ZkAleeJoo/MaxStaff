@@ -21,6 +21,7 @@ public class StaffManager {
     private final Map<UUID, ItemStack[]> savedArmor = new HashMap<>();
     
     private final Map<UUID, Boolean> staffModePlayers = new HashMap<>();
+    private final java.util.List<UUID> vanishedPlayers = new java.util.ArrayList<>();
 
     public StaffManager(MaxStaff plugin) {
         this.plugin = plugin;
@@ -35,6 +36,8 @@ public class StaffManager {
     }
 
     public void enableStaffMode(Player player) {
+        MainConfigManager config = plugin.getMainConfigManager(); //
+        
         savedInventory.put(player.getUniqueId(), player.getInventory().getContents());
         savedArmor.put(player.getUniqueId(), player.getInventory().getArmorContents());
         
@@ -47,11 +50,13 @@ public class StaffManager {
         giveStaffItems(player);
         
         staffModePlayers.put(player.getUniqueId(), true);
-        player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&aStaff Mode Activated. Inventory saved."));
         
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
     }
 
     public void disableStaffMode(Player player) {
+        MainConfigManager config = plugin.getMainConfigManager(); //
         player.getInventory().clear();
         
         if (savedInventory.containsKey(player.getUniqueId())) {
@@ -68,7 +73,9 @@ public class StaffManager {
         player.setInvulnerable(false);
         
         staffModePlayers.remove(player.getUniqueId());
-        player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cStaff Mode Disabled. Inventory Restored."));
+        
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventoryRestored()));
     }
 
     public boolean isInStaffMode(Player player) {
@@ -76,9 +83,7 @@ public class StaffManager {
     }
 
     private void giveStaffItems(Player player) {
-
         MainConfigManager config = plugin.getMainConfigManager();
-
         player.getInventory().setItem(0, createItem(config.getMatPunish(), config.getItemNamePunish()));
         player.getInventory().setItem(1, createItem(config.getMatFreeze(), config.getItemNameFreeze()));
         player.getInventory().setItem(4, createItem(config.getMatPlayers(), config.getItemNamePlayers()));
@@ -98,7 +103,6 @@ public class StaffManager {
         return item;
     }
 
-    //LOGICA DEL VANISH
     public void toggleVanish(Player player) {
         if (!staffModePlayers.containsKey(player.getUniqueId())) return;
 
@@ -111,17 +115,14 @@ public class StaffManager {
         }
     }
 
-    private final java.util.List<UUID> vanishedPlayers = new java.util.ArrayList<>();
-
     public void setVanish(Player player, boolean enable) {
         if (enable) {
             vanishedPlayers.add(player.getUniqueId());
             for (Player target : Bukkit.getOnlinePlayers()) {
-                if (!target.hasPermission("maxstaff.see.vanish")) {  //PERMISO
+                if (!target.hasPermission("maxstaff.see.vanish")) {
                     target.hidePlayer(plugin, player);
                 }
             }
-
         } else {
             vanishedPlayers.remove(player.getUniqueId());
             for (Player target : Bukkit.getOnlinePlayers()) {
@@ -138,7 +139,6 @@ public class StaffManager {
         return vanishedPlayers;
     }
 
-
     public void disableAllStaff() {
         for (UUID uuid : new java.util.ArrayList<>(staffModePlayers.keySet())) {
             Player player = Bukkit.getPlayer(uuid);
@@ -147,5 +147,4 @@ public class StaffManager {
             }
         }
     }
-
 }
