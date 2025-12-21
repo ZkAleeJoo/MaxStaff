@@ -1,7 +1,6 @@
 package org.zkaleejoo.config;
 
 import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,81 +11,40 @@ public class MainConfigManager {
     
     private CustomConfig configFile;
     private MaxStaff plugin;
-    private String prefix;
-    private String noPermission;
-    private String pluginReload;
-    private String subcommandInvalid;
-    private String subcommandSpecified;
-    private String staffModeEnabled;
-    private String staffModeDisabled;
-    private String inventorySaved;
-    private String inventoryRestored;
-    private String cannotDrop;  
-    private String cannotPlace; 
-    private String msgInspect;
-    private String msgVanishOn;
-    private String msgVanishOff;
-    private String msgPunish;
-    private String msgPlayers;
-    private String msgFreezeStaff;
-    private String msgUnfreezeStaff;
-    private java.util.List<String> msgTargetFrozen; 
+    
+    // General & Messages
+    private String prefix, noPermission, pluginReload, subcommandInvalid, subcommandSpecified;
+    private String msgConsole, noReason, playerMuted, msgTeleport, helpTitle, msgUsage;
+    private List<String> helpLines;
+    private String msgOffline, msgNotMuted, msgUnbanSuccess, msgUnmuteSuccess, msgInvalidMaterial;
+
+    // Staff Mode
+    private String staffModeEnabled, staffModeDisabled, inventorySaved, inventoryRestored;
+    private String cannotDrop, cannotPlace, msgInspect, msgVanishOn, msgVanishOff;
+    private String msgPunish, msgPlayers, msgFreezeStaff, msgUnfreezeStaff;
+    private List<String> msgTargetFrozen;
     private String msgTargetUnfrozen;
-    private String msgConsole;
-    private String noReason;
-    private String playerMuted;
-    private String TitleOnlinePlayers;
-    private String playerNoOnline;
-    private String tpPlayer;
-    private String sanctionMenuTitle;
-    private String kickedMessage;
-    private String TitleDuration;
-    private String SactionsMenu;
-    private String playerClickPls;
-    private String guiPlayersTitle;
-    private String guiHeadLore;
-    private String guiSanctionsTitle;
+    private String itemNamePunish, itemNameFreeze, itemNamePlayers, itemNameInspect, itemNameVanish;
+    private Material matPunish, matFreeze, matPlayers, matInspect, matVanish;
+
+    // GUI General
+    private String guiPlayersTitle, guiHeadLore, guiSanctionsTitle;
     private String guiItemBanName; private List<String> guiItemBanLore;
     private String guiItemMuteName; private List<String> guiItemMuteLore;
     private String guiItemKickName; private List<String> guiItemKickLore;
-    private String guiDurationTitle;
-    private String guiTime1hName; private String guiTime1hLore;
-    private String guiTime1dName; private String guiTime1dLore;
-    private String guiTime7dName; private String guiTime7dLore;
-    private String guiTimePermName; private String guiTimePermLore;
-    private String guiBackName;
-    private String defaultReason;
-    private String bcBan;
-    private String bcMute;
-    private String bcKick;
-    private String screenBan;
-    private String screenKick;
-    private String screenMute;
-    private String screenUnmute;
-    private String msgMutedChat;
-    private String msgOffline;
-    private String msgNotMuted;
-    private String msgUnbanSuccess;
-    private String msgUnmuteSuccess;
-    private String msgUsage;
-    private String itemNamePunish;
-    private String itemNameFreeze;
-    private String itemNamePlayers;
-    private String itemNameInspect;
-    private String itemNameVanish;
-    private Material matPunish;
-    private Material matFreeze;
-    private Material matPlayers;
-    private Material matInspect;
-    private Material matVanish;
-    private boolean isBroadcastEnabled;
-    private String msgInvalidMaterial;
     private Material borderMaterial;
-    private String navBackName;
-    private String navNextName;
-    private String navPrevName;
+    
+    // GUI Reasons & Navigation
+    private String guiReasonsTitle, guiReasonsItemName, guiReasonsDyeName, guiNavLoreBack, guiNavLorePage;
+    private List<String> guiReasonsItemLore, guiReasonsDyeLore;
+    private String navBackName, navNextName, navPrevName;
     private Material navBackMat, navNextMat, navPrevMat;
     private Material[] durationDyes = new Material[4];
+
+    // Punishments & Time
+    private boolean isBroadcastEnabled;
+    private String bcBan, bcMute, bcKick, screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
+    private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -98,11 +56,19 @@ public class MainConfigManager {
     public void loadConfig(){
         FileConfiguration config = configFile.getConfig();
         
-        prefix = config.getString("general.prefix");
+        prefix = config.getString("general.prefix", "&4&lMaxStaff &8» ");
         noPermission = config.getString("messages.no-permission");
         pluginReload = config.getString("messages.plugin-reload");
         subcommandInvalid = config.getString("messages.subcommand-invalid");
         subcommandSpecified = config.getString("messages.subcommand-specified");
+        msgConsole = config.getString("messages.message-console", "&cOnly players!");
+        noReason = config.getString("messages.no-reason", "No reason");
+        playerMuted = config.getString("messages.player-muted");
+        msgTeleport = config.getString("messages.teleport-success");
+        helpTitle = config.getString("messages.command-help-title");
+        helpLines = config.getStringList("messages.command-help-list");
+        msgInvalidMaterial = config.getString("messages.invalid-material", "&cInvalid material: {path}");
+
         staffModeEnabled = config.getString("staff-mode.enabled");
         staffModeDisabled = config.getString("staff-mode.disabled");
         inventorySaved = config.getString("staff-mode.inventory-saved");
@@ -118,17 +84,17 @@ public class MainConfigManager {
         msgUnfreezeStaff = config.getString("staff-mode.items.freeze.message-unfreeze");
         msgTargetFrozen = config.getStringList("staff-mode.items.freeze.target-frozen");
         msgTargetUnfrozen = config.getString("staff-mode.items.freeze.target-unfrozen");
-        msgConsole = config.getString("messages.message-console");
-        noReason = config.getString("messages.no-reason");
-        playerMuted = config.getString("messages.player-muted");
-        TitleOnlinePlayers = config.getString("online-players.title");
-        playerNoOnline = config.getString("online-players.player-no-online");
-        tpPlayer = config.getString("online-players.tp-player");
-        sanctionMenuTitle = config.getString("sanctions-players.title");
-        kickedMessage = config.getString("sanctions-players.kicked-message");
-        TitleDuration = config.getString("title-duration");
-        SactionsMenu = config.getString("sanctions-menu");
-        playerClickPls = config.getString("messages.player-click-pls");
+        itemNamePunish = config.getString("staff-mode.items.punish.name");
+        itemNameFreeze = config.getString("staff-mode.items.freeze.name");
+        itemNamePlayers = config.getString("staff-mode.items.players.name");
+        itemNameInspect = config.getString("staff-mode.items.inspect.name");
+        itemNameVanish = config.getString("staff-mode.items.vanish.name");
+        matPunish = loadMaterial(config.getString("staff-mode.items.punish.material"), Material.NETHERITE_HOE);
+        matFreeze = loadMaterial(config.getString("staff-mode.items.freeze.material"), Material.PACKED_ICE);
+        matPlayers = loadMaterial(config.getString("staff-mode.items.players.material"), Material.CLOCK);
+        matInspect = loadMaterial(config.getString("staff-mode.items.inspect.material"), Material.CHEST);
+        matVanish = loadMaterial(config.getString("staff-mode.items.vanish.material"), Material.NETHER_STAR);
+
         guiPlayersTitle = config.getString("gui.players.title");
         guiHeadLore = config.getString("gui.players.head-lore");
         guiSanctionsTitle = config.getString("gui.sanctions.title");
@@ -138,17 +104,34 @@ public class MainConfigManager {
         guiItemMuteLore = config.getStringList("gui.sanctions.items.mute.lore");
         guiItemKickName = config.getString("gui.sanctions.items.kick.name");
         guiItemKickLore = config.getStringList("gui.sanctions.items.kick.lore");
-        guiDurationTitle = config.getString("gui.duration.title");
-        guiTime1hName = config.getString("gui.duration.items.1h.name");
-        guiTime1hLore = config.getString("gui.duration.items.1h.lore");
-        guiTime1dName = config.getString("gui.duration.items.1d.name");
-        guiTime1dLore = config.getString("gui.duration.items.1d.lore");
-        guiTime7dName = config.getString("gui.duration.items.7d.name");
-        guiTime7dLore = config.getString("gui.duration.items.7d.lore");
-        guiTimePermName = config.getString("gui.duration.items.perm.name");
-        guiTimePermLore = config.getString("gui.duration.items.perm.lore");
-        guiBackName = config.getString("gui.duration.items.back");
-        defaultReason = config.getString("punishments.default-reason");
+        
+        guiReasonsTitle = config.getString("gui.reasons.title");
+        guiReasonsItemName = config.getString("gui.reasons.item-name");
+        guiReasonsItemLore = config.getStringList("gui.reasons.item-lore");
+        guiReasonsDyeName = config.getString("gui.reasons.dye-name");
+        guiReasonsDyeLore = config.getStringList("gui.reasons.dye-lore");
+        guiNavLoreBack = config.getString("gui.reasons.navigation.lore-back");
+        guiNavLorePage = config.getString("gui.reasons.navigation.lore-page");
+        
+        borderMaterial = loadMaterial(config.getString("gui-style.border-material"), Material.BLACK_STAINED_GLASS_PANE);
+        navBackName = config.getString("gui-style.navigation.back-name");
+        navNextName = config.getString("gui-style.navigation.next-name");
+        navPrevName = config.getString("gui-style.navigation.prev-name");
+        navBackMat = loadMaterial(config.getString("gui-style.navigation.back-material"), Material.BOOK);
+        navNextMat = loadMaterial(config.getString("gui-style.navigation.next-material"), Material.ARROW);
+        navPrevMat = loadMaterial(config.getString("gui-style.navigation.prev-material"), Material.ARROW);
+        durationDyes[0] = loadMaterial(config.getString("gui-style.unified-menu.duration-1-material"), Material.LIME_DYE);
+        durationDyes[1] = loadMaterial(config.getString("gui-style.unified-menu.duration-2-material"), Material.YELLOW_DYE);
+        durationDyes[2] = loadMaterial(config.getString("gui-style.unified-menu.duration-3-material"), Material.ORANGE_DYE);
+        durationDyes[3] = loadMaterial(config.getString("gui-style.unified-menu.duration-4-material"), Material.RED_DYE);
+
+        timeUnitPermanent = config.getString("time-units.permanent", "Permanent");
+        timeUnitDays = config.getString("time-units.days", "days");
+        timeUnitHours = config.getString("time-units.hours", "hours");
+        timeUnitMinutes = config.getString("time-units.minutes", "minutes");
+        timeUnitSeconds = config.getString("time-units.seconds", "seconds");
+
+        isBroadcastEnabled = config.getBoolean("punishments.broadcast");
         bcBan = config.getString("punishments.broadcasts.ban");
         bcMute = config.getString("punishments.broadcasts.mute");
         bcKick = config.getString("punishments.broadcasts.kick");
@@ -162,114 +145,43 @@ public class MainConfigManager {
         msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
         msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
         msgUsage = config.getString("punishments.feedback.usage");
-        isBroadcastEnabled = config.getBoolean("punishments.broadcast");
-        itemNamePunish = config.getString("staff-mode.items.punish.name");
-        itemNameFreeze = config.getString("staff-mode.items.freeze.name");
-        itemNamePlayers = config.getString("staff-mode.items.players.name");
-        itemNameInspect = config.getString("staff-mode.items.inspect.name");
-        itemNameVanish = config.getString("staff-mode.items.vanish.name");
-        matPunish = loadMaterial(config.getString("staff-mode.items.punish.material"), Material.NETHERITE_HOE);
-        matFreeze = loadMaterial(config.getString("staff-mode.items.freeze.material"), Material.PACKED_ICE);
-        matPlayers = loadMaterial(config.getString("staff-mode.items.players.material"), Material.CLOCK);
-        matInspect = loadMaterial(config.getString("staff-mode.items.inspect.material"), Material.CHEST);
-        matVanish = loadMaterial(config.getString("staff-mode.items.vanish.material"), Material.NETHER_STAR);
-        msgInvalidMaterial = config.getString("messages.invalid-material", "&cInvalid material: {path}. Using {default}");
-        this.borderMaterial = loadMaterial(config.getString("gui-style.border-material"), Material.BLACK_STAINED_GLASS_PANE);
-        this.navBackName = config.getString("gui-style.navigation.back-name", "&c« Volver");
-        this.navNextName = config.getString("gui-style.navigation.next-name", "&aPágina Siguiente »");
-        this.navPrevName = config.getString("gui-style.navigation.prev-name", "&e« Página Anterior");
-
-        this.navBackMat = loadMaterial(config.getString("gui-style.navigation.back-material"), Material.BOOK);
-        this.navNextMat = loadMaterial(config.getString("gui-style.navigation.next-material"), Material.ARROW);
-        this.navPrevMat = loadMaterial(config.getString("gui-style.navigation.prev-material"), Material.ARROW);
-        durationDyes[0] = loadMaterial(config.getString("gui-style.unified-menu.duration-1-material"), Material.LIME_DYE);
-        durationDyes[1] = loadMaterial(config.getString("gui-style.unified-menu.duration-2-material"), Material.YELLOW_DYE);
-        durationDyes[2] = loadMaterial(config.getString("gui-style.unified-menu.duration-3-material"), Material.ORANGE_DYE);
-        durationDyes[3] = loadMaterial(config.getString("gui-style.unified-menu.duration-4-material"), Material.RED_DYE);
-
-    }
-
-    public void reloadConfig(){
-        configFile.reloadConfig();
-        loadConfig();
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
-    if (materialName == null) return defaultMat;
-    
-    Material matched = Material.matchMaterial(materialName);
-    
-    if (matched == null) {
-        String finalMsg = msgInvalidMaterial
-            .replace("{path}", materialName)
-            .replace("{default}", defaultMat.name());
-        
-        plugin.getServer().getConsoleSender().sendMessage(
-            MessageUtils.getColoredMessage(prefix + finalMsg)
-        );
-        
-        return defaultMat;
-    }
-    return matched;
+        if (materialName == null) return defaultMat;
+        Material matched = Material.matchMaterial(materialName);
+        if (matched == null) {
+            plugin.getServer().getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + msgInvalidMaterial.replace("{path}", materialName).replace("{default}", defaultMat.name())));
+            return defaultMat;
+        }
+        return matched;
     }
 
-    public ConfigurationSection getReasons(String type) {
-    return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
-    }
+    public void reloadConfig(){ configFile.reloadConfig(); loadConfig(); }
 
-    public String getReasonName(String type, String reasonId) {
-        return configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".name");
-    }
-
-    public List<String> getReasonDurations(String type, String reasonId) {
-        return configFile.getConfig().getStringList("punishment-reasons." + type + "." + reasonId + ".durations");
-    }
-
-    public Material getReasonMaterial(String type, String reasonId) {
-        String matName = configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".material");
-        return Material.matchMaterial(matName != null ? matName : "PAPER");
-    }
-
-    public Material getDurationDye(int index) { 
-        return durationDyes[index]; 
-    }
-    
+    // --- GETTERS ---
     public String getPrefix() { return prefix; }
     public String getNoPermission() { return noPermission; }
     public String getPluginReload() { return pluginReload; }
     public String getSubcommandInvalid() { return subcommandInvalid; }
-    public String getSubcommandSpecified() { return subcommandSpecified; }
-
+    public String getMsgTeleport() { return msgTeleport; }
+    public String getHelpTitle() { return helpTitle; }
+    public List<String> getHelpLines() { return helpLines; }
     public String getStaffModeEnabled() { return staffModeEnabled; }
     public String getStaffModeDisabled() { return staffModeDisabled; }
     public String getInventorySaved() { return inventorySaved; }
     public String getInventoryRestored() { return inventoryRestored; }
     public String getCannotDrop() { return cannotDrop; }
     public String getCannotPlace() { return cannotPlace; }
-    
     public String getMsgInspect() { return msgInspect; }
     public String getMsgVanishOn() { return msgVanishOn; }
     public String getMsgVanishOff() { return msgVanishOff; }
     public String getMsgPunish() { return msgPunish; }
     public String getMsgPlayers() { return msgPlayers; }
-
     public String getMsgFreezeStaff() { return msgFreezeStaff; }
     public String getMsgUnfreezeStaff() { return msgUnfreezeStaff; }
-    public java.util.List<String> getMsgTargetFrozen() { return msgTargetFrozen; }
+    public List<String> getMsgTargetFrozen() { return msgTargetFrozen; }
     public String getMsgTargetUnfrozen() { return msgTargetUnfrozen; }
-
-    public String getMsgConsole() { return msgConsole; }
-    public String getNoReason() { return noReason; }
-    public String getPlayerMuted() { return playerMuted; }
-    public String getTitleOnlinePlayers() { return TitleOnlinePlayers; }
-    public String getPlayerNoOnline() { return playerNoOnline; }
-    public String getTpPlayer() { return tpPlayer; }
-    public String getSanctionMenuTitle() { return sanctionMenuTitle; }
-    public String getKickedMessage() { return kickedMessage; }
-    public String getTitleDuration() { return TitleDuration; }
-    public String getSactionsMenu() { return SactionsMenu; }
-    public String getPlayerClickPls() { return playerClickPls; }
-
     public String getGuiPlayersTitle() { return guiPlayersTitle; }
     public String getGuiHeadLore() { return guiHeadLore; }
     public String getGuiSanctionsTitle() { return guiSanctionsTitle; }
@@ -279,15 +191,18 @@ public class MainConfigManager {
     public List<String> getGuiItemMuteLore() { return guiItemMuteLore; }
     public String getGuiItemKickName() { return guiItemKickName; }
     public List<String> getGuiItemKickLore() { return guiItemKickLore; }
-    
-    public String getGuiDurationTitle() { return guiDurationTitle; }
-    public String getGuiTime1hName() { return guiTime1hName; } public String getGuiTime1hLore() { return guiTime1hLore; }
-    public String getGuiTime1dName() { return guiTime1dName; } public String getGuiTime1dLore() { return guiTime1dLore; }
-    public String getGuiTime7dName() { return guiTime7dName; } public String getGuiTime7dLore() { return guiTime7dLore; }
-    public String getGuiTimePermName() { return guiTimePermName; } public String getGuiTimePermLore() { return guiTimePermLore; }
-    public String getGuiBackName() { return guiBackName; }
-
-    public String getDefaultReason() { return defaultReason; }
+    public String getGuiReasonsTitle() { return guiReasonsTitle; }
+    public String getGuiReasonsItemName() { return guiReasonsItemName; }
+    public List<String> getGuiReasonsItemLore() { return guiReasonsItemLore; }
+    public String getGuiReasonsDyeName() { return guiReasonsDyeName; }
+    public List<String> getGuiReasonsDyeLore() { return guiReasonsDyeLore; }
+    public String getGuiNavLoreBack() { return guiNavLoreBack; }
+    public String getGuiNavLorePage() { return guiNavLorePage; }
+    public String getTimeUnitPermanent() { return timeUnitPermanent; }
+    public String getTimeUnitDays() { return timeUnitDays; }
+    public String getTimeUnitHours() { return timeUnitHours; }
+    public String getTimeUnitMinutes() { return timeUnitMinutes; }
+    public String getTimeUnitSeconds() { return timeUnitSeconds; }
     public String getBcBan() { return bcBan; }
     public String getBcMute() { return bcMute; }
     public String getBcKick() { return bcKick; }
@@ -301,28 +216,40 @@ public class MainConfigManager {
     public String getMsgUnbanSuccess() { return msgUnbanSuccess; }
     public String getMsgUnmuteSuccess() { return msgUnmuteSuccess; }
     public String getMsgUsage() { return msgUsage; }
-    
     public boolean isBroadcastEnabled() { return isBroadcastEnabled; }
-
-    public String getItemNamePunish() { return itemNamePunish; }
-    public String getItemNameFreeze() { return itemNameFreeze; }
-    public String getItemNamePlayers() { return itemNamePlayers; }
-    public String getItemNameInspect() { return itemNameInspect; }
-    public String getItemNameVanish() { return itemNameVanish; }
-
+    public String getNoReason() { return noReason; }
+    public String getPlayerMuted() { return playerMuted; }
+    public String getMsgConsole() { return msgConsole; }
     public Material getMatPunish() { return matPunish; }
     public Material getMatFreeze() { return matFreeze; }
     public Material getMatPlayers() { return matPlayers; }
     public Material getMatInspect() { return matInspect; }
     public Material getMatVanish() { return matVanish; }
-
+    public String getItemNamePunish() { return itemNamePunish; }
+    public String getItemNameFreeze() { return itemNameFreeze; }
+    public String getItemNamePlayers() { return itemNamePlayers; }
+    public String getItemNameInspect() { return itemNameInspect; }
+    public String getItemNameVanish() { return itemNameVanish; }
     public Material getBorderMaterial() { return borderMaterial; }
     public String getNavBackName() { return navBackName; }
     public String getNavNextName() { return navNextName; }
     public String getNavPrevName() { return navPrevName; }
-
     public Material getNavBackMat() { return navBackMat; }
     public Material getNavNextMat() { return navNextMat; }
     public Material getNavPrevMat() { return navPrevMat; }
+    public Material getDurationDye(int index) { return durationDyes[index]; }
 
+    public ConfigurationSection getReasons(String type) {
+        return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
+    }
+    public String getReasonName(String type, String reasonId) {
+        return configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".name");
+    }
+    public List<String> getReasonDurations(String type, String reasonId) {
+        return configFile.getConfig().getStringList("punishment-reasons." + type + "." + reasonId + ".durations");
+    }
+    public Material getReasonMaterial(String type, String reasonId) {
+        String matName = configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".material");
+        return Material.matchMaterial(matName != null ? matName : "PAPER");
+    }
 }
