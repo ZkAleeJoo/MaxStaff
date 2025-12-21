@@ -50,15 +50,12 @@ public class GuiListener implements Listener {
             String target = title.replace(sanctionsTitle, "").trim();
             if (item.getType() == Material.IRON_SWORD) plugin.getGuiManager().openReasonsMenu(player, target, "BAN", 0);
             else if (item.getType() == Material.PAPER) plugin.getGuiManager().openReasonsMenu(player, target, "MUTE", 0);
-            else if (item.getType() == Material.FEATHER) {
-                plugin.getPunishmentManager().kickPlayer(player, target, plugin.getMainConfigManager().getNoReason());
-                player.closeInventory();
-            }
+            else if (item.getType() == Material.FEATHER) plugin.getGuiManager().openReasonsMenu(player, target, "KICK", 0);
         }
 
         if (title.contains("Sancionar")) { 
             event.setCancelled(true);
-            String type = title.contains("[BAN]") ? "BAN" : "MUTE";
+            String type = title.contains("[BAN]") ? "BAN" : (title.contains("[MUTE]") ? "MUTE" : "KICK");
             String target = title.split(" - ")[1].split(" \\(")[0];
             int page = Integer.parseInt(title.split("\\(")[1].split("/")[0]) - 1;
 
@@ -71,16 +68,23 @@ public class GuiListener implements Listener {
             else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
-            else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
+                else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
                 String reasonId = "", duration = "";
                 for (String line : item.getItemMeta().getLore()) {
                     String clean = ChatColor.stripColor(line);
                     if (clean.startsWith("ID: ")) reasonId = clean.replace("ID: ", "");
                     if (clean.startsWith("TimeValue: ")) duration = clean.replace("TimeValue: ", "");
                 }
+                
                 String name = plugin.getMainConfigManager().getReasonName(type, reasonId);
-                if (type.equals("BAN")) plugin.getPunishmentManager().banPlayer(player, target, name, duration);
-                else plugin.getPunishmentManager().mutePlayer(player, target, name, duration);
+                
+                if (type.equals("BAN")) {
+                    plugin.getPunishmentManager().banPlayer(player, target, name, duration);
+                } else if (type.equals("MUTE")) {
+                    plugin.getPunishmentManager().mutePlayer(player, target, name, duration);
+                } else if (type.equals("KICK")) {
+                    plugin.getPunishmentManager().kickPlayer(player, target, name);
+                }
                 player.closeInventory();
             }
         }
