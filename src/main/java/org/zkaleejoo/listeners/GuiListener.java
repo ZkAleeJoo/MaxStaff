@@ -27,7 +27,6 @@ public class GuiListener implements Listener {
         ItemStack item = event.getCurrentItem();
         String itemName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 
-        // Cancelar si es el material de borde
         if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
             event.setCancelled(true);
             return;
@@ -47,7 +46,7 @@ public class GuiListener implements Listener {
             }
         }
 
-        // 2. MENÚ DE SELECCIÓN DE TIPO (BAN/MUTE/KICK)
+        // 2. MENÚ DE SELECCIÓN DE TIPO
         else if (title.startsWith("Punish:")) {
             event.setCancelled(true);
             String targetName = title.split(": ")[1];
@@ -62,45 +61,56 @@ public class GuiListener implements Listener {
             }
         }
 
-        // 3. MENÚ DE MOTIVOS
+        // 3. MENÚ DE MOTIVOS Y TIEMPOS UNIFICADO
         else if (title.startsWith("Sancionar -")) {
             event.setCancelled(true);
             String targetName = title.split(" - ")[1].split(" \\(")[0];
-            String type = title.contains("(BAN)") ? "BAN" : "MUTE";
+            int currentPage = Integer.parseInt(title.split("\\(")[1].split("/")[0]) - 1;
 
-            if (itemName.contains("Volver")) {
+            if (item.getType() == Material.BOOK) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
-            } else if (itemName.contains("Siguiente")) {
-            } else if (item.getItemMeta().hasLore()) {
-                String reasonId = ChatColor.stripColor(item.getItemMeta().getLore().get(0)).replace("ID: ", "");
-                plugin.getGuiManager().openReasonDurationMenu(player, targetName, type, reasonId);
-            }
-        }
-
-        // 4. MENÚ DE DURACIÓN FINAL
-        else if (title.startsWith("Tiempo:")) {
-            event.setCancelled(true);
-            String parts = title.replace("Tiempo: ", "");
-            String type = parts.split(" - ")[0];
-            String reasonId = parts.split(" - ")[1].split(" : ")[0];
-            String targetName = parts.split(" : ")[1];
-
-            if (itemName.contains("Volver")) {
-                plugin.getGuiManager().openReasonsMenu(player, targetName, type, 0);
                 return;
             }
 
-            if (item.getType() == Material.CLOCK) {
-                String duration = itemName.replace("Duración: ", "").trim();
+            if (item.getType() == Material.ARROW) {
+                String type = getPunishTypeFromLore(item);
+                if (itemName.contains("Siguiente")) {
+                    plugin.getGuiManager().openReasonsMenu(player, targetName, type, currentPage + 1);
+                } else if (itemName.contains("Anterior")) {
+                    plugin.getGuiManager().openReasonsMenu(player, targetName, type, currentPage - 1);
+                }
+                return;
+            }
+
+            if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
+                String type = "";
+                String reasonId = "";
+                String duration = "";
+                
+                for (String line : item.getItemMeta().getLore()) {
+                    String cleanLine = ChatColor.stripColor(line);
+                    if (cleanLine.startsWith("Tipo: ")) type = cleanLine.replace("Tipo: ", "");
+                    if (cleanLine.startsWith("ID: ")) reasonId = cleanLine.replace("ID: ", "");
+                    if (cleanLine.startsWith("TimeValue: ")) duration = cleanLine.replace("TimeValue: ", "");
+                }
+
                 String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
 
-                if (type.equals("BAN")) {
+                if (type.equalsIgnoreCase("BAN")) {
                     plugin.getPunishmentManager().banPlayer(player, targetName, reasonName, duration);
-                } else {
+                } else if (type.equalsIgnoreCase("MUTE")) {
                     plugin.getPunishmentManager().mutePlayer(player, targetName, reasonName, duration);
                 }
                 player.closeInventory();
             }
         }
+    }
+
+    private String getPunishTypeFromLore(ItemStack item) {
+        if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) return "BAN";
+        for (String line : item.getItemMeta().getLore()) {
+            if (ChatColor.stripColor(line).contains("Tipo: MUTE")) return "MUTE";
+        }
+        return "BAN";
     }
 }
