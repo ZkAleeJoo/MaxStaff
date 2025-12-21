@@ -85,6 +85,8 @@ public class MainConfigManager {
     private String navBackName;
     private String navNextName;
     private String navPrevName;
+    private Material navBackMat, navNextMat, navPrevMat;
+    private Material[] durationDyes = new Material[4];
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -177,6 +179,14 @@ public class MainConfigManager {
         this.navNextName = config.getString("gui-style.navigation.next-name", "&aPágina Siguiente »");
         this.navPrevName = config.getString("gui-style.navigation.prev-name", "&e« Página Anterior");
 
+        this.navBackMat = loadMaterial(config.getString("gui-style.navigation.back-material"), Material.BOOK);
+        this.navNextMat = loadMaterial(config.getString("gui-style.navigation.next-material"), Material.ARROW);
+        this.navPrevMat = loadMaterial(config.getString("gui-style.navigation.prev-material"), Material.ARROW);
+        durationDyes[0] = loadMaterial(config.getString("gui-style.unified-menu.duration-1-material"), Material.LIME_DYE);
+        durationDyes[1] = loadMaterial(config.getString("gui-style.unified-menu.duration-2-material"), Material.YELLOW_DYE);
+        durationDyes[2] = loadMaterial(config.getString("gui-style.unified-menu.duration-3-material"), Material.ORANGE_DYE);
+        durationDyes[3] = loadMaterial(config.getString("gui-style.unified-menu.duration-4-material"), Material.RED_DYE);
+
     }
 
     public void reloadConfig(){
@@ -218,6 +228,10 @@ public class MainConfigManager {
     public Material getReasonMaterial(String type, String reasonId) {
         String matName = configFile.getConfig().getString("punishment-reasons." + type + "." + reasonId + ".material");
         return Material.matchMaterial(matName != null ? matName : "PAPER");
+    }
+
+    public Material getDurationDye(int index) { 
+        return durationDyes[index]; 
     }
     
     public String getPrefix() { return prefix; }
@@ -306,5 +320,9 @@ public class MainConfigManager {
     public String getNavBackName() { return navBackName; }
     public String getNavNextName() { return navNextName; }
     public String getNavPrevName() { return navPrevName; }
+
+    public Material getNavBackMat() { return navBackMat; }
+    public Material getNavNextMat() { return navNextMat; }
+    public Material getNavPrevMat() { return navPrevMat; }
 
 }
