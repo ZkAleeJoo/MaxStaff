@@ -35,6 +35,12 @@ public class MainConfigManager {
     private String guiItemKickName; private List<String> guiItemKickLore;
     private Material borderMaterial;
     
+    // GUI Info
+    private String guiInfoTitle;
+    private Material guiInfoStatsMat, guiInfoHistoryMat, guiInfoActionMat;
+    private String guiInfoStatsName, guiInfoHistoryName, guiInfoActionName;
+    private List<String> guiInfoStatsLore, guiInfoHistoryLore, guiInfoActionLore;
+
     // GUI Reasons & Navigation
     private String guiReasonsTitle, guiReasonsItemName, guiReasonsDyeName, guiNavLoreBack, guiNavLorePage;
     private List<String> guiReasonsItemLore, guiReasonsDyeLore;
@@ -106,6 +112,17 @@ public class MainConfigManager {
         guiItemKickName = config.getString("gui.sanctions.items.kick.name");
         guiItemKickLore = config.getStringList("gui.sanctions.items.kick.lore");
         
+        guiInfoTitle = config.getString("gui.info.title", "&8Information: &0{target}");
+        guiInfoStatsMat = loadMaterial(config.getString("gui.info.items.stats.material"), Material.BOOK);
+        guiInfoStatsName = config.getString("gui.info.items.stats.name");
+        guiInfoStatsLore = config.getStringList("gui.info.items.stats.lore");
+        guiInfoHistoryMat = loadMaterial(config.getString("gui.info.items.history.material"), Material.PAPER);
+        guiInfoHistoryName = config.getString("gui.info.items.history.name");
+        guiInfoHistoryLore = config.getStringList("gui.info.items.history.lore");
+        guiInfoActionMat = loadMaterial(config.getString("gui.info.items.action_punish.material"), Material.NETHERITE_SWORD);
+        guiInfoActionName = config.getString("gui.info.items.action_punish.name");
+        guiInfoActionLore = config.getStringList("gui.info.items.action_punish.lore");
+
         guiReasonsTitle = config.getString("gui.reasons.title");
         guiReasonsItemName = config.getString("gui.reasons.item-name");
         guiReasonsItemLore = config.getStringList("gui.reasons.item-lore");
@@ -241,6 +258,17 @@ public class MainConfigManager {
     public Material getNavPrevMat() { return navPrevMat; }
     public Material getDurationDye(int index) { return durationDyes[index]; }
     public String getPlayerClickPls() {return playerClickPls;}
+
+    public String getGuiInfoTitle() { return guiInfoTitle; }
+    public Material getGuiInfoStatsMat() { return guiInfoStatsMat; }
+    public String getGuiInfoStatsName() { return guiInfoStatsName; }
+    public List<String> getGuiInfoStatsLore() { return guiInfoStatsLore; }
+    public Material getGuiInfoHistoryMat() { return guiInfoHistoryMat; }
+    public String getGuiInfoHistoryName() { return guiInfoHistoryName; }
+    public List<String> getGuiInfoHistoryLore() { return guiInfoHistoryLore; }
+    public Material getGuiInfoActionMat() { return guiInfoActionMat; }
+    public String getGuiInfoActionName() { return guiInfoActionName; }
+    public List<String> getGuiInfoActionLore() { return guiInfoActionLore; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);

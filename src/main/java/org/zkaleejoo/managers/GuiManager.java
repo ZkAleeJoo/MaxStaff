@@ -11,11 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuiManager {
 
@@ -38,11 +40,11 @@ public class GuiManager {
     }
 
     public void openUserInfoMenu(Player staff, Player target) {
-        String title = MessageUtils.getColoredMessage("&8Información: &0" + target.getName());
+        MainConfigManager config = plugin.getMainConfigManager();
+        String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
         Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
 
-        //ESTADISTICAS
         long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
         long hours = ticks / 72000;
         long minutes = (ticks % 72000) / 1200;
@@ -51,22 +53,24 @@ public class GuiManager {
         int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
         int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
         int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
+        int total = bans + mutes + kicks;
 
-        ItemStack stats = createItem(Material.BOOK, "&b&lEstadísticas", Arrays.asList(
-            "&7Nick: &f" + target.getName(),
-            "&7UUID: &8" + target.getUniqueId(),
-            "&7Tiempo Jugado: &f" + playtime,
-            "",
-            "&7Sanciones Totales: &c" + (bans + mutes + kicks)
-        ));
+        List<String> statsLore = config.getGuiInfoStatsLore().stream()
+                .map(line -> line.replace("{target}", target.getName())
+                                 .replace("{uuid}", target.getUniqueId().toString())
+                                 .replace("{playtime}", playtime)
+                                 .replace("{total_punishments}", String.valueOf(total)))
+                .collect(Collectors.toList());
+        ItemStack stats = createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore);
 
-        ItemStack history = createItem(Material.PAPER, "&e&lHistorial", Arrays.asList(
-            "&7Baneos: &f" + bans,
-            "&7Mutes: &f" + mutes,
-            "&7Kicks: &f" + kicks
-        ));
+        List<String> historyLore = config.getGuiInfoHistoryLore().stream()
+                .map(line -> line.replace("{bans}", String.valueOf(bans))
+                                 .replace("{mutes}", String.valueOf(mutes))
+                                 .replace("{kicks}", String.valueOf(kicks)))
+                .collect(Collectors.toList());
+        ItemStack history = createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore);
 
-        ItemStack action = createItem(Material.NETHERITE_SWORD, "&c&lSancionar Jugador", Arrays.asList("&7Haz clic para ver opciones"));
+        ItemStack action = createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore());
 
         gui.setItem(11, stats);
         gui.setItem(13, history);

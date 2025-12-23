@@ -32,11 +32,13 @@ public class GuiListener implements Listener {
             return;
         }
 
-        // --- MANEJO DEL NUEVO MENÚ DE INFORMACIÓN ---
-        if (title.startsWith("Información: ")) {
+        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0]));
+
+        if (title.startsWith(infoTitleBase)) {
             event.setCancelled(true);
-            String targetName = title.replace("Información: ", "").trim();
-            if (item.getType() == Material.NETHERITE_SWORD) {
+            String targetName = title.replace(infoTitleBase, "").trim();
+            if (item.getType() == plugin.getMainConfigManager().getGuiInfoActionMat()) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
             }
             return;
