@@ -2,6 +2,7 @@ package org.zkaleejoo.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -36,6 +37,44 @@ public class GuiManager {
         }
     }
 
+    public void openUserInfoMenu(Player staff, Player target) {
+        String title = MessageUtils.getColoredMessage("&8Información: &0" + target.getName());
+        Inventory gui = Bukkit.createInventory(null, 27, title);
+        setupBorder(gui);
+
+        //ESTADISTICAS
+        long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
+        long hours = ticks / 72000;
+        long minutes = (ticks % 72000) / 1200;
+        String playtime = hours + "h " + minutes + "m";
+        
+        int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
+        int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
+        int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
+
+        ItemStack stats = createItem(Material.BOOK, "&b&lEstadísticas", Arrays.asList(
+            "&7Nick: &f" + target.getName(),
+            "&7UUID: &8" + target.getUniqueId(),
+            "&7Tiempo Jugado: &f" + playtime,
+            "",
+            "&7Sanciones Totales: &c" + (bans + mutes + kicks)
+        ));
+
+        ItemStack history = createItem(Material.PAPER, "&e&lHistorial", Arrays.asList(
+            "&7Baneos: &f" + bans,
+            "&7Mutes: &f" + mutes,
+            "&7Kicks: &f" + kicks
+        ));
+
+        ItemStack action = createItem(Material.NETHERITE_SWORD, "&c&lSancionar Jugador", Arrays.asList("&7Haz clic para ver opciones"));
+
+        gui.setItem(11, stats);
+        gui.setItem(13, history);
+        gui.setItem(15, action);
+
+        staff.openInventory(gui);
+    }
+
     public void openPlayersMenu(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
         setupBorder(gui);
@@ -57,8 +96,8 @@ public class GuiManager {
     }
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
-    ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
-    if (section == null) return;
+        ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
+        if (section == null) return;
 
         List<String> keys = new ArrayList<>(section.getKeys(false));
         int totalPages = (int) Math.ceil(keys.size() / 4.0);
@@ -100,17 +139,13 @@ public class GuiManager {
             gui.setItem(baseSlot, rItem);
 
             List<String> durations = plugin.getMainConfigManager().getReasonDurations(type, key);
-            
             int maxDurationsToShow = type.equals("KICK") ? 1 : 4;
 
             for (int d = 0; d < maxDurationsToShow; d++) {
                 String dur = (d < durations.size()) ? durations.get(d) : (type.equals("KICK") ? "Ahora" : "perm");
-                
                 ItemStack dye = new ItemStack(plugin.getMainConfigManager().getDurationDye(d));
                 ItemMeta dMeta = dye.getItemMeta();
-                
-                String dName = plugin.getMainConfigManager().getGuiReasonsDyeName()
-                        .replace("{duration}", dur);
+                String dName = plugin.getMainConfigManager().getGuiReasonsDyeName().replace("{duration}", dur);
                 dMeta.setDisplayName(MessageUtils.getColoredMessage(dName));
                 
                 List<String> dLore = new ArrayList<>();
@@ -128,12 +163,8 @@ public class GuiManager {
         }
 
         gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar"))));
-        if (page > 0) {
-            gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page))));
-        }
-        if (end < keys.size()) {
-            gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2)))));
-        }
+        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page))));
+        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2)))));
         
         player.openInventory(gui);
     }

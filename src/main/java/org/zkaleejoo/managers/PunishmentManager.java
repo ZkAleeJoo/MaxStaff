@@ -24,10 +24,24 @@ public class PunishmentManager {
         this.dataFile.registerConfig();
     }
 
+    private void logHistory(String targetName, String type) {
+        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        FileConfiguration data = dataFile.getConfig();
+        int current = data.getInt("history." + uuid + "." + type, 0);
+        data.set("history." + uuid + "." + type, current + 1);
+        dataFile.saveConfig();
+    }
+
+    public int getHistoryCount(String targetName, String type) {
+        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        return dataFile.getConfig().getInt("history." + uuid + "." + type, 0);
+    }
+
     // --- KICK ---
     public void kickPlayer(CommandSender staff, String targetName, String reason) {
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
+            logHistory(targetName, "KICK");
             String kickScreen = plugin.getMainConfigManager().getScreenKick()
                     .replace("{staff}", staff.getName())
                     .replace("{reason}", reason);
@@ -45,6 +59,7 @@ public class PunishmentManager {
 
     // --- BAN ---
     public void banPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
+        logHistory(targetName, "BAN");
         long duration = TimeUtils.parseDuration(durationStr);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
         String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
@@ -63,7 +78,6 @@ public class PunishmentManager {
             target.kickPlayer(finalBanMessage);
         }
 
-        //MENSAJE AL SERVER
         String bcMsg = plugin.getMainConfigManager().getBcBan()
                 .replace("{target}", targetName)
                 .replace("{staff}", staff.getName())
@@ -84,6 +98,7 @@ public class PunishmentManager {
         Player target = Bukkit.getPlayer(targetName);
         UUID uuid = (target != null) ? target.getUniqueId() : Bukkit.getOfflinePlayer(targetName).getUniqueId();
         
+        logHistory(targetName, "MUTE");
         long duration = TimeUtils.parseDuration(durationStr);
         long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
         String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);

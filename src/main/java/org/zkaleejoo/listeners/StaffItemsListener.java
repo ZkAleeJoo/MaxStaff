@@ -107,8 +107,8 @@ public class StaffItemsListener implements Listener {
         
         else if (item.getType() == config.getMatPunish()) {
             event.setCancelled(true);
-            plugin.getGuiManager().openSanctionMenu(player, target.getName());
-            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPunish()));
+            plugin.getGuiManager().openUserInfoMenu(player, target);
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&eCargando información del jugador..."));
         }
 
         else if (item.getType() == config.getMatFreeze()) {

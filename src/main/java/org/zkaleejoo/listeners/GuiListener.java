@@ -16,7 +16,6 @@ public class GuiListener implements Listener {
 
     public GuiListener(MaxStaff plugin) { this.plugin = plugin; }
 
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
@@ -30,6 +29,16 @@ public class GuiListener implements Listener {
 
         if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
             event.setCancelled(true);
+            return;
+        }
+
+        // --- MANEJO DEL NUEVO MENÚ DE INFORMACIÓN ---
+        if (title.startsWith("Información: ")) {
+            event.setCancelled(true);
+            String targetName = title.replace("Información: ", "").trim();
+            if (item.getType() == Material.NETHERITE_SWORD) {
+                plugin.getGuiManager().openSanctionMenu(player, targetName);
+            }
             return;
         }
 
@@ -59,12 +68,9 @@ public class GuiListener implements Listener {
         }
 
         String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0]));
-        
         if (title.contains(reasonsBaseTitle)) { 
             event.setCancelled(true);
-            
             String type = title.contains("[BAN]") ? "BAN" : (title.contains("[MUTE]") ? "MUTE" : "KICK");
-            
             String target;
             try {
                 target = title.split(" - ")[1].split(" \\(")[0];
@@ -93,14 +99,9 @@ public class GuiListener implements Listener {
                 }
                 
                 String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
-                
-                if (type.equals("BAN")) {
-                    plugin.getPunishmentManager().banPlayer(player, target, reasonName, duration);
-                } else if (type.equals("MUTE")) {
-                    plugin.getPunishmentManager().mutePlayer(player, target, reasonName, duration);
-                } else if (type.equals("KICK")) {
-                    plugin.getPunishmentManager().kickPlayer(player, target, reasonName);
-                }
+                if (type.equals("BAN")) plugin.getPunishmentManager().banPlayer(player, target, reasonName, duration);
+                else if (type.equals("MUTE")) plugin.getPunishmentManager().mutePlayer(player, target, reasonName, duration);
+                else if (type.equals("KICK")) plugin.getPunishmentManager().kickPlayer(player, target, reasonName);
                 player.closeInventory();
             }
         }

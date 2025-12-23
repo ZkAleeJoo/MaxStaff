@@ -80,6 +80,31 @@ gui:
       kick: 
         name: "&b&lKICK"
         lore: ["&7Click to kick now"]
+  info:
+    title: "&8Información: &0{target}"
+    items:
+      stats:
+        material: "BOOK"
+        name: "&b&lEstadísticas del Usuario"
+        lore:
+          - "&7Nick: &f{target}"
+          - "&7UUID: &f{uuid}"
+          - "&7Tiempo de juego: &f{playtime}"
+          - ""
+          - "&7Sanciones totales: &c{total_punishments}"
+      history:
+        material: "PAPER"
+        name: "&e&lHistorial de Sanciones"
+        lore:
+          - "&7Baneos: &f{bans}"
+          - "&7Mutes: &f{mutes}"
+          - "&7Kicks: &f{kicks}"
+      action_punish:
+        material: "NETHERITE_SWORD"
+        name: "&c&lSancionar Jugador"
+        lore:
+          - "&7Haz clic para abrir el menú"
+          - "&7de tipos de sanción."
   
   # Punishment reasons menu configuration
   reasons:
