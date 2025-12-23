@@ -84,7 +84,8 @@ public class GuiListener implements Listener {
             } catch (Exception e) { page = 0; }
 
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
-                plugin.getGuiManager().openSanctionMenu(player, target);
+                plugin.getGuiManager().openUserInfoMenu(player, plugin.getServer().getPlayer(target));
+                return;
             }
             else if (item.getType() == plugin.getMainConfigManager().getNavNextMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page + 1);

@@ -39,6 +39,7 @@ public class GuiManager {
         }
     }
 
+
     public void openUserInfoMenu(Player staff, Player target) {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
@@ -79,6 +80,7 @@ public class GuiManager {
         staff.openInventory(gui);
     }
 
+
     public void openPlayersMenu(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
         setupBorder(gui);
@@ -88,16 +90,28 @@ public class GuiManager {
         player.openInventory(gui);
     }
 
+
     public void openSanctionMenu(Player player, String targetName) {
-        Inventory gui = Bukkit.createInventory(null, 36, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", targetName)));
+        MainConfigManager config = plugin.getMainConfigManager();
+        String title = MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().replace("{target}", targetName));
+        
+        Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
         
-        gui.setItem(11, createItem(Material.IRON_SWORD, plugin.getMainConfigManager().getGuiItemBanName(), plugin.getMainConfigManager().getGuiItemBanLore()));
-        gui.setItem(13, createItem(Material.PAPER, plugin.getMainConfigManager().getGuiItemMuteName(), plugin.getMainConfigManager().getGuiItemMuteLore()));
-        gui.setItem(15, createItem(Material.FEATHER, plugin.getMainConfigManager().getGuiItemKickName(), plugin.getMainConfigManager().getGuiItemKickLore()));
+        Player targetPlayer = Bukkit.getPlayer(targetName);
+        if (targetPlayer != null) {
+            gui.setItem(4, createPlayerHead(targetPlayer));
+        }
+
+        gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
+        gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore()));
+        gui.setItem(15, createItem(Material.FEATHER, config.getGuiItemKickName(), config.getGuiItemKickLore()));
+        
+        gui.setItem(22, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver a Información")));
         
         player.openInventory(gui);
     }
+
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
         ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
