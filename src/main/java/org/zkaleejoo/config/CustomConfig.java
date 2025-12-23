@@ -7,6 +7,9 @@ import org.zkaleejoo.MaxStaff;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class CustomConfig {
     private MaxStaff plugin;
@@ -17,10 +20,10 @@ public class CustomConfig {
     private boolean newFile;
 
     public CustomConfig(String fileName, String folderName, MaxStaff plugin, boolean newFile) {
-    this.fileName = fileName;
-    this.folderName = folderName;
-    this.plugin = plugin;
-    this.newFile = newFile;
+        this.fileName = fileName;
+        this.folderName = folderName;
+        this.plugin = plugin;
+        this.newFile = newFile;
     }
 
     public String getPath(){
@@ -29,37 +32,55 @@ public class CustomConfig {
 
     public void registerConfig(){
         if(folderName != null){
-            file = new File(plugin.getDataFolder() +File.separator + folderName,fileName);
-        }else{
+            file = new File(plugin.getDataFolder() + File.separator + folderName, fileName);
+        } else {
             file = new File(plugin.getDataFolder(), fileName);
         }
 
         if(!file.exists()){
             if(newFile){
-                try{
+                try {
                     file.createNewFile();
-                }catch(IOException e){
+                } catch(IOException e){
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 if(folderName != null){
-                    plugin.saveResource(folderName+File.separator+fileName, false);
-                }else{
+                    plugin.saveResource(folderName + File.separator + fileName, false);
+                } else {
                     plugin.saveResource(fileName, false);
                 }
             }
-
         }
 
         fileConfiguration = new YamlConfiguration();
         try {
             fileConfiguration.load(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+            if (!newFile) {
+                updateConfig();
+            }
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
+
+    public void updateConfig() {
+        try {
+            InputStream resourceStream = plugin.getResource(fileName);
+            if (resourceStream == null) return;
+
+            YamlConfiguration jarConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resourceStream, StandardCharsets.UTF_8));
+            
+            fileConfiguration.setDefaults(jarConfig);
+            
+            fileConfiguration.options().copyDefaults(true);
+            
+            saveConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void saveConfig() {
         try {
             fileConfiguration.save(file);
@@ -76,20 +97,20 @@ public class CustomConfig {
     }
 
     public boolean reloadConfig() {
-        if (fileConfiguration == null) {
-            if(folderName != null){
-                file = new File(plugin.getDataFolder() +File.separator + folderName, fileName);
-            }else{
-                file = new File(plugin.getDataFolder(), fileName);
-            }
-
+        if(folderName != null){
+            file = new File(plugin.getDataFolder() + File.separator + folderName, fileName);
+        } else {
+            file = new File(plugin.getDataFolder(), fileName);
         }
+
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
 
-        if(file != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(file);
+        InputStream resourceStream = plugin.getResource(fileName);
+        if (resourceStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resourceStream, StandardCharsets.UTF_8));
             fileConfiguration.setDefaults(defConfig);
         }
+        
         return true;
     }
 }
