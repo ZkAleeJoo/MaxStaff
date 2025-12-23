@@ -53,7 +53,7 @@ public class PunishmentManager {
                 .replace("{reason}", reason);
             broadcast(bcMsg);
         } else {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgOffline()));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgOffline()));
         }
     }
 
@@ -62,7 +62,8 @@ public class PunishmentManager {
         logHistory(targetName, "BAN");
         long duration = TimeUtils.parseDuration(durationStr);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
-        String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
+        
+        String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
 
         String banScreenTemplate = plugin.getMainConfigManager().getScreenBan()
                 .replace("{staff}", staff.getName())
@@ -89,7 +90,7 @@ public class PunishmentManager {
     public void unbanPlayer(CommandSender staff, String targetName) {
         Bukkit.getBanList(BanList.Type.NAME).pardon(targetName);
         staff.sendMessage(MessageUtils.getColoredMessage(
-            plugin.getMainConfigManager().getMsgUnbanSuccess().replace("{target}", targetName)
+            plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnbanSuccess().replace("{target}", targetName)
         ));
     }
 
@@ -101,7 +102,8 @@ public class PunishmentManager {
         logHistory(targetName, "MUTE");
         long duration = TimeUtils.parseDuration(durationStr);
         long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
-        String timeDisplay = (duration == -1) ? "Permanent" : TimeUtils.getDurationString(duration);
+        
+        String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
 
         FileConfiguration data = dataFile.getConfig();
         data.set("mutes." + uuid + ".reason", reason);
@@ -133,14 +135,14 @@ public class PunishmentManager {
             dataFile.saveConfig();
             
             staff.sendMessage(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
+                plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
             ));
             
             if (target != null) {
                 target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
             }
         } else {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgNotMuted()));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNotMuted()));
         }
     }
 

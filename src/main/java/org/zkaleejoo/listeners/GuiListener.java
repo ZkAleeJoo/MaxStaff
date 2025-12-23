@@ -97,8 +97,8 @@ public class GuiListener implements Listener {
                 String reasonId = "", duration = "";
                 for (String line : item.getItemMeta().getLore()) {
                     String clean = ChatColor.stripColor(line);
-                    if (clean.startsWith("ID: ")) reasonId = clean.replace("ID: ", "");
-                    if (clean.startsWith("TimeValue: ")) duration = clean.replace("TimeValue: ", "");
+                    if (clean.contains("ID:")) reasonId = clean.split("ID:")[1].trim();
+                    if (clean.contains("TimeValue:")) duration = clean.split("TimeValue:")[1].trim();
                 }
                 
                 String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
