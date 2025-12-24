@@ -26,7 +26,6 @@ public class StaffItemsListener implements Listener {
         this.plugin = plugin;
     }
 
-    // --- PROTECCIÓN: No tirar ítems ---
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
@@ -35,7 +34,6 @@ public class StaffItemsListener implements Listener {
         }
     }
 
-    // --- PROTECCIÓN: No poner bloques ---
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
@@ -44,7 +42,6 @@ public class StaffItemsListener implements Listener {
         }
     }
 
-    // --- INTERACCIÓN: Clic al aire/bloque ---
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
     if (event.getHand() != EquipmentSlot.HAND) return; 
@@ -86,7 +83,6 @@ public class StaffItemsListener implements Listener {
     }
 }
 
-    // --- INTERACCIÓN: Clic a entidad (Jugador) ---
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -117,7 +113,6 @@ public class StaffItemsListener implements Listener {
         }   
     }
 
-    // --- No recoger ítems ---
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
