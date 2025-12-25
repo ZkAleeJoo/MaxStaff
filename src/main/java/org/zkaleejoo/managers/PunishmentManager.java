@@ -92,7 +92,6 @@ public class PunishmentManager {
         broadcast(bcMsg);
 
         if (staff instanceof Player) {
-        // Un trueno dramático para el baneo
         ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
     }
 
