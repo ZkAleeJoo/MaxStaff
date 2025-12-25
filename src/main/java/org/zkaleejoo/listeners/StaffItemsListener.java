@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.Sound;
 
 public class StaffItemsListener implements Listener {
 
@@ -105,6 +106,7 @@ public class StaffItemsListener implements Listener {
             else if (item.getType() == config.getMatPlayers()) {
                 event.setCancelled(true);
                 plugin.getGuiManager().openPlayersMenu(player);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
             }
             else if (item.getType() == config.getMatPunish()) {

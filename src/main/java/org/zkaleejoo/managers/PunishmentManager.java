@@ -9,7 +9,7 @@ import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.CustomConfig;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.TimeUtils;
-
+import org.bukkit.Sound;
 import java.util.Date;
 import java.util.UUID;
 
@@ -55,6 +55,11 @@ public class PunishmentManager {
         } else {
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgOffline()));
         }
+
+        if (staff instanceof Player) {
+        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 0.5f);
+    }
+
     }
 
     // --- BAN ---
@@ -85,6 +90,12 @@ public class PunishmentManager {
                 .replace("{duration}", timeDisplay)
                 .replace("{reason}", reason);
         broadcast(bcMsg);
+
+        if (staff instanceof Player) {
+        // Un trueno dramático para el baneo
+        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
+    }
+
     }
 
     public void unbanPlayer(CommandSender staff, String targetName) {
@@ -123,6 +134,11 @@ public class PunishmentManager {
                 .replace("{duration}", timeDisplay)
                 .replace("{reason}", reason);
         broadcast(bcMsg);
+
+        if (staff instanceof Player) {
+        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.BLOCK_ANVIL_LAND, 0.8f, 1.2f);
+    }
+
     }
 
     public void unmutePlayer(CommandSender staff, String targetName) {

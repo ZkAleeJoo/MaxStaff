@@ -1,5 +1,6 @@
 package org.zkaleejoo.managers;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player; 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,9 +23,11 @@ public class FreezeManager {
     public void toggleFreeze(Player staff, Player target) {
         if (isFrozen(target)) {
             setFrozen(target, false);
+            staff.playSound(staff.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.5f);
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnfreezeStaff().replace("{player}", target.getName())));
         } else {
             setFrozen(target, true);
+            staff.playSound(staff.getLocation(), Sound.BLOCK_GLASS_BREAK, 1.0f, 0.5f);
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgFreezeStaff().replace("{player}", target.getName())));
         }
     }

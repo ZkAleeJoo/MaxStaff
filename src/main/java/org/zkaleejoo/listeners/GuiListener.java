@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
+import org.bukkit.Sound;
 
 public class GuiListener implements Listener {
 
@@ -21,6 +22,7 @@ public class GuiListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
         Player player = (Player) event.getWhoClicked();
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
         String title = ChatColor.stripColor(event.getView().getTitle());
         ItemStack item = event.getCurrentItem();
         
