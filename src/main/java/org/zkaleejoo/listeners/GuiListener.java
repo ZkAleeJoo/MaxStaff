@@ -61,13 +61,22 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
+       String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
         if (title.contains(sanctionsTitle)) {
             event.setCancelled(true);
-            String target = title.replace(sanctionsTitle, "").trim();
-            if (item.getType() == Material.IRON_SWORD) plugin.getGuiManager().openReasonsMenu(player, target, "BAN", 0);
-            else if (item.getType() == Material.PAPER) plugin.getGuiManager().openReasonsMenu(player, target, "MUTE", 0);
-            else if (item.getType() == Material.FEATHER) plugin.getGuiManager().openReasonsMenu(player, target, "KICK", 0);
+            String targetName = title.replace(sanctionsTitle, "").trim();
+
+            if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+                Player targetPlayer = plugin.getServer().getPlayer(targetName);
+                if (targetPlayer != null) {
+                    plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
+                }
+                return;
+            }
+
+            if (item.getType() == Material.IRON_SWORD) plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
+            else if (item.getType() == Material.PAPER) plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
+            else if (item.getType() == Material.FEATHER) plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
             return;
         }
 
