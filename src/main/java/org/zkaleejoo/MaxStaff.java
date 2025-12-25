@@ -7,6 +7,7 @@ import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
 import org.zkaleejoo.managers.StaffManager;
+import org.zkaleejoo.utils.UpdateChecker;
 import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
 
@@ -22,6 +23,7 @@ import org.zkaleejoo.managers.PunishmentManager;
 import org.zkaleejoo.commands.PunishmentCommand;
 import org.zkaleejoo.listeners.ChatListener;
 
+
 public class MaxStaff extends JavaPlugin {
 
     private MainConfigManager mainConfigManager;
@@ -29,6 +31,7 @@ public class MaxStaff extends JavaPlugin {
     private GuiManager guiManager;
     private FreezeManager freezeManager;
     private PunishmentManager punishmentManager;
+    private String latestVersion;
 
     //PLUGIN SE PRENDE
     @Override
@@ -41,6 +44,7 @@ public class MaxStaff extends JavaPlugin {
 
         registerCommands();
         registerEvents();
+        checkUpdates();
 
         Bukkit.getConsoleSender().sendMessage("   _____                   _________ __          _____  _____ \r\n" + 
                         "  /     \\ _____  ___  ___ /   _____//  |______ _/ ____\\/ ____\\\r\n" + 
@@ -52,6 +56,25 @@ public class MaxStaff extends JavaPlugin {
         String prefix = mainConfigManager.getPrefix();
         Bukkit.getConsoleSender().sendMessage(
                 ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was activated correctly"));
+
+        
+    }
+
+    private void checkUpdates() {
+    if (!getMainConfigManager().isUpdateCheckEnabled()) return;
+    new UpdateChecker(this, 130851).getVersion(version -> {
+        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+            getLogger().info("You are using the latest version!");
+        } else {
+            this.latestVersion = version;
+            getLogger().warning("A new version is available: " + version);
+            getLogger().warning("Download it at: https://www.spigotmc.org/resources/130851/");
+        }
+        });
+    }
+
+    public String getLatestVersion() {
+    return latestVersion;
     }
 
     // PLUGIN SE APAGA

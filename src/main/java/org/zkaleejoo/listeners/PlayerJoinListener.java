@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.utils.MessageUtils;
 
 public class PlayerJoinListener implements Listener {
 
@@ -26,5 +27,21 @@ public class PlayerJoinListener implements Listener {
                 }
             }
         }
+
+        Player player = event.getPlayer();
+    
+    if (player.hasPermission("maxstaff.admin")) { 
+        String latest = plugin.getLatestVersion();
+        if (latest != null && !plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
+            player.sendMessage(" ");
+            player.sendMessage(MessageUtils.getColoredMessage("&4&lMaxStaff &8» &eA new version is available! (&b" + latest + "&e)"));
+            player.sendMessage(MessageUtils.getColoredMessage("&7Your current version: &c" + plugin.getDescription().getVersion()));
+            player.sendMessage(MessageUtils.getColoredMessage("&eDownload it to get improvements and fixes."));
+            player.sendMessage(" ");
+        }
     }
+
+    }
+
+    
 }

@@ -11,6 +11,7 @@ public class MainConfigManager {
     
     private CustomConfig configFile;
     private MaxStaff plugin;
+    private boolean updateCheckEnabled;
     
     // General & Messages
     private String prefix, noPermission, pluginReload, subcommandInvalid, subcommandSpecified;
@@ -164,6 +165,8 @@ public class MainConfigManager {
         msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
         msgUsage = config.getString("punishments.feedback.usage");
         playerClickPls = config.getString("messages.player-click-pls");
+
+        updateCheckEnabled = config.getBoolean("general.update-check", true);
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -269,6 +272,7 @@ public class MainConfigManager {
     public Material getGuiInfoActionMat() { return guiInfoActionMat; }
     public String getGuiInfoActionName() { return guiInfoActionName; }
     public List<String> getGuiInfoActionLore() { return guiInfoActionLore; }
+    public boolean isUpdateCheckEnabled() { return updateCheckEnabled; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);

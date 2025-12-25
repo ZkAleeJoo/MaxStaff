@@ -4,6 +4,7 @@
 
 general:
   prefix: "&4&lMaxStaff &8» "
+  update-check: true
 
 # All plugin messages
 messages:
