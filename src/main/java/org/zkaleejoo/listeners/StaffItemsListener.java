@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,11 +20,16 @@ import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.event.entity.EntityPickupItemEvent;
 
 public class StaffItemsListener implements Listener {
 
     private final MaxStaff plugin;
+    private final Map<UUID, Block> silentViewers = new HashMap<>();
 
     public StaffItemsListener(MaxStaff plugin) {
         this.plugin = plugin;
@@ -75,14 +81,16 @@ public class StaffItemsListener implements Listener {
                             Inventory realInv = container.getInventory();
                             
                             String title = container.getCustomName() != null ? container.getCustomName() : "Silent " + container.getType().name();
-                            Inventory silentInv = Bukkit.createInventory(realInv.getHolder(), realInv.getSize(), title);
                             
+                            Inventory silentInv = Bukkit.createInventory(null, realInv.getSize(), title);
                             silentInv.setContents(realInv.getContents());
                             
+                            silentViewers.put(player.getUniqueId(), block);
+                            
                             player.openInventory(silentInv);
-                            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&7(Modo Silencioso Activo)"));
+                            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&7(Modo Silencioso: Edición habilitada)"));
                         }
-                        return;
+                        return; 
                     }
                 }
             }
@@ -110,6 +118,22 @@ public class StaffItemsListener implements Listener {
                 );
                 if (ray != null && ray.getHitEntity() != null) return;
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        if (silentViewers.containsKey(uuid)) {
+            Block block = silentViewers.remove(uuid); 
+            
+            if (block.getState() instanceof Container) {
+                Container container = (Container) block.getState();
+                container.getInventory().setContents(event.getInventory().getContents());
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&aCambios sincronizados silenciosamente."));
             }
         }
     }
