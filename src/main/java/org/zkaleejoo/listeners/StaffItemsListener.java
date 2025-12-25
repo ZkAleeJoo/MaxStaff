@@ -1,5 +1,6 @@
 package org.zkaleejoo.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
@@ -57,7 +59,6 @@ public class StaffItemsListener implements Listener {
             if (block != null) {
                 if (block.getState() instanceof Container || block.getType() == Material.ENDER_CHEST) {
                     
-     
                     boolean usingStaffItem = item != null && (
                         item.getType() == config.getMatVanish() || 
                         item.getType() == config.getMatPlayers() || 
@@ -71,9 +72,17 @@ public class StaffItemsListener implements Listener {
                             player.openInventory(player.getEnderChest());
                         } else {
                             Container container = (Container) block.getState();
-                            player.openInventory(container.getInventory());
+                            Inventory realInv = container.getInventory();
+                            
+                            String title = container.getCustomName() != null ? container.getCustomName() : "Silent " + container.getType().name();
+                            Inventory silentInv = Bukkit.createInventory(realInv.getHolder(), realInv.getSize(), title);
+                            
+                            silentInv.setContents(realInv.getContents());
+                            
+                            player.openInventory(silentInv);
+                            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&7(Modo Silencioso Activo)"));
                         }
-                        return; 
+                        return;
                     }
                 }
             }
@@ -82,7 +91,6 @@ public class StaffItemsListener implements Listener {
         if (item == null || item.getType() == Material.AIR) return;
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            
             if (item.getType() == config.getMatVanish()) {
                 event.setCancelled(true); 
                 plugin.getStaffManager().toggleVanish(player);
@@ -94,18 +102,13 @@ public class StaffItemsListener implements Listener {
             }
             else if (item.getType() == config.getMatPunish()) {
                 event.setCancelled(true);
-
                 org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
                     player.getEyeLocation(), 
                     player.getEyeLocation().getDirection(), 
                     5, 
                     entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
                 );
-
-                if (ray != null && ray.getHitEntity() != null) {
-                    return;
-                }
-
+                if (ray != null && ray.getHitEntity() != null) return;
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
             }
         }
@@ -128,13 +131,11 @@ public class StaffItemsListener implements Listener {
             player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + msg));
             player.openInventory(target.getInventory());
         }
-        
         else if (item.getType() == config.getMatPunish()) {
             event.setCancelled(true);
             plugin.getGuiManager().openUserInfoMenu(player, target);
             player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&eCargando información del jugador..."));
         }
-
         else if (item.getType() == config.getMatFreeze()) {
             event.setCancelled(true);
             plugin.getFreezeManager().toggleFreeze(player, target);
@@ -144,9 +145,7 @@ public class StaffItemsListener implements Listener {
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-
         Player player = (Player) event.getEntity();
-
         if (plugin.getStaffManager().isInStaffMode(player)) {
             event.setCancelled(true); 
         }
