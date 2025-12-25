@@ -88,7 +88,6 @@ public class StaffItemsListener implements Listener {
                             silentViewers.put(player.getUniqueId(), block);
                             
                             player.openInventory(silentInv);
-                            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&7(Modo Silencioso: Edición habilitada)"));
                         }
                         return; 
                     }
@@ -133,7 +132,6 @@ public class StaffItemsListener implements Listener {
             if (block.getState() instanceof Container) {
                 Container container = (Container) block.getState();
                 container.getInventory().setContents(event.getInventory().getContents());
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&aCambios sincronizados silenciosamente."));
             }
         }
     }
@@ -158,7 +156,6 @@ public class StaffItemsListener implements Listener {
         else if (item.getType() == config.getMatPunish()) {
             event.setCancelled(true);
             plugin.getGuiManager().openUserInfoMenu(player, target);
-            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&eCargando información del jugador..."));
         }
         else if (item.getType() == config.getMatFreeze()) {
             event.setCancelled(true);
