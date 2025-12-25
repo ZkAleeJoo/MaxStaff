@@ -1,6 +1,8 @@
 package org.zkaleejoo.listeners;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +18,6 @@ import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.entity.Player;
 
 public class StaffItemsListener implements Listener {
 
@@ -44,14 +45,41 @@ public class StaffItemsListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-    if (event.getHand() != EquipmentSlot.HAND) return; 
+        if (event.getHand() != EquipmentSlot.HAND) return;
         Player player = event.getPlayer();
-        if (!plugin.getStaffManager().isInStaffMode(player)) return; 
+        if (!plugin.getStaffManager().isInStaffMode(player)) return;
 
         ItemStack item = event.getItem();
-        if (item == null || item.getType() == Material.AIR) return;
-
         MainConfigManager config = plugin.getMainConfigManager();
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock();
+            if (block != null) {
+                if (block.getState() instanceof Container || block.getType() == Material.ENDER_CHEST) {
+                    
+     
+                    boolean usingStaffItem = item != null && (
+                        item.getType() == config.getMatVanish() || 
+                        item.getType() == config.getMatPlayers() || 
+                        item.getType() == config.getMatPunish()
+                    );
+
+                    if (!usingStaffItem) {
+                        event.setCancelled(true); 
+
+                        if (block.getType() == Material.ENDER_CHEST) {
+                            player.openInventory(player.getEnderChest());
+                        } else {
+                            Container container = (Container) block.getState();
+                            player.openInventory(container.getInventory());
+                        }
+                        return; 
+                    }
+                }
+            }
+        }
+
+        if (item == null || item.getType() == Material.AIR) return;
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             
@@ -65,23 +93,23 @@ public class StaffItemsListener implements Listener {
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
             }
             else if (item.getType() == config.getMatPunish()) {
-            event.setCancelled(true);
+                event.setCancelled(true);
 
-            org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
-                player.getEyeLocation(), 
-                player.getEyeLocation().getDirection(), 
-                5, 
-                entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
-            );
+                org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
+                    player.getEyeLocation(), 
+                    player.getEyeLocation().getDirection(), 
+                    5, 
+                    entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
+                );
 
-            if (ray != null && ray.getHitEntity() != null) {
-                return;
+                if (ray != null && ray.getHitEntity() != null) {
+                    return;
+                }
+
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
             }
-
-            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
         }
     }
-}
 
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
@@ -121,7 +149,6 @@ public class StaffItemsListener implements Listener {
 
         if (plugin.getStaffManager().isInStaffMode(player)) {
             event.setCancelled(true); 
-        
         }
     }
 }
