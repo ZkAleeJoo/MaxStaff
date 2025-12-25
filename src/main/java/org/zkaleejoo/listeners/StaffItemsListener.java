@@ -80,7 +80,7 @@ public class StaffItemsListener implements Listener {
                             Container container = (Container) block.getState();
                             Inventory realInv = container.getInventory();
                             
-                            String title = container.getCustomName() != null ? container.getCustomName() : "Silent " + container.getType().name();
+                            String title = container.getCustomName() != null ? container.getCustomName() : container.getType().name();
                             
                             Inventory silentInv = Bukkit.createInventory(null, realInv.getSize(), title);
                             silentInv.setContents(realInv.getContents());
