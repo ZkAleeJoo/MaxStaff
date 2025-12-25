@@ -98,10 +98,6 @@ public class GuiManager {
         Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
         
-        Player targetPlayer = Bukkit.getPlayer(targetName);
-        if (targetPlayer != null) {
-            gui.setItem(4, createPlayerHead(targetPlayer));
-        }
 
         gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
         gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore()));
