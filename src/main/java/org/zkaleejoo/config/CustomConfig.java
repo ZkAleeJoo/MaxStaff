@@ -30,22 +30,27 @@ public class CustomConfig {
         return this.fileName;
     }
 
-    public void registerConfig(){
-        if(folderName != null){
-            file = new File(plugin.getDataFolder() + File.separator + folderName, fileName);
+
+    public void registerConfig() {
+        if (folderName != null) {
+            File folder = new File(plugin.getDataFolder(), folderName);
+            if (!folder.exists()) {
+                folder.mkdirs(); 
+            }
+            file = new File(folder, fileName);
         } else {
             file = new File(plugin.getDataFolder(), fileName);
         }
 
-        if(!file.exists()){
-            if(newFile){
+        if (!file.exists()) {
+            if (newFile) {
                 try {
                     file.createNewFile();
-                } catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
-                if(folderName != null){
+                if (folderName != null) {
                     plugin.saveResource(folderName + File.separator + fileName, false);
                 } else {
                     plugin.saveResource(fileName, false);
