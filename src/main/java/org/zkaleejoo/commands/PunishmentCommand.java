@@ -3,12 +3,16 @@ package org.zkaleejoo.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class PunishmentCommand implements CommandExecutor {
+public class PunishmentCommand implements CommandExecutor, TabCompleter { 
 
     private final MaxStaff plugin;
 
@@ -24,8 +28,7 @@ public class PunishmentCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            String usage = plugin.getMainConfigManager().getMsgUsage()
-                    .replace("{command}", label);
+            String usage = plugin.getMainConfigManager().getMsgUsage().replace("{command}", label);
             sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + usage));
             return true;
         }
@@ -48,11 +51,6 @@ public class PunishmentCommand implements CommandExecutor {
         }
 
         if (label.equalsIgnoreCase("warn")) {
-        if (args.length < 1) {
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + " " + plugin.getMainConfigManager().getMsgUsage().replace("{command}", label)));
-            return true;
-        }
-
             String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : "Sin motivo";
             plugin.getPunishmentManager().warnPlayer(sender, target, reason);
             return true;
@@ -84,5 +82,28 @@ public class PunishmentCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (!sender.hasPermission("maxstaff.punish")) return completions;
+
+        if (args.length == 1) {
+            return null; 
+        }
+
+        if (args.length == 2) {
+            if (label.equalsIgnoreCase("ban") || label.equalsIgnoreCase("tempban") || 
+                label.equalsIgnoreCase("mute") || label.equalsIgnoreCase("tempmute")) {
+                completions.addAll(Arrays.asList("1h", "1d", "7d", "30d", "perm"));
+                return completions.stream()
+                        .filter(s -> s.startsWith(args[1].toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return completions;
     }
 }

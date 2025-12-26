@@ -96,14 +96,14 @@ public class MaxStaff extends JavaPlugin {
         this.getCommand("maxstaff").setTabCompleter(mainCommand);
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
-        getCommand("ban").setExecutor(punCmd);
-        getCommand("tempban").setExecutor(punCmd);
-        getCommand("mute").setExecutor(punCmd);
-        getCommand("tempmute").setExecutor(punCmd);
-        getCommand("kick").setExecutor(punCmd);
-        getCommand("unban").setExecutor(punCmd);
-        getCommand("unmute").setExecutor(punCmd);
-
+        
+        String[] punCommands = {"ban", "tempban", "mute", "tempmute", "kick", "unban", "unmute", "warn"};
+        for (String cmd : punCommands) {
+            if (getCommand(cmd) != null) {
+                getCommand(cmd).setExecutor(punCmd);
+                getCommand(cmd).setTabCompleter(punCmd);
+            }
+        }
     }
 
     public MainConfigManager getMainConfigManager() {
