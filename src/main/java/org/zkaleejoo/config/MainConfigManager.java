@@ -10,9 +10,20 @@ import org.zkaleejoo.utils.MessageUtils;
 public class MainConfigManager {
     
     private CustomConfig configFile;
+    private CustomConfig langFile;
     private MaxStaff plugin;
-    private boolean updateCheckEnabled;
     
+    //VARIABLES DE CONFIGURACIÓN PRINCIPAL (config.yml)
+    private boolean updateCheckEnabled;
+    private boolean isBroadcastEnabled;
+    private String selectedLanguage;
+    private Material matPunish, matFreeze, matPlayers, matInspect, matVanish;
+    private Material borderMaterial, navBackMat, navNextMat, navPrevMat;
+    private Material guiInfoStatsMat, guiInfoHistoryMat, guiInfoActionMat;
+    private Material[] durationDyes = new Material[4];
+    private ConfigurationSection warnThresholds;
+
+    //MENSAJES Y TEXTOS (Se cargan de messages_xx.yml)
     private String prefix, noPermission, pluginReload, subcommandInvalid, subcommandSpecified;
     private String msgConsole, noReason, playerMuted, msgTeleport, helpTitle, msgUsage;
     private List<String> helpLines;
@@ -25,35 +36,24 @@ public class MainConfigManager {
     private List<String> msgTargetFrozen;
     private String msgTargetUnfrozen;
     private String itemNamePunish, itemNameFreeze, itemNamePlayers, itemNameInspect, itemNameVanish;
-    private Material matPunish, matFreeze, matPlayers, matInspect, matVanish;
-    private String bcWarn, msgWarnReceived;
-    private ConfigurationSection warnThresholds;
  
     private String guiPlayersTitle, guiHeadLore, guiSanctionsTitle;
     private String guiItemBanName; private List<String> guiItemBanLore;
     private String guiItemMuteName; private List<String> guiItemMuteLore;
     private String guiItemKickName; private List<String> guiItemKickLore;
-    private Material borderMaterial;
      
     private String guiInfoTitle;
-    private Material guiInfoStatsMat, guiInfoHistoryMat, guiInfoActionMat;
     private String guiInfoStatsName, guiInfoHistoryName, guiInfoActionName;
     private List<String> guiInfoStatsLore, guiInfoHistoryLore, guiInfoActionLore;
 
     private String guiReasonsTitle, guiReasonsItemName, guiReasonsDyeName, guiNavLoreBack, guiNavLorePage;
     private List<String> guiReasonsItemLore, guiReasonsDyeLore;
     private String navBackName, navNextName, navPrevName;
-    private Material navBackMat, navNextMat, navPrevMat;
-    private Material[] durationDyes = new Material[4];
 
-    private boolean isBroadcastEnabled;
-    private String bcBan, bcMute, bcKick, screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
+    private String bcBan, bcMute, bcKick, bcWarn, msgWarnReceived;
+    private String screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
-    private String usestaffreset;
-    private String usestafftake;
-    private String takeNumberInvalid;
-    private String playerNoHistory;
-    private String msgResetSuccess, msgTakeSuccess;
+    private String usestaffreset, usestafftake, takeNumberInvalid, playerNoHistory, msgResetSuccess, msgTakeSuccess;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -65,118 +65,137 @@ public class MainConfigManager {
     public void loadConfig(){
         FileConfiguration config = configFile.getConfig();
         
-        prefix = config.getString("general.prefix", "&4&lMaxStaff &8» ");
-        noPermission = config.getString("messages.no-permission");
-        pluginReload = config.getString("messages.plugin-reload");
-        subcommandInvalid = config.getString("messages.subcommand-invalid");
-        subcommandSpecified = config.getString("messages.subcommand-specified");
-        msgConsole = config.getString("messages.message-console", "&cOnly players!");
-        noReason = config.getString("messages.no-reason", "No reason");
-        playerMuted = config.getString("messages.player-muted");
-        msgTeleport = config.getString("messages.teleport-success");
-        helpTitle = config.getString("messages.command-help-title");
-        helpLines = config.getStringList("messages.command-help-list");
-        msgInvalidMaterial = config.getString("messages.invalid-material", "&cInvalid material: {path}");
+        selectedLanguage = config.getString("general.language", "en");
+        
+        String langPath = "messages_" + selectedLanguage + ".yml";
+        langFile = new CustomConfig(langPath, "lang", plugin, false);
+        langFile.registerConfig();
+        FileConfiguration lang = langFile.getConfig();
 
-        staffModeEnabled = config.getString("staff-mode.enabled");
-        staffModeDisabled = config.getString("staff-mode.disabled");
-        inventorySaved = config.getString("staff-mode.inventory-saved");
-        inventoryRestored = config.getString("staff-mode.inventory-restored");
-        cannotDrop = config.getString("staff-mode.cannot-drop");
-        cannotPlace = config.getString("staff-mode.cannot-place");
-        msgInspect = config.getString("staff-mode.items.inspect.message");
-        msgVanishOn = config.getString("staff-mode.items.vanish.message-on");
-        msgVanishOff = config.getString("staff-mode.items.vanish.message-off");
-        msgPunish = config.getString("staff-mode.items.punish.message");
-        msgPlayers = config.getString("staff-mode.items.players.message");
-        msgFreezeStaff = config.getString("staff-mode.items.freeze.message-freeze");
-        msgUnfreezeStaff = config.getString("staff-mode.items.freeze.message-unfreeze");
-        msgTargetFrozen = config.getStringList("staff-mode.items.freeze.target-frozen");
-        msgTargetUnfrozen = config.getString("staff-mode.items.freeze.target-unfrozen");
-        itemNamePunish = config.getString("staff-mode.items.punish.name");
-        itemNameFreeze = config.getString("staff-mode.items.freeze.name");
-        itemNamePlayers = config.getString("staff-mode.items.players.name");
-        itemNameInspect = config.getString("staff-mode.items.inspect.name");
-        itemNameVanish = config.getString("staff-mode.items.vanish.name");
+        //CONFIGRACIÓN PRINCIPAL (config.yml)
+        prefix = config.getString("general.prefix", "&4&lMaxStaff &8» ");
+        updateCheckEnabled = config.getBoolean("general.update-check", true);
+        isBroadcastEnabled = config.getBoolean("punishments.broadcast", true);
+        
         matPunish = loadMaterial(config.getString("staff-mode.items.punish.material"), Material.NETHERITE_HOE);
         matFreeze = loadMaterial(config.getString("staff-mode.items.freeze.material"), Material.PACKED_ICE);
         matPlayers = loadMaterial(config.getString("staff-mode.items.players.material"), Material.CLOCK);
         matInspect = loadMaterial(config.getString("staff-mode.items.inspect.material"), Material.CHEST);
         matVanish = loadMaterial(config.getString("staff-mode.items.vanish.material"), Material.NETHER_STAR);
 
-        guiPlayersTitle = config.getString("gui.players.title");
-        guiHeadLore = config.getString("gui.players.head-lore");
-        guiSanctionsTitle = config.getString("gui.sanctions.title");
-        guiItemBanName = config.getString("gui.sanctions.items.ban.name");
-        guiItemBanLore = config.getStringList("gui.sanctions.items.ban.lore");
-        guiItemMuteName = config.getString("gui.sanctions.items.mute.name");
-        guiItemMuteLore = config.getStringList("gui.sanctions.items.mute.lore");
-        guiItemKickName = config.getString("gui.sanctions.items.kick.name");
-        guiItemKickLore = config.getStringList("gui.sanctions.items.kick.lore");
-        
-        guiInfoTitle = config.getString("gui.info.title", "&8Information: &0{target}");
-        guiInfoStatsMat = loadMaterial(config.getString("gui.info.items.stats.material"), Material.BOOK);
-        guiInfoStatsName = config.getString("gui.info.items.stats.name");
-        guiInfoStatsLore = config.getStringList("gui.info.items.stats.lore");
-        guiInfoHistoryMat = loadMaterial(config.getString("gui.info.items.history.material"), Material.PAPER);
-        guiInfoHistoryName = config.getString("gui.info.items.history.name");
-        guiInfoHistoryLore = config.getStringList("gui.info.items.history.lore");
-        guiInfoActionMat = loadMaterial(config.getString("gui.info.items.action_punish.material"), Material.NETHERITE_SWORD);
-        guiInfoActionName = config.getString("gui.info.items.action_punish.name");
-        guiInfoActionLore = config.getStringList("gui.info.items.action_punish.lore");
-
-        guiReasonsTitle = config.getString("gui.reasons.title");
-        guiReasonsItemName = config.getString("gui.reasons.item-name");
-        guiReasonsItemLore = config.getStringList("gui.reasons.item-lore");
-        guiReasonsDyeName = config.getString("gui.reasons.dye-name");
-        guiReasonsDyeLore = config.getStringList("gui.reasons.dye-lore");
-        guiNavLoreBack = config.getString("gui.reasons.navigation.lore-back");
-        guiNavLorePage = config.getString("gui.reasons.navigation.lore-page");
-        
         borderMaterial = loadMaterial(config.getString("gui-style.border-material"), Material.BLACK_STAINED_GLASS_PANE);
-        navBackName = config.getString("gui-style.navigation.back-name");
-        navNextName = config.getString("gui-style.navigation.next-name");
-        navPrevName = config.getString("gui-style.navigation.prev-name");
         navBackMat = loadMaterial(config.getString("gui-style.navigation.back-material"), Material.BOOK);
         navNextMat = loadMaterial(config.getString("gui-style.navigation.next-material"), Material.ARROW);
         navPrevMat = loadMaterial(config.getString("gui-style.navigation.prev-material"), Material.ARROW);
+        
         durationDyes[0] = loadMaterial(config.getString("gui-style.unified-menu.duration-1-material"), Material.LIME_DYE);
         durationDyes[1] = loadMaterial(config.getString("gui-style.unified-menu.duration-2-material"), Material.YELLOW_DYE);
         durationDyes[2] = loadMaterial(config.getString("gui-style.unified-menu.duration-3-material"), Material.ORANGE_DYE);
         durationDyes[3] = loadMaterial(config.getString("gui-style.unified-menu.duration-4-material"), Material.RED_DYE);
 
-        timeUnitPermanent = config.getString("time-units.permanent", "Permanent");
-        timeUnitDays = config.getString("time-units.days", "days");
-        timeUnitHours = config.getString("time-units.hours", "hours");
-        timeUnitMinutes = config.getString("time-units.minutes", "minutes");
-        timeUnitSeconds = config.getString("time-units.seconds", "seconds");
+        guiInfoStatsMat = loadMaterial(config.getString("gui.info.items.stats.material"), Material.BOOK);
+        guiInfoHistoryMat = loadMaterial(config.getString("gui.info.items.history.material"), Material.PAPER);
+        guiInfoActionMat = loadMaterial(config.getString("gui.info.items.action_punish.material"), Material.NETHERITE_SWORD);
 
-        isBroadcastEnabled = config.getBoolean("punishments.broadcast");
-        bcBan = config.getString("punishments.broadcasts.ban");
-        bcMute = config.getString("punishments.broadcasts.mute");
-        bcKick = config.getString("punishments.broadcasts.kick");
-        screenBan = config.getString("punishments.screens.ban");
-        screenKick = config.getString("punishments.screens.kick");
-        screenMute = config.getString("punishments.screens.mute");
-        screenUnmute = config.getString("punishments.screens.unmute");
-        msgMutedChat = config.getString("punishments.screens.muted-chat");
-        msgOffline = config.getString("punishments.feedback.player-offline");
-        msgNotMuted = config.getString("punishments.feedback.not-muted");
-        msgUnbanSuccess = config.getString("punishments.feedback.unban-success");
-        msgUnmuteSuccess = config.getString("punishments.feedback.unmute-success");
-        msgUsage = config.getString("punishments.feedback.usage");
-        playerClickPls = config.getString("messages.player-click-pls");
-
-        updateCheckEnabled = config.getBoolean("general.update-check", true);
-        bcWarn = config.getString("punishments.broadcasts.warns.broadcast");
-        msgWarnReceived = config.getString("punishments.broadcasts.warns.received");
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
-        usestaffreset = config.getString("messages.use-staffreset");
-        usestafftake = config.getString("messages.use-stafftake");
-        msgResetSuccess = config.getString("messages.staff-reset-success");
-        msgTakeSuccess = config.getString("messages.staff-take-success");
-        takeNumberInvalid = config.getString("messages.take-number-invalid");
-        playerNoHistory = config.getString("messages.player-no-history");
+
+        //MENSAJES DESDE lang/messages_XX.yml
+        noPermission = lang.getString("messages.no-permission");
+        pluginReload = lang.getString("messages.plugin-reload");
+        subcommandInvalid = lang.getString("messages.subcommand-invalid");
+        subcommandSpecified = lang.getString("messages.subcommand-specified");
+        msgConsole = lang.getString("messages.message-console", "&cOnly players!");
+        noReason = lang.getString("messages.no-reason", "No reason");
+        playerMuted = lang.getString("messages.player-muted");
+        msgTeleport = lang.getString("messages.teleport-success");
+        helpTitle = lang.getString("messages.command-help-title");
+        helpLines = lang.getStringList("messages.command-help-list");
+        msgInvalidMaterial = lang.getString("messages.invalid-material", "&cInvalid material: {path}");
+        playerClickPls = lang.getString("messages.player-click-pls");
+
+        staffModeEnabled = lang.getString("staff-mode.enabled");
+        staffModeDisabled = lang.getString("staff-mode.disabled");
+        inventorySaved = lang.getString("staff-mode.inventory-saved");
+        inventoryRestored = lang.getString("staff-mode.inventory-restored");
+        cannotDrop = lang.getString("staff-mode.cannot-drop");
+        cannotPlace = lang.getString("staff-mode.cannot-place");
+        
+        msgInspect = lang.getString("staff-mode.items.inspect.message");
+        msgVanishOn = lang.getString("staff-mode.items.vanish.message-on");
+        msgVanishOff = lang.getString("staff-mode.items.vanish.message-off");
+        msgPunish = lang.getString("staff-mode.items.punish.message");
+        msgPlayers = lang.getString("staff-mode.items.players.message");
+        msgFreezeStaff = lang.getString("staff-mode.items.freeze.message-freeze");
+        msgUnfreezeStaff = lang.getString("staff-mode.items.freeze.message-unfreeze");
+        msgTargetFrozen = lang.getStringList("staff-mode.items.freeze.target-frozen");
+        msgTargetUnfrozen = lang.getString("staff-mode.items.freeze.target-unfrozen");
+        
+        itemNamePunish = lang.getString("staff-mode.items.punish.name");
+        itemNameFreeze = lang.getString("staff-mode.items.freeze.name");
+        itemNamePlayers = lang.getString("staff-mode.items.players.name");
+        itemNameInspect = lang.getString("staff-mode.items.inspect.name");
+        itemNameVanish = lang.getString("staff-mode.items.vanish.name");
+
+        guiPlayersTitle = lang.getString("gui.players.title");
+        guiHeadLore = lang.getString("gui.players.head-lore");
+        guiSanctionsTitle = lang.getString("gui.sanctions.title");
+        guiItemBanName = lang.getString("gui.sanctions.items.ban.name");
+        guiItemBanLore = lang.getStringList("gui.sanctions.items.ban.lore");
+        guiItemMuteName = lang.getString("gui.sanctions.items.mute.name");
+        guiItemMuteLore = lang.getStringList("gui.sanctions.items.mute.lore");
+        guiItemKickName = lang.getString("gui.sanctions.items.kick.name");
+        guiItemKickLore = lang.getStringList("gui.sanctions.items.kick.lore");
+        
+        guiInfoTitle = lang.getString("gui.info.title", "&8Information: &0{target}");
+        guiInfoStatsName = lang.getString("gui.info.items.stats.name");
+        guiInfoStatsLore = lang.getStringList("gui.info.items.stats.lore");
+        guiInfoHistoryName = lang.getString("gui.info.items.history.name");
+        guiInfoHistoryLore = lang.getStringList("gui.info.items.history.lore");
+        guiInfoActionName = lang.getString("gui.info.items.action_punish.name");
+        guiInfoActionLore = lang.getStringList("gui.info.items.action_punish.lore");
+
+        guiReasonsTitle = lang.getString("gui.reasons.title");
+        guiReasonsItemName = lang.getString("gui.reasons.item-name");
+        guiReasonsItemLore = lang.getStringList("gui.reasons.item-lore");
+        guiReasonsDyeName = lang.getString("gui.reasons.dye-name");
+        guiReasonsDyeLore = lang.getStringList("gui.reasons.dye-lore");
+        guiNavLoreBack = lang.getString("gui.reasons.navigation.lore-back");
+        guiNavLorePage = lang.getString("gui.reasons.navigation.lore-page");
+        
+        navBackName = lang.getString("gui-style.navigation.back-name");
+        navNextName = lang.getString("gui-style.navigation.next-name");
+        navPrevName = lang.getString("gui-style.navigation.prev-name");
+
+        timeUnitPermanent = lang.getString("time-units.permanent", "Permanent");
+        timeUnitDays = lang.getString("time-units.days", "days");
+        timeUnitHours = lang.getString("time-units.hours", "hours");
+        timeUnitMinutes = lang.getString("time-units.minutes", "minutes");
+        timeUnitSeconds = lang.getString("time-units.seconds", "seconds");
+
+        bcBan = lang.getString("punishments.broadcasts.ban");
+        bcMute = lang.getString("punishments.broadcasts.mute");
+        bcKick = lang.getString("punishments.broadcasts.kick");
+        bcWarn = lang.getString("punishments.broadcasts.warns.broadcast");
+        msgWarnReceived = lang.getString("punishments.broadcasts.warns.received");
+
+        screenBan = lang.getString("punishments.screens.ban");
+        screenKick = lang.getString("punishments.screens.kick");
+        screenMute = lang.getString("punishments.screens.mute");
+        screenUnmute = lang.getString("punishments.screens.unmute");
+        msgMutedChat = lang.getString("punishments.screens.muted-chat");
+        
+        msgOffline = lang.getString("punishments.feedback.player-offline");
+        msgNotMuted = lang.getString("punishments.feedback.not-muted");
+        msgUnbanSuccess = lang.getString("punishments.feedback.unban-success");
+        msgUnmuteSuccess = lang.getString("punishments.feedback.unmute-success");
+        msgUsage = lang.getString("punishments.feedback.usage");
+
+        usestaffreset = lang.getString("messages.use-staffreset");
+        usestafftake = lang.getString("messages.use-stafftake");
+        msgResetSuccess = lang.getString("messages.staff-reset-success");
+        msgTakeSuccess = lang.getString("messages.staff-take-success");
+        takeNumberInvalid = lang.getString("messages.take-number-invalid");
+        playerNoHistory = lang.getString("messages.player-no-history");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -189,7 +208,11 @@ public class MainConfigManager {
         return matched;
     }
 
-    public void reloadConfig(){ configFile.reloadConfig(); loadConfig(); }
+    public void reloadConfig(){ 
+        configFile.reloadConfig(); 
+        if(langFile != null) langFile.reloadConfig();
+        loadConfig(); 
+    }
 
     public String getPrefix() { return prefix; }
     public String getNoPermission() { return noPermission; }
