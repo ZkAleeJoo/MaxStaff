@@ -108,23 +108,22 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    public void help(CommandSender sender){
-        String titleTemplate = plugin.getConfig().getString("messages.command-help-title", "&fList of commands: &b{version}");
-        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + titleTemplate.replace("{version}", plugin.getDescription().getVersion())));
-        
-        List<String> helpLines = plugin.getConfig().getStringList("messages.command-help-list");
-        if (helpLines == null || helpLines.isEmpty()) {
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Toggle staff mode"));
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reset"));
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff take"));
-        } else {
-            for (String line : helpLines) {
-                sender.sendMessage(MessageUtils.getColoredMessage(line));
+        public void help(CommandSender sender) {
+            String titleTemplate = plugin.getMainConfigManager().getHelpTitle(); 
+            sender.sendMessage(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getPrefix() + 
+                titleTemplate.replace("{version}", plugin.getDescription().getVersion())
+            ));
+            
+            List<String> helpLines = plugin.getMainConfigManager().getHelpLines();
+            if (helpLines == null || helpLines.isEmpty()) {
+                sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
+            } else {
+                for (String line : helpLines) {
+                    sender.sendMessage(MessageUtils.getColoredMessage(line));
+                }
             }
         }
-    }
 
         @Override
         public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
