@@ -140,6 +140,7 @@ public class PunishmentManager {
 
     }
 
+    // --- UNMUTE ---
     public void unmutePlayer(CommandSender staff, String targetName) {
         Player target = Bukkit.getPlayer(targetName);
         UUID uuid = (target != null) ? target.getUniqueId() : Bukkit.getOfflinePlayer(targetName).getUniqueId();
@@ -159,6 +160,29 @@ public class PunishmentManager {
         } else {
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNotMuted()));
         }
+    }
+
+    // --- WARN ---
+    public void warnPlayer(CommandSender staff, String targetName, String reason) {
+    logHistory(targetName, "WARN"); 
+    int count = getHistoryCount(targetName, "WARN");
+    
+    Player target = Bukkit.getPlayer(targetName);
+    if (target != null) {
+        target.sendMessage(MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getPrefix() + 
+            "&c&l¡ADVERTENCIA! &fHas sido advertido por: &e" + reason));
+    }
+
+    String bcMsg = "&c" + targetName + " &fha sido advertido por &c" + staff.getName() + 
+                   " &8(&e" + count + " warns&8) | Motivo: &e" + reason;
+    broadcast(bcMsg);
+
+    checkWarnThresholds(targetName, count);
+    }
+
+    private void checkWarnThresholds(String targetName, int count) {
+        
     }
 
     public boolean isMuted(UUID uuid) {

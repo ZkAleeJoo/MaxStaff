@@ -47,6 +47,17 @@ public class PunishmentCommand implements CommandExecutor {
             return true;
         }
 
+        if (label.equalsIgnoreCase("warn")) {
+        if (args.length < 1) {
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + " " + plugin.getMainConfigManager().getMsgUsage().replace("{command}", label)));
+            return true;
+        }
+
+            String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : "Sin motivo";
+            plugin.getPunishmentManager().warnPlayer(sender, target, reason);
+            return true;
+        }
+
         String time = "perm";
         String reason = plugin.getMainConfigManager().getNoReason();
         

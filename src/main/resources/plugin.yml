@@ -22,6 +22,8 @@ commands:
     description: Desbanear
   unmute:
     description: Desmutear
+  warn:
+    description: Advertir jugador
 
 permissions:
   maxstaff.admin:

@@ -54,6 +54,7 @@ public class GuiManager {
         int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
         int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
         int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
+        int warns = plugin.getPunishmentManager().getHistoryCount(target.getName(), "WARN");
         int total = bans + mutes + kicks;
 
         List<String> statsLore = config.getGuiInfoStatsLore().stream()
@@ -67,7 +68,8 @@ public class GuiManager {
         List<String> historyLore = config.getGuiInfoHistoryLore().stream()
                 .map(line -> line.replace("{bans}", String.valueOf(bans))
                                  .replace("{mutes}", String.valueOf(mutes))
-                                 .replace("{kicks}", String.valueOf(kicks)))
+                                 .replace("{kicks}", String.valueOf(kicks))
+                                 .replace("{warns}", String.valueOf(warns)) )
                 .collect(Collectors.toList());
         ItemStack history = createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore);
 
