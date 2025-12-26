@@ -100,6 +100,7 @@ gui:
           - "&7Bans: &f{bans}"
           - "&7Mutes: &f{mutes}"
           - "&7Kicks: &f{kicks}"
+          - "&7Warns: &f{warns}"
       action_punish:
         material: "NETHERITE_SWORD"
         name: "&c&lPunish Player"

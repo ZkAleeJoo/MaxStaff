@@ -3,10 +3,12 @@ package org.zkaleejoo.managers;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.CustomConfig;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.TimeUtils;
 import org.bukkit.Sound;
@@ -168,21 +170,36 @@ public class PunishmentManager {
     int count = getHistoryCount(targetName, "WARN");
     
     Player target = Bukkit.getPlayer(targetName);
+    MainConfigManager config = plugin.getMainConfigManager();
+
     if (target != null) {
         target.sendMessage(MessageUtils.getColoredMessage(
-            plugin.getMainConfigManager().getPrefix() + 
-            "&c&l¡ADVERTENCIA! &fHas sido advertido por: &e" + reason));
+            config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
     }
 
-    String bcMsg = "&c" + targetName + " &fha sido advertido por &c" + staff.getName() + 
-                   " &8(&e" + count + " warns&8) | Motivo: &e" + reason;
+    String bcMsg = config.getBcWarn()
+            .replace("{target}", targetName)
+            .replace("{staff}", staff.getName())
+            .replace("{count}", String.valueOf(count))
+            .replace("{reason}", reason);
     broadcast(bcMsg);
 
-    checkWarnThresholds(targetName, count);
+        checkWarnThresholds(targetName, count);
     }
 
     private void checkWarnThresholds(String targetName, int count) {
-        
+    ConfigurationSection thresholds = plugin.getMainConfigManager().getWarnThresholds();
+    if (thresholds == null) return;
+
+    String key = String.valueOf(count);
+    if (thresholds.contains(key)) {
+        String command = thresholds.getString(key);
+        if (command != null) {
+            String finalCmd = command.replace("{target}", targetName);
+            Bukkit.getScheduler().runTask(plugin, () -> 
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
+            }
+        }
     }
 
     public boolean isMuted(UUID uuid) {

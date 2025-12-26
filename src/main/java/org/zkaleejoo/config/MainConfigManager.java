@@ -13,14 +13,12 @@ public class MainConfigManager {
     private MaxStaff plugin;
     private boolean updateCheckEnabled;
     
-    // General & Messages
     private String prefix, noPermission, pluginReload, subcommandInvalid, subcommandSpecified;
     private String msgConsole, noReason, playerMuted, msgTeleport, helpTitle, msgUsage;
     private List<String> helpLines;
     private String msgOffline, msgNotMuted, msgUnbanSuccess, msgUnmuteSuccess, msgInvalidMaterial;
     private String playerClickPls;
 
-    // Staff Mode
     private String staffModeEnabled, staffModeDisabled, inventorySaved, inventoryRestored;
     private String cannotDrop, cannotPlace, msgInspect, msgVanishOn, msgVanishOff;
     private String msgPunish, msgPlayers, msgFreezeStaff, msgUnfreezeStaff;
@@ -28,28 +26,26 @@ public class MainConfigManager {
     private String msgTargetUnfrozen;
     private String itemNamePunish, itemNameFreeze, itemNamePlayers, itemNameInspect, itemNameVanish;
     private Material matPunish, matFreeze, matPlayers, matInspect, matVanish;
+    private String bcWarn, msgWarnReceived;
+    private ConfigurationSection warnThresholds;
  
-    // GUI General
     private String guiPlayersTitle, guiHeadLore, guiSanctionsTitle;
     private String guiItemBanName; private List<String> guiItemBanLore;
     private String guiItemMuteName; private List<String> guiItemMuteLore;
     private String guiItemKickName; private List<String> guiItemKickLore;
     private Material borderMaterial;
-    
-    // GUI Info
+     
     private String guiInfoTitle;
     private Material guiInfoStatsMat, guiInfoHistoryMat, guiInfoActionMat;
     private String guiInfoStatsName, guiInfoHistoryName, guiInfoActionName;
     private List<String> guiInfoStatsLore, guiInfoHistoryLore, guiInfoActionLore;
 
-    // GUI Reasons & Navigation
     private String guiReasonsTitle, guiReasonsItemName, guiReasonsDyeName, guiNavLoreBack, guiNavLorePage;
     private List<String> guiReasonsItemLore, guiReasonsDyeLore;
     private String navBackName, navNextName, navPrevName;
     private Material navBackMat, navNextMat, navPrevMat;
     private Material[] durationDyes = new Material[4];
 
-    // Punishments & Time
     private boolean isBroadcastEnabled;
     private String bcBan, bcMute, bcKick, screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
@@ -167,6 +163,9 @@ public class MainConfigManager {
         playerClickPls = config.getString("messages.player-click-pls");
 
         updateCheckEnabled = config.getBoolean("general.update-check", true);
+        bcWarn = config.getString("punishments.broadcasts.warns.broadcast");
+        msgWarnReceived = config.getString("punishments.broadcasts.warns.received");
+        warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -181,7 +180,6 @@ public class MainConfigManager {
 
     public void reloadConfig(){ configFile.reloadConfig(); loadConfig(); }
 
-    // --- GETTERS ---
     public String getPrefix() { return prefix; }
     public String getNoPermission() { return noPermission; }
     public String getPluginReload() { return pluginReload; }
@@ -273,6 +271,9 @@ public class MainConfigManager {
     public String getGuiInfoActionName() { return guiInfoActionName; }
     public List<String> getGuiInfoActionLore() { return guiInfoActionLore; }
     public boolean isUpdateCheckEnabled() { return updateCheckEnabled; }
+    public String getBcWarn() { return bcWarn; }
+    public String getMsgWarnReceived() { return msgWarnReceived; }
+    public ConfigurationSection getWarnThresholds() { return warnThresholds; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
