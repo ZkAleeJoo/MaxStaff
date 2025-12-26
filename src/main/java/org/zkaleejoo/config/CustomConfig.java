@@ -71,15 +71,14 @@ public class CustomConfig {
 
     public void updateConfig() {
         try {
-            InputStream resourceStream = plugin.getResource(fileName);
+            String resourcePath = (folderName != null) ? folderName + "/" + fileName : fileName;
+            InputStream resourceStream = plugin.getResource(resourcePath);
+            
             if (resourceStream == null) return;
 
             YamlConfiguration jarConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resourceStream, StandardCharsets.UTF_8));
-            
             fileConfiguration.setDefaults(jarConfig);
-            
             fileConfiguration.options().copyDefaults(true);
-            
             saveConfig();
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +109,9 @@ public class CustomConfig {
 
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
 
-        InputStream resourceStream = plugin.getResource(fileName);
+        String resourcePath = (folderName != null) ? folderName + "/" + fileName : fileName;
+        InputStream resourceStream = plugin.getResource(resourcePath);
+        
         if (resourceStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resourceStream, StandardCharsets.UTF_8));
             fileConfiguration.setDefaults(defConfig);
