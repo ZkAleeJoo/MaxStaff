@@ -1,0 +1,140 @@
+# ==========================================
+#        MaxStaff - English Messages
+# ==========================================
+
+messages:
+  no-permission: "&cYou do not have permission to use this command."
+  plugin-reload: "&aConfiguration successfully reloaded."
+  subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
+  subcommand-specified: "&cPlease specify a subcommand."
+  player-click-pls: "&cPlease right-click on a player to sanction them."
+  invalid-material: "&c[Error] &fMaterial '&e{path}&f' doesn't exist. Using: &b{default}"
+  teleport-success: "&aYou have been teleported to &e{player}"
+  message-console: "&cThis command can only be executed by players."
+  no-reason: "No reason provided"
+  player-muted: "&cYou are muted! You cannot speak."
+  use-staffreset: "&cUsage: /staff reset <player> <BAN|MUTE|KICK|WARN|ALL>"
+  use-stafftake: "&cUsage: /staff take <player> <type> [quantity]"
+  staff-reset-success: "&aHistory &a{type} &a &b{target} &a successfully restarted."
+  staff-take-success: "&aThey have been removed &e{amount} &asanctions of the type &e{type} &ato &b{target}."
+  take-number-invalid: "&cThe quantity must be a valid number."
+  player-no-history: "&cThat player has no punishment history."
+  command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
+  command-help-list:
+    - "&9> &a/maxstaff reload &7- Reload configuration"
+    - "&9> &a/maxstaff mode &7- Enable/Disable staff mode"
+    - "&9> &a/maxstaff help &7- View command list"
+
+staff-mode:
+  enabled: "&aStaff Mode &lACTIVATED&a!"
+  disabled: "&cStaff Mode &lDISABLED&c."
+  inventory-saved: "&eYour inventory has been saved."
+  inventory-restored: "&eYour inventory has been restored."
+  cannot-drop: "&cYou cannot drop items while in staff mode."
+  cannot-place: "&cYou cannot place blocks while in staff mode."
+  items:
+    punish:
+      name: "&c&lPunish &7(Right Click)"
+      message: "&eOpening punishment menu..."
+    freeze:
+      name: "&b&lFreeze &7(Click Player)"
+      message-freeze: "&fYou have frozen &b{player}"
+      message-unfreeze: "&fYou have unfrozen &b{player}"
+      target-frozen:
+        - "&c&lYOU HAVE BEEN FROZEN!"
+        - "&ePlease wait for a Staff member to assist you."
+        - "&7If you disconnect, you will be banned."
+      target-unfrozen: "&aYou have been unfrozen!"
+    players:
+      name: "&b&lOnline Players &7(Right Click)"
+      message: "&eOpening player list..."
+    inspect:
+      name: "&6&lInspect &7(Click Player)"
+      message: "&6Inspecting: &f{player}"
+    vanish:
+      name: "&a&lVanish &7(Click to toggle)"
+      message-on: "&aVanish: &lENABLED &7(You are invisible)"
+      message-off: "&cVanish: &lDISABLED &7(You are visible)"
+
+gui:
+  players:
+    title: "&8Online Players"
+    head-lore: "&7Click to teleport"
+  sanctions:
+    title: "&8Punish: &0{target}"
+    items:
+      ban: { name: "&c&lBAN", lore: ["&7Click to select reason and duration"] }
+      mute: { name: "&e&lMUTE", lore: ["&7Click to select reason and duration"] }
+      kick: { name: "&b&lKICK", lore: ["&7Click to kick now"] }
+  info:
+    title: "&8Information: &0{target}"
+    items:
+      stats:
+        name: "&b&lUser Statistics"
+        lore:
+          - "&7Nick: &f{target}"
+          - "&7UUID: &f{uuid}"
+          - "&7Playtime: &f{playtime}"
+          - ""
+          - "&7Total Punishments: &c{total_punishments}"
+      history:
+        name: "&e&lPunishment History"
+        lore:
+          - "&7Bans: &f{bans}"
+          - "&7Mutes: &f{mutes}"
+          - "&7Kicks: &f{kicks}"
+          - "&7Warns: &f{warns}"
+      action_punish:
+        name: "&c&lPunish Player"
+        lore:
+          - "&7Click to open punishment menu"
+          - "&7types of sanctions."
+  reasons:
+    title: "&8Sanction [{type}] - {target} ({page}/3)"
+    item-name: "&c&lSanction #{number}"
+    item-lore: ["&7Reason: &f{reason}", "&8ID: {id}"]
+    dye-name: "&eDuration: &f{duration}"
+    dye-lore:
+      - "&7Type: &6{type}"
+      - "&7Reason: &f{reason}"
+      - "&8ID: {id}"
+      - "&8TimeValue: {duration}"
+      - ""
+      - "&eClick to apply sanction"
+    navigation:
+      lore-back: "&7Return to previous menu"
+      lore-page: "&7Go to page {page}"
+
+gui-style:
+  navigation:
+    back-name: "&c« Back"
+    next-name: "&aNext Page »"
+    prev-name: "&e« Previous Page"
+
+time-units:
+  permanent: "Permanent"
+  days: "days"
+  hours: "hours"
+  minutes: "minutes"
+  seconds: "seconds"
+
+punishments:
+  broadcasts:
+    ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
+    mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
+    kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
+    warns:
+      broadcast: "&c{target} &fhas been warned by &c{staff}. &8(&e{count} warns&8) | Reason: &e{reason}"
+      received: "&c&lWARNING! &fYou have been warned by: &e{reason}"
+  screens:
+    ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
+    kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
+    mute: "&cYou are muted by {staff}!"
+    unmute: "&aYou may now speak again!"
+    muted-chat: "&cYou are muted! You cannot speak."
+  feedback:
+    player-offline: "&cThat player is not online."
+    not-muted: "&cThat player is not muted."
+    unban-success: "&aYou have unbanned &e{target}"
+    unmute-success: "&aYou have unmuted &e{target}"
+    usage: "&cUsage: /{command} <player> [time] [reason]"
