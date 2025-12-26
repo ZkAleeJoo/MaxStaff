@@ -28,7 +28,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
                 return true;
             }
-            
             plugin.getMainConfigManager().reloadConfig();
             sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPluginReload()));
             return true;
@@ -40,32 +39,24 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
 
         Player player = (Player) sender;
-
         if (!player.hasPermission("maxstaff.admin")) {
             player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
             return true;
         }
 
-        if(args.length >= 1){
-             if(args[0].equalsIgnoreCase("help")){
-                help(sender);
-
-            } else if (args[0].equalsIgnoreCase("mode") || args[0].equalsIgnoreCase("staff")) {
-                plugin.getStaffManager().toggleStaffMode(player);
-
-            } else {
-                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getSubcommandInvalid()));
-            }
-        } else {
+        if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             help(sender);
+            return true;
         }
 
-        //NUEVA SECCIÓN
-        if (args.length >= 1 && args[0].equalsIgnoreCase("reset")) {
-            if (!sender.hasPermission("maxstaff.admin")) {
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
-                return true;
-            }
+        String sub = args[0].toLowerCase();
+
+        if (sub.equals("mode") || sub.equals("staff")) {
+            plugin.getStaffManager().toggleStaffMode(player);
+            return true;
+        } 
+        
+        else if (sub.equals("reset")) {
             if (args.length < 3) {
                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUseStaffReset()));
                 return true;
@@ -73,19 +64,16 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             String target = args[1];
             String type = args[2].toUpperCase();
             
+            plugin.getPunishmentManager().resetHistory(target, type); 
+            
             String msg = plugin.getMainConfigManager().getMsgResetSuccess()
                         .replace("{type}", type)
                         .replace("{target}", target);
-                        
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
-                return true;
-        }
-
-        if (args.length >= 1 && args[0].equalsIgnoreCase("take")) {
-            if (!sender.hasPermission("maxstaff.admin")) {
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
-                return true;
-            }
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+            return true;
+        } 
+        
+        else if (sub.equals("take")) {
             if (args.length < 3) {
                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUseStaffTake()));
                 return true;
@@ -99,27 +87,24 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 try {
                     amount = Integer.parseInt(args[3]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
-                        plugin.getMainConfigManager().getTakeNumberInvalid()));
+                    sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getTakeNumberInvalid()));
                     return true;
                 }
             }
 
-            boolean success = plugin.getPunishmentManager().takeHistory(target, type, amount);
-            if (success) {
+            if (plugin.getPunishmentManager().takeHistory(target, type, amount)) {
                 String msg = plugin.getMainConfigManager().getMsgTakeSuccess()
-                .replace("{amount}", String.valueOf(amount))
-                .replace("{type}", type)
-                .replace("{target}", target);
-                
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+                        .replace("{amount}", String.valueOf(amount))
+                        .replace("{type}", type)
+                        .replace("{target}", target);
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
             } else {
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
-                    plugin.getMainConfigManager().getPlayerNoHistory()));
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPlayerNoHistory()));
             }
             return true;
         }
 
+        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getSubcommandInvalid()));
         return true;
     }
 
