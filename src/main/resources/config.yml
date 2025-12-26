@@ -1,190 +1,69 @@
 # ==========================================
-#        MaxStaff - General Configuration
+#        MaxStaff - Technical Configuration
 # ==========================================
 
 general:
+  #The plugin's global prefix
   prefix: "&4&lMaxStaff &8» "
+  #Check for updates on startup?
   update-check: true
+  #Plugin language (Options: en, es)
+  #The plugin will look for the file in: lang/messages_{language}.yml
+  language: "en" 
 
-# All plugin messages
-messages:
-  no-permission: "&cYou do not have permission to use this command."
-  plugin-reload: "&aConfiguration successfully reloaded."
-  subcommand-invalid: "&cInvalid subcommand. Use /maxstaff help."
-  subcommand-specified: "&cPlease specify a subcommand."
-  player-click-pls: "&cPlease right-click on a player to sanction them."
-  invalid-material: "&c[Error] &fMaterial '&e{path}&f' doesn't exist. Using: &b{default}"
-  teleport-success: "&aYou have been teleported to &e{player}"
-  message-console: "&cThis command can only be executed by players."
-  no-reason: "No reason provided"
-  player-muted: "&cYou are muted! You cannot speak."
-  use-staffreset: "&cUsage: /staff reset <player> <BAN|MUTE|KICK|WARN|ALL>"
-  use-stafftake: "&cUsage: /staff take <player> <type> [quantity]"
-  staff-reset-success: "&aHistory &a{type} &a &b{target} &a successfully restarted."
-  staff-take-success: "&aThey have been removed &e{amount} &asanctions of the type &e{type} &ato &b{target}."
-  take-number-invalid: "&cThe quantity must be a valid number."
-  player-no-history: "&cThat player has no punishment history."
-  
-  # Command help messages
-  command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
-  command-help-list:
-    - "&9> &a/maxstaff reload &7- Reload configuration"
-    - "&9> &a/maxstaff mode &7- Enable/Disable staff mode"
-    - "&9> &a/maxstaff help &7- View command list"
-
-# Staff Mode Configuration
+#Material Configuration for Staff Mode
 staff-mode:
-  enabled: "&aStaff Mode &lACTIVATED&a!"
-  disabled: "&cStaff Mode &lDISABLED&c."
-  inventory-saved: "&eYour inventory has been saved."
-  inventory-restored: "&eYour inventory has been restored."
-  cannot-drop: "&cYou cannot drop items while in staff mode."
-  cannot-place: "&cYou cannot place blocks while in staff mode."
-  
   items:
     punish:
       material: "NETHERITE_HOE"
-      name: "&c&lPunish &7(Right Click)"
-      message: "&eOpening punishment menu..."
     freeze:
       material: "PACKED_ICE"
-      name: "&b&lFreeze &7(Click Player)"
-      message-freeze: "&fYou have frozen &b{player}"
-      message-unfreeze: "&fYou have unfrozen &b{player}"
-      target-frozen: 
-        - "&c&lYOU HAVE BEEN FROZEN!"
-        - "&ePlease wait for a Staff member to assist you."
-        - "&7If you disconnect, you will be banned."
-      target-unfrozen: "&aYou have been unfrozen!"
     players:
       material: "CLOCK"
-      name: "&b&lOnline Players &7(Right Click)"
-      message: "&eOpening player list..."
     inspect:
       material: "CHEST"
-      name: "&6&lInspect &7(Click Player)"
-      message: "&6Inspecting: &f{player}"
     vanish:
       material: "NETHER_STAR"
-      name: "&a&lVanish &7(Click to toggle)"
-      message-on: "&aVanish: &lENABLED &7(You are invisible)"
-      message-off: "&cVanish: &lDISABLED &7(You are visible)"
 
-# GUI Configuration
+#Technical configuration of GUIs (Materials)
 gui:
-  players:
-    title: "&8Online Players"
-    head-lore: "&7Click to teleport"
-  sanctions:
-    title: "&8Punish: &0{target}"
-    items:
-      ban: 
-        name: "&c&lBAN"
-        lore: ["&7Click to select reason and duration"]
-      mute: 
-        name: "&e&lMUTE" 
-        lore: ["&7Click to select reason and duration"]
-      kick: 
-        name: "&b&lKICK"
-        lore: ["&7Click to kick now"]
   info:
-    title: "&8Information: &0{target}"
     items:
       stats:
         material: "BOOK"
-        name: "&b&lUser Statistics"
-        lore:
-          - "&7Nick: &f{target}"
-          - "&7UUID: &f{uuid}"
-          - "&7Playtime: &f{playtime}"
-          - ""
-          - "&7Total Punishments: &c{total_punishments}"
       history:
         material: "PAPER"
-        name: "&e&lPunishment History"
-        lore:
-          - "&7Bans: &f{bans}"
-          - "&7Mutes: &f{mutes}"
-          - "&7Kicks: &f{kicks}"
-          - "&7Warns: &f{warns}"
       action_punish:
         material: "NETHERITE_SWORD"
-        name: "&c&lPunish Player"
-        lore:
-          - "&7Click to open punishment menu"
-          - "&7types of sanctions."
 
-  # Punishment reasons menu configuration
-  reasons:
-    title: "&8Sanction [{type}] - {target} ({page}/3)"
-    item-name: "&c&lSanction #{number}"
-    item-lore:
-      - "&7Reason: &f{reason}"
-      - "&8ID: {id}"
-    dye-name: "&eDuration: &f{duration}"
-    dye-lore:
-      - "&7Type: &6{type}"
-      - "&7Reason: &f{reason}"
-      - "&8ID: {id}"
-      - "&8TimeValue: {duration}"
-      - ""
-      - "&eClick to apply sanction"
-    navigation:
-      lore-back: "&7Return to previous menu"
-      lore-page: "&7Go to page {page}"
-
-# GUI Style & Navigation
+#Visual Style and Navigation (Materials Only)
 gui-style:
   border-material: "BLACK_STAINED_GLASS_PANE"
   navigation:
-    back-name: "&c« Back"
     back-material: "BOOK"
-    next-name: "&aNext Page »"
     next-material: "ARROW" 
-    prev-name: "&e« Previous Page"
     prev-material: "ARROW"
   unified-menu:
-    duration-1-material: "LIME_DYE"    # Short time
-    duration-2-material: "YELLOW_DYE"  # Medium time
-    duration-3-material: "ORANGE_DYE"  # Long time
-    duration-4-material: "RED_DYE"     # Permanent
+    #Materials for long-lasting dyes in the reasons menu
+    duration-1-material: "LIME_DYE"    #Short time
+    duration-2-material: "YELLOW_DYE"  #Medium time
+    duration-3-material: "ORANGE_DYE"  #Long time
+    duration-4-material: "RED_DYE"     #Permanent
 
-# Time Units Configuration
-time-units:
-  permanent: "Permanent"
-  days: "days"
-  hours: "hours"
-  minutes: "minutes"
-  seconds: "seconds"
-
-# Punishments Configuration
+#Sanctions System (Logic)
 punishments:
+  #Announce sanctions globally?
   broadcast: true
-  default-reason: "No reason provided"
   broadcasts:
-    ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
-    mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
-    kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
     warns:
-      broadcast: "&c{target} &fhas been warned by &c{staff}. &8(&e{count} warns&8) | Reason: &e{reason}"
-      received: "&c&lWARNING! &fYou have been warned by: &e{reason}"
+      #Commands executed automatically upon reaching X warnings
       thresholds:
         3: "mute {target} 1h Accumulation of 3 warnings"
         5: "kick {target} You have exceeded the warning limit (5)"
-  screens:
-    ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
-    kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
-    mute: "&cYou are muted by {staff}!"
-    unmute: "&aYou may now speak again!"
-    muted-chat: "&cYou are muted! You cannot speak."
-  feedback:
-    player-offline: "&cThat player is not online."
-    not-muted: "&cThat player is not muted."
-    unban-success: "&aYou have unbanned &e{target}"
-    unmute-success: "&aYou have unmuted &e{target}"
-    usage: "&cUsage: /{command} <player> [time] [reason]"
 
-# All Sanction Reasons
+#Definition of Sanction Reasons
+#Here you define the ID, the Material, and the available Durations.
+#The names ('name') can be translated directly here as they follow the logic.
 punishment-reasons:
   BAN:
     xray: { name: "&6X-Ray", material: "DIAMOND_ORE", durations: ["7d", "14d", "30d", "perm"] }
