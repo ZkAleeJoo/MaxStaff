@@ -108,50 +108,51 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-        public void help(CommandSender sender) {
-            String titleTemplate = plugin.getMainConfigManager().getHelpTitle(); 
-            sender.sendMessage(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getPrefix() + 
-                titleTemplate.replace("{version}", plugin.getDescription().getVersion())
-            ));
-            
-            List<String> helpLines = plugin.getMainConfigManager().getHelpLines();
-            if (helpLines == null || helpLines.isEmpty()) {
-                sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
-            } else {
-                for (String line : helpLines) {
-                    sender.sendMessage(MessageUtils.getColoredMessage(line));
-                }
+    public void help(CommandSender sender){
+        String titleTemplate = plugin.getMainConfigManager().getHelpTitle();
+        sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + titleTemplate.replace("{version}", plugin.getDescription().getVersion())));
+        
+        List<String> helpLines = plugin.getMainConfigManager().getHelpLines();
+        if (helpLines == null || helpLines.isEmpty()) {
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Toggle staff mode"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reset"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff take"));
+        } else {
+            for (String line : helpLines) {
+                sender.sendMessage(MessageUtils.getColoredMessage(line));
+            }
+        }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+        if (!sender.hasPermission("maxstaff.admin")) return completions;
+
+        if (args.length == 1) {
+            completions.addAll(Arrays.asList("reload", "help", "mode", "reset", "take"));
+            return filterCompletions(completions, args[0]);
+        }
+
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("take")) {
+                return null; 
             }
         }
 
-        @Override
-        public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-            List<String> completions = new ArrayList<>();
-            if (!sender.hasPermission("maxstaff.admin")) return completions;
-
-            if (args.length == 1) {
-                completions.addAll(Arrays.asList("reload", "help", "mode", "reset", "take"));
-                return filterCompletions(completions, args[0]);
+        if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("reset")) {
+                completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN", "ALL"));
+            } else if (args[0].equalsIgnoreCase("take")) {
+                completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN"));
             }
-
-            if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("take")) {
-                    return null; 
-                }
-            }
-
-            if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("reset")) {
-                    completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN", "ALL"));
-                } else if (args[0].equalsIgnoreCase("take")) {
-                    completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN"));
-                }
-                return filterCompletions(completions, args[2]);
-            }
-
-            return completions;
+            return filterCompletions(completions, args[2]);
         }
+
+        return completions;
+    }
 
     private List<String> filterCompletions(List<String> completions, String input) {
         List<String> filtered = new ArrayList<>();
