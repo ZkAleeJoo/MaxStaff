@@ -73,10 +73,12 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             String target = args[1];
             String type = args[2].toUpperCase();
             
-            plugin.getPunishmentManager().resetHistory(target, type);
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
-                "&aHistorial &e" + type + " &ade &b" + target + " &areiniciado con éxito."));
-            return true;
+            String msg = plugin.getMainConfigManager().getMsgResetSuccess()
+                        .replace("{type}", type)
+                        .replace("{target}", target);
+                        
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+                return true;
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("take")) {
@@ -105,8 +107,12 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
             boolean success = plugin.getPunishmentManager().takeHistory(target, type, amount);
             if (success) {
-                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
-                    "&aSe han quitado &e" + amount + " &asanciones de tipo &e" + type + " &aa &b" + target + "."));
+                String msg = plugin.getMainConfigManager().getMsgTakeSuccess()
+                .replace("{amount}", String.valueOf(amount))
+                .replace("{type}", type)
+                .replace("{target}", target);
+                
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
             } else {
                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
                     plugin.getMainConfigManager().getPlayerNoHistory()));

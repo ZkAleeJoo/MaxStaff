@@ -53,6 +53,7 @@ public class MainConfigManager {
     private String usestafftake;
     private String takeNumberInvalid;
     private String playerNoHistory;
+    private String msgResetSuccess, msgTakeSuccess;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -172,6 +173,8 @@ public class MainConfigManager {
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
         usestaffreset = config.getString("messages.use-staffreset");
         usestafftake = config.getString("messages.use-stafftake");
+        msgResetSuccess = config.getString("messages.staff-reset-success");
+        msgTakeSuccess = config.getString("messages.staff-take-success");
         takeNumberInvalid = config.getString("messages.take-number-invalid");
         playerNoHistory = config.getString("messages.player-no-history");
     }
@@ -286,6 +289,8 @@ public class MainConfigManager {
     public String getUseStaffTake() { return usestafftake; }
     public String getTakeNumberInvalid() { return takeNumberInvalid; }
     public String getPlayerNoHistory() { return playerNoHistory; }
+    public String getMsgResetSuccess() { return msgResetSuccess; }
+    public String getMsgTakeSuccess() { return msgTakeSuccess; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
