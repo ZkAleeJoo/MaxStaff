@@ -1,0 +1,140 @@
+# ==========================================
+#        MaxStaff - Mensajes en Español
+# ==========================================
+
+messages:
+  no-permission: "&cNo tienes permiso para usar este comando."
+  plugin-reload: "&aConfiguración recargada exitosamente."
+  subcommand-invalid: "&cSubcomando inválido. Usa /maxstaff help."
+  subcommand-specified: "&cPor favor especifica un subcomando."
+  player-click-pls: "&cPor favor haz click derecho en un jugador para sancionarlo."
+  invalid-material: "&c[Error] &fEl material '&e{path}&f' no existe. Usando: &b{default}"
+  teleport-success: "&aHas sido teletransportado a &e{player}"
+  message-console: "&cEste comando solo puede ser ejecutado por jugadores."
+  no-reason: "Sin motivo proporcionado"
+  player-muted: "&c¡Estás silenciado! No puedes hablar."
+  use-staffreset: "&cUso: /staff reset <jugador> <BAN|MUTE|KICK|WARN|ALL>"
+  use-stafftake: "&cUso: /staff take <jugador> <tipo> [cantidad]"
+  staff-reset-success: "&aEl historial de &a{type} &ade &b{target} &a ha sido reiniciado."
+  staff-take-success: "&aSe han eliminado &e{amount} &asanciones de tipo &e{type} &aa &b{target}."
+  take-number-invalid: "&cLa cantidad debe ser un número válido."
+  player-no-history: "&cEse jugador no tiene historial de sanciones."
+  command-help-title: "&4&lMaxStaff &fLista de Comandos: &b{version}"
+  command-help-list:
+    - "&9> &a/maxstaff reload &7- Recargar configuración"
+    - "&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"
+    - "&9> &a/maxstaff help &7- Ver lista de comandos"
+
+staff-mode:
+  enabled: "&aModo Staff &lACTIVADO&a!"
+  disabled: "&cModo Staff &lDESACTIVADO&c."
+  inventory-saved: "&eTu inventario ha sido guardado."
+  inventory-restored: "&eTu inventario ha sido restaurado."
+  cannot-drop: "&cNo puedes tirar objetos en modo staff."
+  cannot-place: "&cNo puedes poner bloques en modo staff."
+  items:
+    punish:
+      name: "&c&lSancionar &7(Click Derecho)"
+      message: "&eAbriendo menú de sanciones..."
+    freeze:
+      name: "&b&lCongelar &7(Click al Jugador)"
+      message-freeze: "&fHas congelado a &b{player}"
+      message-unfreeze: "&fHas descongelado a &b{player}"
+      target-frozen: 
+        - "&c&l¡HAS SIDO CONGELADO!"
+        - "&ePor favor espera a que un miembro del Staff te atienda."
+        - "&7Si te desconectas, serás baneado."
+      target-unfrozen: "&a¡Has sido descongelado!"
+    players:
+      name: "&b&lJugadores Online &7(Click Derecho)"
+      message: "&eAbriendo lista de jugadores..."
+    inspect:
+      name: "&6&lInspeccionar &7(Click al Jugador)"
+      message: "&6Inspeccionando a: &f{player}"
+    vanish:
+      name: "&a&lVanish &7(Click para alternar)"
+      message-on: "&aVanish: &lACTIVADO &7(Eres invisible)"
+      message-off: "&cVanish: &lDESACTIVADO &7(Eres visible)"
+
+gui:
+  players:
+    title: "&8Jugadores Online"
+    head-lore: "&7Click para teletransportarte"
+  sanctions:
+    title: "&8Sancionar: &0{target}"
+    items:
+      ban: { name: "&c&lBANEAR", lore: ["&7Click para seleccionar motivo y duración"] }
+      mute: { name: "&e&lMUTEAR", lore: ["&7Click para seleccionar motivo y duración"] }
+      kick: { name: "&b&lEXPULSAR", lore: ["&7Click para expulsar ahora"] }
+  info:
+    title: "&8Información: &0{target}"
+    items:
+      stats:
+        name: "&b&lEstadísticas de Usuario"
+        lore:
+          - "&7Nick: &f{target}"
+          - "&7UUID: &f{uuid}"
+          - "&7Tiempo jugado: &f{playtime}"
+          - ""
+          - "&7Sanciones Totales: &c{total_punishments}"
+      history:
+        name: "&e&lHistorial de Sanciones"
+        lore:
+          - "&7Baneos: &f{bans}"
+          - "&7Mutes: &f{mutes}"
+          - "&7Kicks: &f{kicks}"
+          - "&7Warns: &f{warns}"
+      action_punish:
+        name: "&c&lSancionar Jugador"
+        lore:
+          - "&7Click para abrir el menú"
+          - "&7de tipos de sanciones."
+  reasons:
+    title: "&8Sanción [{type}] - {target} ({page}/3)"
+    item-name: "&c&lSanción #{number}"
+    item-lore: ["&7Motivo: &f{reason}", "&8ID: {id}"]
+    dye-name: "&eDuración: &f{duration}"
+    dye-lore:
+      - "&7Tipo: &6{type}"
+      - "&7Motivo: &f{reason}"
+      - "&8ID: {id}"
+      - "&8Tiempo: {duration}"
+      - ""
+      - "&eClick para aplicar sanción"
+    navigation:
+      lore-back: "&7Volver al menú anterior"
+      lore-page: "&7Ir a la página {page}"
+
+gui-style:
+  navigation:
+    back-name: "&c« Volver"
+    next-name: "&aSiguiente Página »"
+    prev-name: "&e« Página Anterior"
+
+time-units:
+  permanent: "Permanente"
+  days: "días"
+  hours: "horas"
+  minutes: "minutos"
+  seconds: "segundos"
+
+punishments:
+  broadcasts:
+    ban: "&c{target} &fha sido baneado por &c{staff} &f(&e{duration}&f). | Motivo: &e{reason}"
+    mute: "&c{target} &fha sido silenciado por &c{staff} &f(&e{duration}&f). | Motivo: &e{reason}"
+    kick: "&e{target} &fha sido expulsado por &c{staff} &f| Motivo: &e{reason}"
+    warns:
+      broadcast: "&c{target} &fha sido advertido por &c{staff}. &8(&e{count} advertencias&8) | Motivo: &e{reason}"
+      received: "&c&l¡ADVERTENCIA! &fHas sido advertido por: &e{reason}"
+  screens:
+    ban: "&c¡Has sido baneado!\n\n&fPor: &c{staff}\n&fDuración: &e{duration}\n&fMotivo: &e{reason}"
+    kick: "&c¡Has sido expulsado!\n\n&fPor: &c{staff}\n&fMotivo: &e{reason}"
+    mute: "&c¡Has sido silenciado por {staff}!"
+    unmute: "&a¡Ya puedes hablar de nuevo!"
+    muted-chat: "&c¡Estás silenciado! No puedes hablar."
+  feedback:
+    player-offline: "&cEse jugador no está conectado."
+    not-muted: "&cEse jugador no está silenciado."
+    unban-success: "&aHas desbaneado a &e{target}"
+    unmute-success: "&aHas desilenciado a &e{target}"
+    usage: "&cUso: /{command} <jugador> [tiempo] [motivo]"
