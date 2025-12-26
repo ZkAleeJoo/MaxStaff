@@ -160,11 +160,11 @@ punishments:
     mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
     kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
     warns:
-      broadcast: "&c{target} &fha sido advertido por &c{staff}. &8(&e{count} warns&8) | Motivo: &e{reason}"
-      received: "&c&lADVERTENCIA! &fHas sido advertido por: &e{reason}"
+      broadcast: "&c{target} &fhas been warned by &c{staff}. &8(&e{count} warns&8) | Reason: &e{reason}"
+      received: "&c&lWARNING! &fYou have been warned by: &e{reason}"
       thresholds:
-        3: "mute {target} 1h Acumulación de 3 advertencias"
-        5: "kick {target} Has excedido el límite de advertencias (5)"
+        3: "mute {target} 1h Accumulation of 3 warnings"
+        5: "kick {target} You have exceeded the warning limit (5)"
   screens:
     ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
     kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
