@@ -24,6 +24,9 @@ messages:
     - "&9> &a/maxstaff reload &7- Recargar configuración"
     - "&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"
     - "&9> &a/maxstaff help &7- Ver lista de comandos"
+  update-available: "&e¡Hay una nueva versión disponible! (&b{version}&e)"
+  update-current: "&7Tu versión actual: &c{version}"
+  update-download: "&eDescárgala para obtener mejoras y correcciones."
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"

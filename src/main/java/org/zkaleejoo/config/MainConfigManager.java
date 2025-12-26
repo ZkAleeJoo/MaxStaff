@@ -54,6 +54,7 @@ public class MainConfigManager {
     private String screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
     private String usestaffreset, usestafftake, takeNumberInvalid, playerNoHistory, msgResetSuccess, msgTakeSuccess;
+    private String msgUpdateAvailable, msgUpdateCurrent, msgUpdateDownload;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -196,6 +197,10 @@ public class MainConfigManager {
         msgTakeSuccess = lang.getString("messages.staff-take-success");
         takeNumberInvalid = lang.getString("messages.take-number-invalid");
         playerNoHistory = lang.getString("messages.player-no-history");
+
+        msgUpdateAvailable = lang.getString("messages.update-available", "&eA new version is available! (&b{version}&e)");
+        msgUpdateCurrent = lang.getString("messages.update-current", "&7Your current version: &c{version}");
+        msgUpdateDownload = lang.getString("messages.update-download", "&eDownload it to get improvements and fixes.");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -314,6 +319,9 @@ public class MainConfigManager {
     public String getPlayerNoHistory() { return playerNoHistory; }
     public String getMsgResetSuccess() { return msgResetSuccess; }
     public String getMsgTakeSuccess() { return msgTakeSuccess; }
+    public String getMsgUpdateAvailable() { return msgUpdateAvailable; }
+    public String getMsgUpdateCurrent() { return msgUpdateCurrent; }
+    public String getMsgUpdateDownload() { return msgUpdateDownload; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);

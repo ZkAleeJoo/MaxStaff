@@ -51,7 +51,7 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
         }
 
         if (label.equalsIgnoreCase("warn")) {
-            String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : "Sin motivo";
+            String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : plugin.getMainConfigManager().getNoReason();
             plugin.getPunishmentManager().warnPlayer(sender, target, reason);
             return true;
         }

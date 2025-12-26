@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
+import org.zkaleejoo.config.MainConfigManager;
 
 public class PlayerJoinListener implements Listener {
 
@@ -17,31 +18,28 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player newPlayer = event.getPlayer();
+        Player player = event.getPlayer();
+        MainConfigManager config = plugin.getMainConfigManager();
 
+        // Manejo de Vanish para jugadores que entran
         for (java.util.UUID uuid : plugin.getStaffManager().getVanishedPlayers()) {
             Player staff = org.bukkit.Bukkit.getPlayer(uuid);
             if (staff != null && staff.isOnline()) {
-                if (!newPlayer.hasPermission("maxstaff.see.vanish")) {
-                    newPlayer.hidePlayer(plugin, staff);
+                if (!player.hasPermission("maxstaff.see.vanish")) {
+                    player.hidePlayer(plugin, staff);
                 }
             }
         }
 
-        Player player = event.getPlayer();
-    
-    if (player.hasPermission("maxstaff.admin")) { 
-        String latest = plugin.getLatestVersion();
-        if (latest != null && !plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
-            player.sendMessage(" ");
-            player.sendMessage(MessageUtils.getColoredMessage("&4&lMaxStaff &8» &eA new version is available! (&b" + latest + "&e)"));
-            player.sendMessage(MessageUtils.getColoredMessage("&7Your current version: &c" + plugin.getDescription().getVersion()));
-            player.sendMessage(MessageUtils.getColoredMessage("&eDownload it to get improvements and fixes."));
-            player.sendMessage(" ");
+        if (player.hasPermission("maxstaff.admin")) { 
+            String latest = plugin.getLatestVersion();
+            if (latest != null && !plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
+                player.sendMessage(" ");
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgUpdateAvailable().replace("{version}", latest)));
+                player.sendMessage(MessageUtils.getColoredMessage(config.getMsgUpdateCurrent().replace("{version}", plugin.getDescription().getVersion())));
+                player.sendMessage(MessageUtils.getColoredMessage(config.getMsgUpdateDownload()));
+                player.sendMessage(" ");
+            }
         }
     }
-
-    }
-
-    
 }
