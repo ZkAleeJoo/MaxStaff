@@ -49,6 +49,10 @@ public class MainConfigManager {
     private boolean isBroadcastEnabled;
     private String bcBan, bcMute, bcKick, screenBan, screenKick, screenMute, screenUnmute, msgMutedChat;
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
+    private String usestaffreset;
+    private String usestafftake;
+    private String takeNumberInvalid;
+    private String playerNoHistory;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -166,6 +170,10 @@ public class MainConfigManager {
         bcWarn = config.getString("punishments.broadcasts.warns.broadcast");
         msgWarnReceived = config.getString("punishments.broadcasts.warns.received");
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
+        usestaffreset = config.getString("messages.use-staffreset");
+        usestafftake = config.getString("messages.use-stafftake");
+        takeNumberInvalid = config.getString("messages.take-number-invalid");
+        playerNoHistory = config.getString("messages.player-no-history");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -274,6 +282,10 @@ public class MainConfigManager {
     public String getBcWarn() { return bcWarn; }
     public String getMsgWarnReceived() { return msgWarnReceived; }
     public ConfigurationSection getWarnThresholds() { return warnThresholds; }
+    public String getUseStaffReset() { return usestaffreset; }
+    public String getUseStaffTake() { return usestafftake; }
+    public String getTakeNumberInvalid() { return takeNumberInvalid; }
+    public String getPlayerNoHistory() { return playerNoHistory; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);

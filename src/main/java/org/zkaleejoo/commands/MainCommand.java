@@ -9,6 +9,7 @@ import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainCommand implements CommandExecutor, TabCompleter {
@@ -59,6 +60,60 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             help(sender);
         }
 
+        //NUEVA SECCIÓN
+        if (args.length >= 1 && args[0].equalsIgnoreCase("reset")) {
+            if (!sender.hasPermission("maxstaff.admin")) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
+                return true;
+            }
+            if (args.length < 3) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUseStaffReset()));
+                return true;
+            }
+            String target = args[1];
+            String type = args[2].toUpperCase();
+            
+            plugin.getPunishmentManager().resetHistory(target, type);
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
+                "&aHistorial &e" + type + " &ade &b" + target + " &areiniciado con éxito."));
+            return true;
+        }
+
+        if (args.length >= 1 && args[0].equalsIgnoreCase("take")) {
+            if (!sender.hasPermission("maxstaff.admin")) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
+                return true;
+            }
+            if (args.length < 3) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUseStaffTake()));
+                return true;
+            }
+            
+            String target = args[1];
+            String type = args[2].toUpperCase();
+            int amount = 1;
+            
+            if (args.length >= 4) {
+                try {
+                    amount = Integer.parseInt(args[3]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
+                        plugin.getMainConfigManager().getTakeNumberInvalid()));
+                    return true;
+                }
+            }
+
+            boolean success = plugin.getPunishmentManager().takeHistory(target, type, amount);
+            if (success) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
+                    "&aSe han quitado &e" + amount + " &asanciones de tipo &e" + type + " &aa &b" + target + "."));
+            } else {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + 
+                    plugin.getMainConfigManager().getPlayerNoHistory()));
+            }
+            return true;
+        }
+
         return true;
     }
 
@@ -71,6 +126,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
             sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Toggle staff mode"));
             sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reset"));
+            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff take"));
         } else {
             for (String line : helpLines) {
                 sender.sendMessage(MessageUtils.getColoredMessage(line));
@@ -78,23 +135,33 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
+        @Override
+        public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+            List<String> completions = new ArrayList<>();
+            if (!sender.hasPermission("maxstaff.admin")) return completions;
 
-        if (!sender.hasPermission("maxstaff.admin")) {
+            if (args.length == 1) {
+                completions.addAll(Arrays.asList("reload", "help", "mode", "reset", "take"));
+                return filterCompletions(completions, args[0]);
+            }
+
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("take")) {
+                    return null; 
+                }
+            }
+
+            if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("reset")) {
+                    completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN", "ALL"));
+                } else if (args[0].equalsIgnoreCase("take")) {
+                    completions.addAll(Arrays.asList("BAN", "MUTE", "KICK", "WARN"));
+                }
+                return filterCompletions(completions, args[2]);
+            }
+
             return completions;
         }
-
-        if (args.length == 1) {
-            completions.add("reload");
-            completions.add("help");
-            completions.add("mode"); 
-            return filterCompletions(completions, args[0]);
-        }
-
-        return completions;
-    }
 
     private List<String> filterCompletions(List<String> completions, String input) {
         List<String> filtered = new ArrayList<>();

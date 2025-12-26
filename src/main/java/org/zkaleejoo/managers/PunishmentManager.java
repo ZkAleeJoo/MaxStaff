@@ -220,4 +220,38 @@ public class PunishmentManager {
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
         }
     }
+
+
+    public void resetHistory(String targetName, String type) {
+        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        FileConfiguration data = dataFile.getConfig();
+        String path = "history." + uuid;
+
+        if (type.equalsIgnoreCase("all")) {
+            data.set(path, null); 
+        } else {
+            data.set(path + "." + type.toUpperCase(), null);
+        }
+        dataFile.saveConfig();
+    }
+
+    public boolean takeHistory(String targetName, String type, int amount) {
+        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        FileConfiguration data = dataFile.getConfig();
+        String path = "history." + uuid + "." + type.toUpperCase();
+        
+        int current = data.getInt(path, 0);
+        if (current <= 0) return false;
+
+        int newValue = Math.max(0, current - amount);
+        
+        if (newValue == 0) {
+            data.set(path, null); 
+        } else {
+            data.set(path, newValue);
+        }
+        
+        dataFile.saveConfig();
+        return true;
+    }
 }

@@ -18,6 +18,10 @@ messages:
   message-console: "&cThis command can only be executed by players."
   no-reason: "No reason provided"
   player-muted: "&cYou are muted! You cannot speak."
+  use-staffreset: "&cUsage: /staff reset <player> <BAN|MUTE|KICK|WARN|ALL>"
+  user-stafftake: "&cUsage: /staff take <player> <type> [quantity]"
+  take-number-invalid: "&cThe quantity must be a valid number."
+  player-no-history: "&cThat player has no punishment history."
   
   # Command help messages
   command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
