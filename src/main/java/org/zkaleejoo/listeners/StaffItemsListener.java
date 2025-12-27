@@ -2,6 +2,7 @@ package org.zkaleejoo.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey; 
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
@@ -16,6 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType; 
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
@@ -61,15 +64,17 @@ public class StaffItemsListener implements Listener {
         ItemStack item = event.getItem();
         MainConfigManager config = plugin.getMainConfigManager();
 
+        String toolType = getStaffToolType(item);
+
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
             if (block != null) {
                 if (block.getState() instanceof Container || block.getType() == Material.ENDER_CHEST) {
                     
-                    boolean usingStaffItem = item != null && (
-                        item.getType() == config.getMatVanish() || 
-                        item.getType() == config.getMatPlayers() || 
-                        item.getType() == config.getMatPunish()
+                    boolean usingStaffItem = toolType != null && (
+                        toolType.equals("vanish_tool") || 
+                        toolType.equals("players_tool") || 
+                        toolType.equals("punish_tool")
                     );
 
                     if (!usingStaffItem) {
@@ -80,14 +85,10 @@ public class StaffItemsListener implements Listener {
                         } else {
                             Container container = (Container) block.getState();
                             Inventory realInv = container.getInventory();
-                            
                             String title = container.getCustomName() != null ? container.getCustomName() : container.getType().name();
-                            
                             Inventory silentInv = Bukkit.createInventory(null, realInv.getSize(), title);
                             silentInv.setContents(realInv.getContents());
-                            
                             silentViewers.put(player.getUniqueId(), block);
-                            
                             player.openInventory(silentInv);
                         }
                         return; 
@@ -96,20 +97,20 @@ public class StaffItemsListener implements Listener {
             }
         }
 
-        if (item == null || item.getType() == Material.AIR) return;
+        if (toolType == null) return;
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (item.getType() == config.getMatVanish()) {
+            if (toolType.equals("vanish_tool")) {
                 event.setCancelled(true); 
                 plugin.getStaffManager().toggleVanish(player);
             }
-            else if (item.getType() == config.getMatPlayers()) {
+            else if (toolType.equals("players_tool")) {
                 event.setCancelled(true);
                 plugin.getGuiManager().openPlayersMenu(player);
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
             }
-            else if (item.getType() == config.getMatPunish()) {
+            else if (toolType.equals("punish_tool")) {
                 event.setCancelled(true);
                 org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
                     player.getEyeLocation(), 
@@ -119,21 +120,6 @@ public class StaffItemsListener implements Listener {
                 );
                 if (ray != null && ray.getHitEntity() != null) return;
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
-            }
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        if (silentViewers.containsKey(uuid)) {
-            Block block = silentViewers.remove(uuid); 
-            
-            if (block.getState() instanceof Container) {
-                Container container = (Container) block.getState();
-                container.getInventory().setContents(event.getInventory().getContents());
             }
         }
     }
@@ -149,20 +135,44 @@ public class StaffItemsListener implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         MainConfigManager config = plugin.getMainConfigManager();
 
-        if (item.getType() == config.getMatInspect()) {
+        String toolType = getStaffToolType(item);
+        if (toolType == null) return;
+
+        if (toolType.equals("inspect_tool")) {
             event.setCancelled(true);
             String msg = config.getMsgInspect().replace("{player}", target.getName());
             player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + msg));
             player.openInventory(target.getInventory());
         }
-        else if (item.getType() == config.getMatPunish()) {
+        else if (toolType.equals("punish_tool")) {
             event.setCancelled(true);
             plugin.getGuiManager().openUserInfoMenu(player, target);
         }
-        else if (item.getType() == config.getMatFreeze()) {
+        else if (toolType.equals("freeze_tool")) {
             event.setCancelled(true);
             plugin.getFreezeManager().toggleFreeze(player, target);
         }   
+    }
+
+
+    private String getStaffToolType(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return null;
+        ItemMeta meta = item.getItemMeta();
+        NamespacedKey key = new NamespacedKey(plugin, "staff_tool");
+        return meta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        if (silentViewers.containsKey(uuid)) {
+            Block block = silentViewers.remove(uuid); 
+            if (block.getState() instanceof Container) {
+                Container container = (Container) block.getState();
+                container.getInventory().setContents(event.getInventory().getContents());
+            }
+        }
     }
 
     @EventHandler
