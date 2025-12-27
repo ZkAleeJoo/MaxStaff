@@ -3,6 +3,7 @@ package org.zkaleejoo.managers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
+import org.bukkit.NamespacedKey; 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
@@ -38,7 +40,6 @@ public class GuiManager {
             inv.setItem(i + 8, border);
         }
     }
-
 
     public void openUserInfoMenu(Player staff, Player target) {
         MainConfigManager config = plugin.getMainConfigManager();
@@ -82,7 +83,6 @@ public class GuiManager {
         staff.openInventory(gui);
     }
 
-
     public void openPlayersMenu(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
         setupBorder(gui);
@@ -92,7 +92,6 @@ public class GuiManager {
         player.openInventory(gui);
     }
 
-
     public void openSanctionMenu(Player player, String targetName) {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().replace("{target}", targetName));
@@ -100,7 +99,6 @@ public class GuiManager {
         Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
         
-
         gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
         gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore()));
         gui.setItem(15, createItem(Material.FEATHER, config.getGuiItemKickName(), config.getGuiItemKickLore()));
@@ -109,7 +107,6 @@ public class GuiManager {
         
         player.openInventory(gui);
     }
-
 
     public void openReasonsMenu(Player player, String targetName, String type, int page) {
         ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
@@ -161,6 +158,12 @@ public class GuiManager {
                 String dur = (d < durations.size()) ? durations.get(d) : (type.equals("KICK") ? "Ahora" : "perm");
                 ItemStack dye = new ItemStack(plugin.getMainConfigManager().getDurationDye(d));
                 ItemMeta dMeta = dye.getItemMeta();
+
+                NamespacedKey reasonKey = new NamespacedKey(plugin, "reason_id");
+                NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
+                dMeta.getPersistentDataContainer().set(reasonKey, PersistentDataType.STRING, key);
+                dMeta.getPersistentDataContainer().set(durationKey, PersistentDataType.STRING, dur);
+
                 String dName = plugin.getMainConfigManager().getGuiReasonsDyeName().replace("{duration}", dur);
                 dMeta.setDisplayName(MessageUtils.getColoredMessage(dName));
                 
