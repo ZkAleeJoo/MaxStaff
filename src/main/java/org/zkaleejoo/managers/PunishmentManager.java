@@ -12,8 +12,12 @@ import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.TimeUtils;
 import org.bukkit.Sound;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class PunishmentManager {
 
@@ -254,4 +258,31 @@ public class PunishmentManager {
         dataFile.saveConfig();
         return true;
     }
+
+    public List<String> getBannedPlayerNames() {
+        return Bukkit.getBanList(org.bukkit.BanList.Type.NAME).getBanEntries().stream()
+                .map(org.bukkit.BanEntry::getTarget)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<String> getMutedPlayerNames() {
+        List<String> names = new ArrayList<>();
+        FileConfiguration data = dataFile.getConfig();
+        
+        if (data.getConfigurationSection("mutes") == null) return names;
+
+        for (String uuidStr : data.getConfigurationSection("mutes").getKeys(false)) {
+            try {
+                UUID uuid = UUID.fromString(uuidStr);
+                if (isMuted(uuid)) {
+                    String name = Bukkit.getOfflinePlayer(uuid).getName();
+                    if (name != null) names.add(name);
+                }
+            } catch (IllegalArgumentException ignored) {}
+        }
+        return names;
+    }
+
+
 }
