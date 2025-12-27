@@ -91,19 +91,7 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
         if (!sender.hasPermission("maxstaff.punish")) return completions;
 
         if (args.length == 1) {
-            if (label.equalsIgnoreCase("unban")) {
-                completions.addAll(plugin.getPunishmentManager().getBannedPlayerNames());
-            } 
-            else if (label.equalsIgnoreCase("unmute")) {
-                completions.addAll(plugin.getPunishmentManager().getMutedPlayerNames());
-            } 
-            else {
-                return null; 
-            }
-            
-            return completions.stream()
-                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+            return null; 
         }
 
         if (args.length == 2) {
