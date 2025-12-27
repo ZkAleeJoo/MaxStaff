@@ -2,20 +2,25 @@ package org.zkaleejoo.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
-import org.bukkit.Sound;
 
 public class GuiListener implements Listener {
 
     private final MaxStaff plugin;
 
-    public GuiListener(MaxStaff plugin) { this.plugin = plugin; }
+    public GuiListener(MaxStaff plugin) { 
+        this.plugin = plugin; 
+    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -61,7 +66,7 @@ public class GuiListener implements Listener {
             return;
         }
 
-       String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
+        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
         if (title.contains(sanctionsTitle)) {
             event.setCancelled(true);
             String targetName = title.replace(sanctionsTitle, "").trim();
@@ -104,18 +109,24 @@ public class GuiListener implements Listener {
             else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
+            
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
-                String reasonId = "", duration = "";
-                for (String line : item.getItemMeta().getLore()) {
-                    String clean = ChatColor.stripColor(line);
-                    if (clean.contains("ID:")) reasonId = clean.split("ID:")[1].trim();
-                    if (clean.contains("TimeValue:")) duration = clean.split("TimeValue:")[1].trim();
-                }
+                ItemMeta meta = item.getItemMeta();
+                
+                NamespacedKey reasonKey = new NamespacedKey(plugin, "reason_id");
+                NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
+                
+                String reasonId = meta.getPersistentDataContainer().get(reasonKey, PersistentDataType.STRING);
+                String duration = meta.getPersistentDataContainer().get(durationKey, PersistentDataType.STRING);
+                
+                if (reasonId == null || duration == null) return;
                 
                 String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
+                
                 if (type.equals("BAN")) plugin.getPunishmentManager().banPlayer(player, target, reasonName, duration);
                 else if (type.equals("MUTE")) plugin.getPunishmentManager().mutePlayer(player, target, reasonName, duration);
                 else if (type.equals("KICK")) plugin.getPunishmentManager().kickPlayer(player, target, reasonName);
+                
                 player.closeInventory();
             }
         }
