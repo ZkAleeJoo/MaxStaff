@@ -22,8 +22,17 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("maxstaff.punish")) {
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()));
+        String baseLabel = label.toLowerCase();
+        
+        if (baseLabel.equals("tempban")) baseLabel = "ban";
+        if (baseLabel.equals("tempmute")) baseLabel = "mute";
+        
+        String permission = "maxstaff.punish." + baseLabel;
+
+        if (!sender.hasPermission(permission)) {
+            sender.sendMessage(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()
+            ));
             return true;
         }
 
@@ -55,7 +64,6 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
             plugin.getPunishmentManager().warnPlayer(sender, target, reason);
             return true;
         }
-
         String time = "perm";
         String reason = plugin.getMainConfigManager().getNoReason();
         
@@ -88,7 +96,11 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> completions = new ArrayList<>();
 
-        if (!sender.hasPermission("maxstaff.punish")) return completions;
+        String baseLabel = label.toLowerCase();
+        if (baseLabel.equals("tempban")) baseLabel = "ban";
+        if (baseLabel.equals("tempmute")) baseLabel = "mute";
+        
+        if (!sender.hasPermission("maxstaff.punish." + baseLabel)) return completions;
 
         if (args.length == 1) {
             if (label.equalsIgnoreCase("unban")) {
