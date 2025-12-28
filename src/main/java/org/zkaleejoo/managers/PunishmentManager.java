@@ -2,6 +2,7 @@ package org.zkaleejoo.managers;
 
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,8 +31,32 @@ public class PunishmentManager {
         this.dataFile.registerConfig();
     }
 
+    private UUID getUniqueId(String targetName) {
+        Player onlineTarget = Bukkit.getPlayer(targetName);
+        if (onlineTarget != null) {
+            UUID uuid = onlineTarget.getUniqueId();
+            updateNameCache(targetName, uuid);
+            return uuid;
+        }
+
+        String cachedUUID = dataFile.getConfig().getString("uuid-cache." + targetName.toLowerCase());
+        if (cachedUUID != null) {
+            return UUID.fromString(cachedUUID);
+        }
+
+        OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
+        UUID uuid = offlineTarget.getUniqueId();
+        updateNameCache(targetName, uuid);
+        return uuid;
+    }
+
+    private void updateNameCache(String name, UUID uuid) {
+        dataFile.getConfig().set("uuid-cache." + name.toLowerCase(), uuid.toString());
+        dataFile.saveConfig();
+    }
+
     private void logHistory(String targetName, String type) {
-        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        UUID uuid = getUniqueId(targetName);
         FileConfiguration data = dataFile.getConfig();
         int current = data.getInt("history." + uuid + "." + type, 0);
         data.set("history." + uuid + "." + type, current + 1);
@@ -39,7 +64,7 @@ public class PunishmentManager {
     }
 
     public int getHistoryCount(String targetName, String type) {
-        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        UUID uuid = getUniqueId(targetName);
         return dataFile.getConfig().getInt("history." + uuid + "." + type, 0);
     }
 
@@ -63,9 +88,8 @@ public class PunishmentManager {
         }
 
         if (staff instanceof Player) {
-        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 0.5f);
-    }
-
+            ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 0.5f);
+        }
     }
 
     // --- BAN ---
@@ -98,9 +122,8 @@ public class PunishmentManager {
         broadcast(bcMsg);
 
         if (staff instanceof Player) {
-        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
-    }
-
+            ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
+        }
     }
 
     public void unbanPlayer(CommandSender staff, String targetName) {
@@ -112,8 +135,8 @@ public class PunishmentManager {
 
     // --- MUTE ---
     public void mutePlayer(CommandSender staff, String targetName, String reason, String durationStr) {
+        UUID uuid = getUniqueId(targetName);
         Player target = Bukkit.getPlayer(targetName);
-        UUID uuid = (target != null) ? target.getUniqueId() : Bukkit.getOfflinePlayer(targetName).getUniqueId();
         
         logHistory(targetName, "MUTE");
         long duration = TimeUtils.parseDuration(durationStr);
@@ -141,15 +164,14 @@ public class PunishmentManager {
         broadcast(bcMsg);
 
         if (staff instanceof Player) {
-        ((Player) staff).playSound(((Player) staff).getLocation(), Sound.BLOCK_ANVIL_LAND, 0.8f, 1.2f);
-    }
-
+            ((Player) staff).playSound(((Player) staff).getLocation(), Sound.BLOCK_ANVIL_LAND, 0.8f, 1.2f);
+        }
     }
 
     // --- UNMUTE ---
     public void unmutePlayer(CommandSender staff, String targetName) {
+        UUID uuid = getUniqueId(targetName);
         Player target = Bukkit.getPlayer(targetName);
-        UUID uuid = (target != null) ? target.getUniqueId() : Bukkit.getOfflinePlayer(targetName).getUniqueId();
 
         FileConfiguration data = dataFile.getConfig();
         if (data.contains("mutes." + uuid)) {
@@ -170,38 +192,38 @@ public class PunishmentManager {
 
     // --- WARN ---
     public void warnPlayer(CommandSender staff, String targetName, String reason) {
-    logHistory(targetName, "WARN"); 
-    int count = getHistoryCount(targetName, "WARN");
-    
-    Player target = Bukkit.getPlayer(targetName);
-    MainConfigManager config = plugin.getMainConfigManager();
+        logHistory(targetName, "WARN"); 
+        int count = getHistoryCount(targetName, "WARN");
+        
+        Player target = Bukkit.getPlayer(targetName);
+        MainConfigManager config = plugin.getMainConfigManager();
 
-    if (target != null) {
-        target.sendMessage(MessageUtils.getColoredMessage(
-            config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
-    }
+        if (target != null) {
+            target.sendMessage(MessageUtils.getColoredMessage(
+                config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
+        }
 
-    String bcMsg = config.getBcWarn()
-            .replace("{target}", targetName)
-            .replace("{staff}", staff.getName())
-            .replace("{count}", String.valueOf(count))
-            .replace("{reason}", reason);
-    broadcast(bcMsg);
+        String bcMsg = config.getBcWarn()
+                .replace("{target}", targetName)
+                .replace("{staff}", staff.getName())
+                .replace("{count}", String.valueOf(count))
+                .replace("{reason}", reason);
+        broadcast(bcMsg);
 
         checkWarnThresholds(targetName, count);
     }
 
     private void checkWarnThresholds(String targetName, int count) {
-    ConfigurationSection thresholds = plugin.getMainConfigManager().getWarnThresholds();
-    if (thresholds == null) return;
+        ConfigurationSection thresholds = plugin.getMainConfigManager().getWarnThresholds();
+        if (thresholds == null) return;
 
-    String key = String.valueOf(count);
-    if (thresholds.contains(key)) {
-        String command = thresholds.getString(key);
-        if (command != null) {
-            String finalCmd = command.replace("{target}", targetName);
-            Bukkit.getScheduler().runTask(plugin, () -> 
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
+        String key = String.valueOf(count);
+        if (thresholds.contains(key)) {
+            String command = thresholds.getString(key);
+            if (command != null) {
+                String finalCmd = command.replace("{target}", targetName);
+                Bukkit.getScheduler().runTask(plugin, () -> 
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
             }
         }
     }
@@ -225,9 +247,8 @@ public class PunishmentManager {
         }
     }
 
-
     public void resetHistory(String targetName, String type) {
-        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        UUID uuid = getUniqueId(targetName);
         FileConfiguration data = dataFile.getConfig();
         String path = "history." + uuid;
 
@@ -240,7 +261,7 @@ public class PunishmentManager {
     }
 
     public boolean takeHistory(String targetName, String type, int amount) {
-        UUID uuid = Bukkit.getOfflinePlayer(targetName).getUniqueId();
+        UUID uuid = getUniqueId(targetName);
         FileConfiguration data = dataFile.getConfig();
         String path = "history." + uuid + "." + type.toUpperCase();
         
@@ -275,12 +296,11 @@ public class PunishmentManager {
             try {
                 UUID uuid = UUID.fromString(uuidStr);
                 if (isMuted(uuid)) {
-                    String name = Bukkit.getOfflinePlayer(uuid).getName();
-                    if (name != null) names.add(name);
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                    if (op.getName() != null) names.add(op.getName());
                 }
             } catch (IllegalArgumentException ignored) {}
         }
         return names;
     }
-
 }
