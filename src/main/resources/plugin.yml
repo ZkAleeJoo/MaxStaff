@@ -9,23 +9,56 @@ commands:
     description: Comando principal de MaxStaff
     aliases: [staff, ms]
   ban:
-    description: Banear jugador
+    description: Banear jugador (Permanente o Temporal)
   tempban:
-    description: Banear temporalmente
+    description: Banear temporalmente a un jugador
   mute:
-    description: Mutear jugador
+    description: Silenciar jugador (Permanente o Temporal)
   tempmute:
-    description: Mutear temporalmente
+    description: Silenciar temporalmente a un jugador
   kick:
-    description: Expulsar jugador
+    description: Expulsar jugador del servidor
   unban:
-    description: Desbanear
+    description: Perdonar el baneo de un jugador
   unmute:
-    description: Desmutear
+    description: Devolver el habla a un jugador
   warn:
-    description: Advertir jugador
-
+    description: Enviar una advertencia a un jugador
+    
 permissions:
   maxstaff.admin:
-    description: Permisos de administrador para MaxStaff
+    description: Acceso total a MaxStaff y comandos administrativos.
+    default: op
+    children:
+      maxstaff.mode: true
+      maxstaff.punish.ban: true
+      maxstaff.punish.mute: true
+      maxstaff.punish.kick: true
+      maxstaff.punish.warn: true
+      maxstaff.punish.unban: true
+      maxstaff.punish.unmute: true
+      maxstaff.see.vanish: true
+  maxstaff.punish.ban:
+    description: Permite usar /ban y /tempban.
+    default: op
+  maxstaff.punish.mute:
+    description: Permite usar /mute y /tempmute.
+    default: op
+  maxstaff.punish.kick:
+    description: Permite usar /kick.
+    default: op
+  maxstaff.punish.warn:
+    description: Permite usar /warn.
+    default: op
+  maxstaff.punish.unban:
+    description: Permite usar /unban.
+    default: op
+  maxstaff.punish.unmute:
+    description: Permite usar /unmute.
+    default: op
+  maxstaff.mode:
+    description: Permite entrar en modo staff (/staff mode).
+    default: op
+  maxstaff.see.vanish:
+    description: Permite ver a otros miembros del staff en vanish.
     default: op
