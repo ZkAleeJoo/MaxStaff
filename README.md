@@ -1,4 +1,4 @@
-Copyright © 2025 ZkAleeJoo. Todos los derechos reservados. Este código es visible con fines educativos, pero no se permite su uso, modificación o distribución sin permiso explícito.
+Copyright © 2025 ZkAleeJoo. All rights reserved. This code is viewable for educational purposes, but its use, modification, or distribution is not permitted without explicit permission.
 
 # **MaxStaff**
 
