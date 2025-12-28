@@ -27,7 +27,6 @@ public class GuiListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
         Player player = (Player) event.getWhoClicked();
-        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
         String title = ChatColor.stripColor(event.getView().getTitle());
         ItemStack item = event.getCurrentItem();
         
@@ -44,7 +43,9 @@ public class GuiListener implements Listener {
 
         if (title.startsWith(infoTitleBase)) {
             event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             String targetName = title.replace(infoTitleBase, "").trim();
+            
             if (item.getType() == plugin.getMainConfigManager().getGuiInfoActionMat()) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
             }
@@ -54,6 +55,7 @@ public class GuiListener implements Listener {
         String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
         if (title.contains(playersTitle)) {
             event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             if (item.getType() == Material.PLAYER_HEAD) {
                 Player target = plugin.getServer().getPlayer(itemName);
                 if (target != null) {
@@ -72,6 +74,7 @@ public class GuiListener implements Listener {
             String targetName = title.replace(sanctionsTitle, "").trim();
 
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 Player targetPlayer = plugin.getServer().getPlayer(targetName);
                 if (targetPlayer != null) {
                     plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
@@ -79,9 +82,30 @@ public class GuiListener implements Listener {
                 return;
             }
 
-            if (item.getType() == Material.IRON_SWORD) plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
-            else if (item.getType() == Material.PAPER) plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
-            else if (item.getType() == Material.FEATHER) plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
+            if (item.getType() == Material.IRON_SWORD) {
+                if (!player.hasPermission("maxstaff.punish.ban")) {
+                    sendNoPermission(player);
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
+            } 
+            else if (item.getType() == Material.PAPER) {
+                if (!player.hasPermission("maxstaff.punish.mute")) {
+                    sendNoPermission(player);
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
+            } 
+            else if (item.getType() == Material.FEATHER) {
+                if (!player.hasPermission("maxstaff.punish.kick")) {
+                    sendNoPermission(player);
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
+            }
             return;
         }
 
@@ -100,19 +124,28 @@ public class GuiListener implements Listener {
             } catch (Exception e) { page = 0; }
 
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openUserInfoMenu(player, plugin.getServer().getPlayer(target));
                 return;
             }
             else if (item.getType() == plugin.getMainConfigManager().getNavNextMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page + 1);
             }
             else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
             
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
+                String permission = "maxstaff.punish." + type.toLowerCase();
+                if (!player.hasPermission(permission)) {
+                    sendNoPermission(player);
+                    player.closeInventory();
+                    return;
+                }
+
                 ItemMeta meta = item.getItemMeta();
-                
                 NamespacedKey reasonKey = new NamespacedKey(plugin, "reason_id");
                 NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
                 
@@ -130,5 +163,12 @@ public class GuiListener implements Listener {
                 player.closeInventory();
             }
         }
+    }
+
+    private void sendNoPermission(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+        player.sendMessage(MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getNoPermission()
+        ));
     }
 }
