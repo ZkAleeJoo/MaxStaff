@@ -27,7 +27,7 @@ public class GuiListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
         Player player = (Player) event.getWhoClicked();
-        String title = ChatColor.stripColor(event.getView().getTitle());
+        String title = ChatColor.stripColor(org.zkaleejoo.utils.CompatibilityUtil.getInventoryTitle(event));
         ItemStack item = event.getCurrentItem();
         
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
