@@ -112,14 +112,16 @@ public class MaxStaff extends JavaPlugin {
     }
 
     private void setupVersionWrapper() {
-    String version = Bukkit.getServer().getBukkitVersion();
-    
-    if (version.contains("1.21") || version.contains("1.22")) {
-        this.nmsHandler = new Wrapper_1_21();
+    try {
+        if (org.bukkit.inventory.InventoryView.class.isInterface()) {
+            this.nmsHandler = new Wrapper_1_21();
         } else {
             this.nmsHandler = new Wrapper_1_20();
         }
+    } catch (Exception e) {
+        this.nmsHandler = new Wrapper_1_20();
     }
+}
 
     public VersionWrapper getNmsHandler() {
         return nmsHandler;
