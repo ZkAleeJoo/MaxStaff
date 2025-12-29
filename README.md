@@ -39,7 +39,7 @@ Designed for speed, the plugin uses a hierarchical menu system:
 +-----------------+---------------------------------------+
 | Requirement     | Specification                         |
 +-----------------+---------------------------------------+
-| Java version    | Java 21                               |
+| Java version    | Java 17                               |
 | Minimum API     | Spigot API 1.20.1                     |
 | Configuration   | Based on YAML (CustomConfig API)      |
 | Data Management | Persistent Data Containers            |
