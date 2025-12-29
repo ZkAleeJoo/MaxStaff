@@ -7,6 +7,9 @@ import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
 import org.zkaleejoo.managers.StaffManager;
+import org.zkaleejoo.nms.VersionWrapper;
+import org.zkaleejoo.nms.Wrapper_1_20;
+import org.zkaleejoo.nms.Wrapper_1_21;
 import org.zkaleejoo.utils.UpdateChecker;
 import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
@@ -32,10 +35,12 @@ public class MaxStaff extends JavaPlugin {
     private FreezeManager freezeManager;
     private PunishmentManager punishmentManager;
     private String latestVersion;
+    private VersionWrapper nmsHandler;
 
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
+        setupVersionWrapper();
         mainConfigManager = new MainConfigManager(this);
         freezeManager = new FreezeManager(this);
         staffManager = new StaffManager(this);
@@ -104,6 +109,20 @@ public class MaxStaff extends JavaPlugin {
                 getCommand(cmd).setTabCompleter(punCmd);
             }
         }
+    }
+
+    private void setupVersionWrapper() {
+    String version = Bukkit.getServer().getBukkitVersion();
+    
+    if (version.contains("1.21") || version.contains("1.22")) {
+        this.nmsHandler = new Wrapper_1_21();
+        } else {
+            this.nmsHandler = new Wrapper_1_20();
+        }
+    }
+
+    public VersionWrapper getNmsHandler() {
+        return nmsHandler;
     }
 
     public MainConfigManager getMainConfigManager() {
