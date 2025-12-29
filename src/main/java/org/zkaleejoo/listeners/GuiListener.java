@@ -27,7 +27,7 @@ public class GuiListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
         Player player = (Player) event.getWhoClicked();
-        String title = ChatColor.stripColor(plugin.getNmsHandler().getInventoryTitle(event.getView()));
+        String title = ChatColor.stripColor(event.getView().getTitle());
         ItemStack item = event.getCurrentItem();
         
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
