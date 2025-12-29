@@ -11,10 +11,9 @@ public class CompatibilityUtil {
         try {
             Object view = event.getView();
             Method getTitle = view.getClass().getMethod("getTitle");
-            getTitle.setAccessible(true);
             return (String) getTitle.invoke(view);
         } catch (Exception e) {
-            return event.getView().getTitle(); 
+            return ""; 
         }
     }
 
@@ -22,7 +21,6 @@ public class CompatibilityUtil {
         try {
             Object view = event.getView();
             Method getTopInventory = view.getClass().getMethod("getTopInventory");
-            getTopInventory.setAccessible(true);
             return (Inventory) getTopInventory.invoke(view);
         } catch (Exception e) {
             return event.getInventory();
