@@ -6,24 +6,31 @@ import java.lang.reflect.Method;
 
 public class CompatibilityUtil {
 
-
     public static String getInventoryTitle(InventoryEvent event) {
-    try {
-        Object view = event.getView();
-        Method getTitle = view.getClass().getMethod("getTitle");
-        return (String) getTitle.invoke(view);
-    } catch (Exception e) {
-        return event.getInventory().getType().getDefaultTitle(); 
+        try {
+            return event.getView().getTitle();
+        } catch (NoSuchMethodError | Exception e) {
+            try {
+                Object view = event.getView();
+                Method getTitle = view.getClass().getMethod("getTitle");
+                return (String) getTitle.invoke(view);
+            } catch (Exception ex) {
+                return ""; 
+            }
         }
     }
 
     public static Inventory getTopInventory(InventoryEvent event) {
         try {
-            Object view = event.getView();
-            Method getTopInventory = view.getClass().getMethod("getTopInventory");
-            return (Inventory) getTopInventory.invoke(view);
-        } catch (Exception e) {
-            return event.getInventory();
+            return event.getView().getTopInventory();
+        } catch (NoSuchMethodError | Exception e) {
+            try {
+                Object view = event.getView();
+                Method m = view.getClass().getMethod("getTopInventory");
+                return (Inventory) m.invoke(view);
+            } catch (Exception ex) {
+                return event.getInventory();
+            }
         }
     }
 }
