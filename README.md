@@ -2,7 +2,7 @@ Copyright © 2025 ZkAleeJoo. All rights reserved. This code is viewable for educ
 
 # **MaxStaff**
 
-**MaxStaff** It is a robust moderation suite designed specifically for Survival environments in Minecraft 1.20.1+. It offers a high-performance interface for staff members to manage players and maintain server integrity without the need for multiple external plugins.
+**MaxStaff** It is a robust moderation suite designed specifically for Survival environments in Minecraft 1.19+. It offers a high-performance interface for staff members to manage players and maintain server integrity without the need for multiple external plugins.
 
 ---
 
@@ -40,7 +40,7 @@ Designed for speed, the plugin uses a hierarchical menu system:
 | Requirement     | Specification                         |
 +-----------------+---------------------------------------+
 | Java version    | Java 17                               |
-| Minimum API     | Spigot API 1.20.1                     |
+| Minimum API     | Spigot API 1.19                       |
 | Configuration   | Based on YAML (CustomConfig API)      |
 | Data Management | Persistent Data Containers            |
 +-----------------+---------------------------------------+
