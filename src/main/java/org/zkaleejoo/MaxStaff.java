@@ -1,5 +1,6 @@
 package org.zkaleejoo;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +23,7 @@ import org.zkaleejoo.listeners.FreezeListener;
 import org.zkaleejoo.managers.PunishmentManager;
 import org.zkaleejoo.commands.PunishmentCommand;
 import org.zkaleejoo.listeners.ChatListener;
-
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class MaxStaff extends JavaPlugin {
 
@@ -36,6 +37,9 @@ public class MaxStaff extends JavaPlugin {
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
+        int pluginId = 28604;
+        Metrics metrics = new Metrics(this, pluginId);
+        
         mainConfigManager = new MainConfigManager(this);
         freezeManager = new FreezeManager(this);
         staffManager = new StaffManager(this);
