@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
+import org.zkaleejoo.utils.CompatibilityUtil;
 
 public class GuiListener implements Listener {
 
@@ -26,12 +27,18 @@ public class GuiListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
+        if (event.getClickedInventory() != CompatibilityUtil.getTopInventory(event)) return;
+
         Player player = (Player) event.getWhoClicked();
-        String title = ChatColor.stripColor(org.zkaleejoo.utils.CompatibilityUtil.getInventoryTitle(event));
-        ItemStack item = event.getCurrentItem();
         
-        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
-        String itemName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        String rawTitle = CompatibilityUtil.getInventoryTitle(event);
+        String title = ChatColor.stripColor(rawTitle).trim(); 
+        
+        ItemStack item = event.getCurrentItem();
+        if (!item.hasItemMeta()) return;
+        
+        String itemName = item.getItemMeta().hasDisplayName() ? 
+                ChatColor.stripColor(item.getItemMeta().getDisplayName()) : "";
 
         if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
             event.setCancelled(true);
@@ -39,7 +46,7 @@ public class GuiListener implements Listener {
         }
 
         String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0]));
+                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
 
         if (title.startsWith(infoTitleBase)) {
             event.setCancelled(true);
@@ -52,7 +59,9 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
+        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiPlayersTitle())).trim();
+        
         if (title.contains(playersTitle)) {
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
@@ -68,7 +77,9 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", "")));
+        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", ""))).trim();
+        
         if (title.contains(sanctionsTitle)) {
             event.setCancelled(true);
             String targetName = title.replace(sanctionsTitle, "").trim();
@@ -83,39 +94,30 @@ public class GuiListener implements Listener {
             }
 
             if (item.getType() == Material.IRON_SWORD) {
-                if (!player.hasPermission("maxstaff.punish.ban")) {
-                    sendNoPermission(player);
-                    return;
-                }
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                if (!checkPerm(player, "maxstaff.punish.ban")) return;
                 plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
             } 
             else if (item.getType() == Material.PAPER) {
-                if (!player.hasPermission("maxstaff.punish.mute")) {
-                    sendNoPermission(player);
-                    return;
-                }
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                if (!checkPerm(player, "maxstaff.punish.mute")) return;
                 plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
             } 
             else if (item.getType() == Material.FEATHER) {
-                if (!player.hasPermission("maxstaff.punish.kick")) {
-                    sendNoPermission(player);
-                    return;
-                }
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                if (!checkPerm(player, "maxstaff.punish.kick")) return;
                 plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
             }
             return;
         }
 
-        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0]));
+        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0])).trim();
+        
         if (title.contains(reasonsBaseTitle)) { 
             event.setCancelled(true);
+            
             String type = title.contains("[BAN]") ? "BAN" : (title.contains("[MUTE]") ? "MUTE" : "KICK");
             String target;
             try {
-                target = title.split(" - ")[1].split(" \\(")[0];
+                target = title.split(" - ")[1].split(" \\(")[0].trim();
             } catch (Exception e) { return; }
 
             int page;
@@ -126,21 +128,18 @@ public class GuiListener implements Listener {
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openUserInfoMenu(player, plugin.getServer().getPlayer(target));
-                return;
             }
-            else if (item.getType() == plugin.getMainConfigManager().getNavNextMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
+            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page + 1);
             }
-            else if (item.getType() == plugin.getMainConfigManager().getNavPrevMat() && itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
+            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
             
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
-                String permission = "maxstaff.punish." + type.toLowerCase();
-                if (!player.hasPermission(permission)) {
-                    sendNoPermission(player);
+                if (!checkPerm(player, "maxstaff.punish." + type.toLowerCase())) {
                     player.closeInventory();
                     return;
                 }
@@ -163,6 +162,15 @@ public class GuiListener implements Listener {
                 player.closeInventory();
             }
         }
+    }
+
+    private boolean checkPerm(Player player, String permission) {
+        if (!player.hasPermission(permission)) {
+            sendNoPermission(player);
+            return false;
+        }
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        return true;
     }
 
     private void sendNoPermission(Player player) {
