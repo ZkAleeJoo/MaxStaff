@@ -13,7 +13,7 @@ public class CompatibilityUtil {
             Method getTitle = view.getClass().getMethod("getTitle");
             return (String) getTitle.invoke(view);
         } catch (Exception e) {
-            return ""; 
+            return event.getView().getTitle(); 
         }
     }
 
