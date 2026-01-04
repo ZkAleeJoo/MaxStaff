@@ -9,7 +9,7 @@ public class CompatibilityUtil {
     public static String getInventoryTitle(InventoryEvent event) {
         try {
             return event.getView().getTitle();
-        } catch (NoSuchMethodError | Exception e) {
+        } catch (Throwable e) {
             try {
                 Object view = event.getView();
                 Method getTitle = view.getClass().getMethod("getTitle");
