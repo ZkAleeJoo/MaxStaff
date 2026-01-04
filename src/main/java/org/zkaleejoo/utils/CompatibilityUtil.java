@@ -1,25 +1,36 @@
 package org.zkaleejoo.utils;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.inventory.Inventory;
+import java.lang.reflect.Method;
 
 public class CompatibilityUtil {
 
-    public static ItemStack getPlayerHead() {
-        Material type = Material.getMaterial("PLAYER_HEAD");
-        if (type == null) {
-            type = Material.valueOf("SKULL_ITEM");
-            return new ItemStack(type, 1, (short) 3);
+    public static String getInventoryTitle(InventoryEvent event) {
+        try {
+            return event.getView().getTitle();
+        } catch (NoSuchMethodError | Exception e) {
+            try {
+                Object view = event.getView();
+                Method getTitle = view.getClass().getMethod("getTitle");
+                return (String) getTitle.invoke(view);
+            } catch (Exception ex) {
+                return ""; 
+            }
         }
-        return new ItemStack(type);
     }
 
-
-    public static String getSound(String oldSound, String newSound) {
-        if (ServerVersion.isAtLeast(ServerVersion.V1_19)) {
-            return newSound;
+    public static Inventory getTopInventory(InventoryEvent event) {
+        try {
+            return event.getView().getTopInventory();
+        } catch (NoSuchMethodError | Exception e) {
+            try {
+                Object view = event.getView();
+                Method m = view.getClass().getMethod("getTopInventory");
+                return (Inventory) m.invoke(view);
+            } catch (Exception ex) {
+                return event.getInventory();
+            }
         }
-        return oldSound;
     }
 }
