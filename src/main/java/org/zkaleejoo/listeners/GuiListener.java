@@ -32,7 +32,8 @@ public class GuiListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         
         String rawTitle = CompatibilityUtil.getInventoryTitle(event);
-        String title = ChatColor.stripColor(rawTitle).trim(); 
+        if (rawTitle == null || rawTitle.isEmpty()) return;
+        String title = org.bukkit.ChatColor.stripColor(rawTitle).trim();
         
         ItemStack item = event.getCurrentItem();
         if (!item.hasItemMeta()) return;
