@@ -55,6 +55,7 @@ public class MainConfigManager {
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
     private String usestaffreset, usestafftake, takeNumberInvalid, playerNoHistory, msgResetSuccess, msgTakeSuccess;
     private String msgUpdateAvailable, msgUpdateCurrent, msgUpdateDownload;
+    private String msgActionBar, statusEnabled, statusDisabled;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -201,6 +202,10 @@ public class MainConfigManager {
         msgUpdateAvailable = lang.getString("messages.update-available", "&eA new version is available! (&b{version}&e)");
         msgUpdateCurrent = lang.getString("messages.update-current", "&7Your current version: &c{version}");
         msgUpdateDownload = lang.getString("messages.update-download", "&eDownload it to get improvements and fixes.");
+
+        msgActionBar = lang.getString("staff-mode.action-bar", "&4&lSTAFF MODE &8| &fVanish: {status}");
+        statusEnabled = lang.getString("staff-mode.status-enabled", "&aENABLED");
+        statusDisabled = lang.getString("staff-mode.status-disabled", "&cDISABLED");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -322,6 +327,9 @@ public class MainConfigManager {
     public String getMsgUpdateAvailable() { return msgUpdateAvailable; }
     public String getMsgUpdateCurrent() { return msgUpdateCurrent; }
     public String getMsgUpdateDownload() { return msgUpdateDownload; }
+    public String getMsgActionBar() { return msgActionBar; }
+    public String getStatusEnabled() { return statusEnabled; }
+    public String getStatusDisabled() { return statusDisabled; }
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);
