@@ -27,7 +27,7 @@ public class GuiListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
         
-        if (event.getClickedInventory() != CompatibilityUtil.getTopInventory(event)) return;
+        if (event.getClickedInventory() != event.getInventory()) return;
 
         Player player = (Player) event.getWhoClicked();
         
