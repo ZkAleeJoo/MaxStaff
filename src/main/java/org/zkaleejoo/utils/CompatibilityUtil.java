@@ -8,14 +8,14 @@ public class CompatibilityUtil {
 
     public static String getInventoryTitle(InventoryEvent event) {
         try {
-            return event.getView().getTitle();
-        } catch (Throwable t) { 
+            Object view = event.getView();
+            Method getTitle = view.getClass().getMethod("getTitle");
+            return (String) getTitle.invoke(view);
+        } catch (Throwable t) {
             try {
-                Object view = event.getView();
-                Method getTitle = view.getClass().getMethod("getTitle");
-                return (String) getTitle.invoke(view);
-            } catch (Exception ex) {
-                return ""; 
+                return event.getView().getTitle();
+            } catch (Throwable t2) {
+                return "";
             }
         }
     }
