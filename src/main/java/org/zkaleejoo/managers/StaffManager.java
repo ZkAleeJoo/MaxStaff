@@ -65,8 +65,14 @@ public class StaffManager {
                 this.cancel();
                 return;
             }
-            String vanishStatus = isVanished(player) ? "&aACTIVADO" : "&cDESACTIVADO";
-            String message = MessageUtils.getColoredMessage("&4&lMODO STAFF &8| &fVanish: " + vanishStatus);
+
+            MainConfigManager config = plugin.getMainConfigManager();
+            
+            String statusText = isVanished(player) ? config.getStatusEnabled() : config.getStatusDisabled();
+            
+            String message = MessageUtils.getColoredMessage(
+                config.getMsgActionBar().replace("{status}", statusText)
+            );
             
             player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, 
                 new net.md_5.bungee.api.chat.TextComponent(message));
