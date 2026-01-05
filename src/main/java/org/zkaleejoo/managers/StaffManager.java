@@ -57,6 +57,21 @@ public class StaffManager {
         
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
+
+        new org.bukkit.scheduler.BukkitRunnable() {
+        @Override
+        public void run() {
+            if (!isInStaffMode(player) || !player.isOnline()) {
+                this.cancel();
+                return;
+            }
+            String vanishStatus = isVanished(player) ? "&aACTIVADO" : "&cDESACTIVADO";
+            String message = MessageUtils.getColoredMessage("&4&lMODO STAFF &8| &fVanish: " + vanishStatus);
+            
+            player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, 
+                new net.md_5.bungee.api.chat.TextComponent(message));
+        }
+    }.runTaskTimer(plugin, 0L, 20L); 
     }
 
     public void disableStaffMode(Player player) {
