@@ -26,14 +26,32 @@ public class GuiListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-        
-        if (event.getClickedInventory() != CompatibilityUtil.getTopInventory(event)) return;
 
         Player player = (Player) event.getWhoClicked();
         
         String rawTitle = CompatibilityUtil.getInventoryTitle(event);
         String title = ChatColor.stripColor(rawTitle).trim(); 
         
+        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
+        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiPlayersTitle())).trim();
+        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", ""))).trim();
+        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0])).trim();
+
+        boolean isOurGui = title.startsWith(infoTitleBase) || 
+                           title.contains(playersTitle) || 
+                           title.contains(sanctionsTitle) || 
+                           title.contains(reasonsBaseTitle);
+
+        if (!isOurGui) return;
+
+        event.setCancelled(true);
+
+        if (event.getClickedInventory() != CompatibilityUtil.getTopInventory(event)) return;
+
         ItemStack item = event.getCurrentItem();
         if (!item.hasItemMeta()) return;
         
@@ -41,15 +59,10 @@ public class GuiListener implements Listener {
                 ChatColor.stripColor(item.getItemMeta().getDisplayName()) : "";
 
         if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
-            event.setCancelled(true);
             return;
         }
 
-        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
-
         if (title.startsWith(infoTitleBase)) {
-            event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             String targetName = title.replace(infoTitleBase, "").trim();
             
@@ -59,11 +72,7 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiPlayersTitle())).trim();
-        
         if (title.contains(playersTitle)) {
-            event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             if (item.getType() == Material.PLAYER_HEAD) {
                 Player target = plugin.getServer().getPlayer(itemName);
@@ -77,11 +86,7 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", ""))).trim();
-        
         if (title.contains(sanctionsTitle)) {
-            event.setCancelled(true);
             String targetName = title.replace(sanctionsTitle, "").trim();
 
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
@@ -108,12 +113,7 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0])).trim();
-        
         if (title.contains(reasonsBaseTitle)) { 
-            event.setCancelled(true);
-            
             String type = title.contains("[BAN]") ? "BAN" : (title.contains("[MUTE]") ? "MUTE" : "KICK");
             String target;
             try {
@@ -137,7 +137,6 @@ public class GuiListener implements Listener {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
-            
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
                 if (!checkPerm(player, "maxstaff.punish." + type.toLowerCase())) {
                     player.closeInventory();
