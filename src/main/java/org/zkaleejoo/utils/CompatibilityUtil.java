@@ -9,7 +9,7 @@ public class CompatibilityUtil {
     public static String getInventoryTitle(InventoryEvent event) {
         try {
             return event.getView().getTitle();
-        } catch (Throwable e) { 
+        } catch (Throwable t) { 
             try {
                 Object view = event.getView();
                 Method getTitle = view.getClass().getMethod("getTitle");
@@ -22,15 +22,9 @@ public class CompatibilityUtil {
 
     public static Inventory getTopInventory(InventoryEvent event) {
         try {
-            return event.getView().getTopInventory();
-        } catch (Throwable e) { 
-            try {
-                Object view = event.getView();
-                Method m = view.getClass().getMethod("getTopInventory");
-                return (Inventory) m.invoke(view);
-            } catch (Exception ex) {
-                return event.getInventory();
-            }
+            return event.getInventory();
+        } catch (Throwable t) {
+            return null;
         }
     }
 }
