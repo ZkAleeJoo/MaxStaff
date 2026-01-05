@@ -35,6 +35,9 @@ staff-mode:
   inventory-restored: "&eYour inventory has been restored."
   cannot-drop: "&cYou cannot drop items while in staff mode."
   cannot-place: "&cYou cannot place blocks while in staff mode."
+  action-bar: "&4&lSTAFF MODE &8| &fVanish: {status}"
+  status-enabled: "&aENABLED"
+  status-disabled: "&cDISABLED"
   items:
     punish:
       name: "&c&lPunish &7(Right Click)"
