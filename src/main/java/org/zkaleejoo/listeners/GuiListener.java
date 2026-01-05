@@ -29,6 +29,8 @@ public class GuiListener implements Listener {
         
         if (event.getClickedInventory() != event.getInventory()) return;
 
+        event.setCancelled(true);
+        
         Player player = (Player) event.getWhoClicked();
         
         String rawTitle = CompatibilityUtil.getInventoryTitle(event);
