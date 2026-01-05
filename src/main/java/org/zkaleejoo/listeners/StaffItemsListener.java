@@ -37,6 +37,7 @@ public class StaffItemsListener implements Listener {
 
     public StaffItemsListener(MaxStaff plugin) {
         this.plugin = plugin;
+        
     }
 
     @EventHandler
@@ -58,68 +59,67 @@ public class StaffItemsListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
+        
         Player player = event.getPlayer();
         if (!plugin.getStaffManager().isInStaffMode(player)) return;
 
         ItemStack item = event.getItem();
         MainConfigManager config = plugin.getMainConfigManager();
-
         String toolType = getStaffToolType(item);
 
+        // --- PRIORIDAD 1: USO DE HERRAMIENTAS DE STAFF ---
+        if (toolType != null) {
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                
+                if (toolType.equals("vanish_tool")) {
+                    event.setCancelled(true); 
+                    plugin.getStaffManager().toggleVanish(player);
+                }
+                else if (toolType.equals("players_tool")) {
+                    event.setCancelled(true);
+                    plugin.getGuiManager().openPlayersMenu(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                    player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
+                }
+                else if (toolType.equals("punish_tool")) {
+                    event.setCancelled(true);
+                    org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
+                        player.getEyeLocation(), 
+                        player.getEyeLocation().getDirection(), 
+                        5, 
+                        entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
+                    );
+                    
+                    if (ray == null || ray.getHitEntity() == null) {
+                        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
+                    }
+                }
+                return; 
+            }
+        }
+
+        // --- PRIORIDAD 2: INSPECCIÓN SILENCIOSA (Sin herramientas de staff) ---
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
             if (block != null) {
                 if (block.getState() instanceof Container || block.getType() == Material.ENDER_CHEST) {
-                    
-                    boolean usingStaffItem = toolType != null && (
-                        toolType.equals("vanish_tool") || 
-                        toolType.equals("players_tool") || 
-                        toolType.equals("punish_tool")
-                    );
+                    event.setCancelled(true);
 
-                    if (!usingStaffItem) {
-                        event.setCancelled(true); 
-
-                        if (block.getType() == Material.ENDER_CHEST) {
-                            player.openInventory(player.getEnderChest());
-                        } else {
-                            Container container = (Container) block.getState();
-                            Inventory realInv = container.getInventory();
-                            String title = container.getCustomName() != null ? container.getCustomName() : container.getType().name();
-                            Inventory silentInv = Bukkit.createInventory(null, realInv.getSize(), title);
-                            silentInv.setContents(realInv.getContents());
-                            silentViewers.put(player.getUniqueId(), block);
-                            player.openInventory(silentInv);
-                        }
-                        return; 
+                    if (block.getType() == Material.ENDER_CHEST) {
+                        player.openInventory(player.getEnderChest());
+                    } else {
+                        Container container = (Container) block.getState();
+                        Inventory realInv = container.getInventory();
+                        
+                        String title = container.getCustomName() != null ? container.getCustomName() : container.getType().name();
+                        
+                        Inventory silentInv = Bukkit.createInventory(null, realInv.getSize(), title);
+                        silentInv.setContents(realInv.getContents());
+                        
+                        silentViewers.put(player.getUniqueId(), block);
+                        player.openInventory(silentInv);
                     }
                 }
-            }
-        }
-
-        if (toolType == null) return;
-
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (toolType.equals("vanish_tool")) {
-                event.setCancelled(true); 
-                plugin.getStaffManager().toggleVanish(player);
-            }
-            else if (toolType.equals("players_tool")) {
-                event.setCancelled(true);
-                plugin.getGuiManager().openPlayersMenu(player);
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgPlayers()));
-            }
-            else if (toolType.equals("punish_tool")) {
-                event.setCancelled(true);
-                org.bukkit.util.RayTraceResult ray = player.getWorld().rayTraceEntities(
-                    player.getEyeLocation(), 
-                    player.getEyeLocation().getDirection(), 
-                    5, 
-                    entity -> entity instanceof org.bukkit.entity.Player && !entity.equals(player)
-                );
-                if (ray != null && ray.getHitEntity() != null) return;
-                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getPlayerClickPls()));
             }
         }
     }
@@ -183,4 +183,10 @@ public class StaffItemsListener implements Listener {
             event.setCancelled(true); 
         }
     }
+
+    @EventHandler
+    public void onQuit(org.bukkit.event.player.PlayerQuitEvent event) {
+        silentViewers.remove(event.getPlayer().getUniqueId());
+    }
+
 }
