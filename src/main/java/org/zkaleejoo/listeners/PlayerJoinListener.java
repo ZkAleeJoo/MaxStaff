@@ -26,7 +26,7 @@ public class PlayerJoinListener implements Listener {
             Player staff = org.bukkit.Bukkit.getPlayer(uuid);
             if (staff != null && staff.isOnline()) {
                 if (!player.hasPermission("maxstaff.see.vanish")) {
-                    player.hidePlayer(plugin, staff);
+                    plugin.getNMS().hidePlayer(player, staff);
                 }
             }
         }
