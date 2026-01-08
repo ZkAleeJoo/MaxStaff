@@ -1,23 +1,22 @@
 package org.zkaleejoo.managers;
 
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.NamespacedKey; 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,179 +28,152 @@ public class GuiManager {
         this.plugin = plugin; 
     }
 
-    private void setupBorder(Inventory inv) {
-        ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null);
-        for (int i = 0; i < 9; i++) {
-            inv.setItem(i, border);
-            inv.setItem(inv.getSize() - 9 + i, border);
-        }
-        for (int i = 0; i < inv.getSize(); i += 9) {
-            inv.setItem(i, border);
-            inv.setItem(i + 8, border);
-        }
+    private Component t(String text) {
+        return Component.text(MessageUtils.getColoredMessage(text));
     }
 
     public void openUserInfoMenu(Player staff, Player target) {
         MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
-        Inventory gui = Bukkit.createInventory(null, 27, title);
-        setupBorder(gui);
+        
+        Gui gui = Gui.gui()
+                .title(t(config.getGuiInfoTitle().replace("{target}", target.getName())))
+                .rows(3)
+                .create();
+
+        gui.setDefaultClickAction(event -> event.setCancelled(true));
+        gui.getFiller().fillBorder(ItemBuilder.from(config.getBorderMaterial()).name(t(" ")).asGuiItem());
 
         long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        long hours = ticks / 72000;
-        long minutes = (ticks % 72000) / 1200;
-        String playtime = hours + "h " + minutes + "m";
+        String playtime = (ticks / 72000) + "h " + ((ticks % 72000) / 1200) + "m";
         
         int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
         int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
         int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
         int warns = plugin.getPunishmentManager().getHistoryCount(target.getName(), "WARN");
-        int total = bans + mutes + kicks;
 
-        List<String> statsLore = config.getGuiInfoStatsLore().stream()
-                .map(line -> line.replace("{target}", target.getName())
-                                 .replace("{uuid}", target.getUniqueId().toString())
-                                 .replace("{playtime}", playtime)
-                                 .replace("{total_punishments}", String.valueOf(total)))
+        List<Component> statsLore = config.getGuiInfoStatsLore().stream()
+                .map(line -> t(line.replace("{target}", target.getName())
+                        .replace("{uuid}", target.getUniqueId().toString())
+                        .replace("{playtime}", playtime)
+                        .replace("{total_punishments}", String.valueOf(bans + mutes + kicks))))
                 .collect(Collectors.toList());
-        ItemStack stats = createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore);
 
-        List<String> historyLore = config.getGuiInfoHistoryLore().stream()
-                .map(line -> line.replace("{bans}", String.valueOf(bans))
-                                 .replace("{mutes}", String.valueOf(mutes))
-                                 .replace("{kicks}", String.valueOf(kicks))
-                                 .replace("{warns}", String.valueOf(warns)) )
+        gui.setItem(11, ItemBuilder.from(config.getGuiInfoStatsMat()).name(t(config.getGuiInfoStatsName())).lore(statsLore).asGuiItem());
+
+        List<Component> historyLore = config.getGuiInfoHistoryLore().stream()
+                .map(line -> t(line.replace("{bans}", String.valueOf(bans))
+                        .replace("{mutes}", String.valueOf(mutes))
+                        .replace("{kicks}", String.valueOf(kicks))
+                        .replace("{warns}", String.valueOf(warns))))
                 .collect(Collectors.toList());
-        ItemStack history = createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore);
 
-        ItemStack action = createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore());
+        gui.setItem(13, ItemBuilder.from(config.getGuiInfoHistoryMat()).name(t(config.getGuiInfoHistoryName())).lore(historyLore).asGuiItem());
 
-        gui.setItem(11, stats);
-        gui.setItem(13, history);
-        gui.setItem(15, action);
+        gui.setItem(15, ItemBuilder.from(config.getGuiInfoActionMat())
+                .name(t(config.getGuiInfoActionName()))
+                .lore(config.getGuiInfoActionLore().stream().map(this::t).collect(Collectors.toList()))
+                .asGuiItem(event -> openSanctionMenu(staff, target.getName())));
 
-        staff.openInventory(gui);
+        gui.open(staff);
     }
 
     public void openPlayersMenu(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
-        setupBorder(gui);
+        MainConfigManager config = plugin.getMainConfigManager();
+        
+        PaginatedGui gui = Gui.paginated()
+                .title(t(config.getGuiPlayersTitle()))
+                .rows(6)
+                .pageSize(45)
+                .create();
+
+        gui.setDefaultClickAction(event -> event.setCancelled(true));
+        gui.getFiller().fillBottom(ItemBuilder.from(config.getBorderMaterial()).name(t(" ")).asGuiItem());
+
         for (Player target : Bukkit.getOnlinePlayers()) {
-            gui.addItem(createPlayerHead(target));
+            gui.addItem(ItemBuilder.from(createPlayerHead(target))
+                    .asGuiItem(event -> {
+                        player.teleport(target);
+                        player.sendMessage(MessageUtils.getColoredMessage(config.getMsgTeleport().replace("{player}", target.getName())));
+                    }));
         }
-        player.openInventory(gui);
+
+        gui.setItem(48, ItemBuilder.from(config.getNavPrevMat()).name(t(config.getNavPrevName())).asGuiItem(event -> gui.previous()));
+        gui.setItem(50, ItemBuilder.from(config.getNavNextMat()).name(t(config.getNavNextName())).asGuiItem(event -> gui.next()));
+
+        gui.open(player);
     }
 
     public void openSanctionMenu(Player player, String targetName) {
         MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().replace("{target}", targetName));
         
-        Inventory gui = Bukkit.createInventory(null, 27, title);
-        setupBorder(gui);
-        
-        gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
-        gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore()));
-        gui.setItem(15, createItem(Material.FEATHER, config.getGuiItemKickName(), config.getGuiItemKickLore()));
-        
-        gui.setItem(22, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver a Información")));
-        
-        player.openInventory(gui);
+        Gui gui = Gui.gui()
+                .title(t(config.getGuiSanctionsTitle().replace("{target}", targetName)))
+                .rows(3)
+                .create();
+
+        gui.setDefaultClickAction(event -> event.setCancelled(true));
+        gui.getFiller().fillBorder(ItemBuilder.from(config.getBorderMaterial()).name(t(" ")).asGuiItem());
+
+        gui.setItem(11, ItemBuilder.from(Material.IRON_SWORD).name(t(config.getGuiItemBanName()))
+                .lore(config.getGuiItemBanLore().stream().map(this::t).collect(Collectors.toList()))
+                .asGuiItem(event -> openReasonsMenu(player, targetName, "BAN")));
+
+        gui.setItem(13, ItemBuilder.from(Material.PAPER).name(t(config.getGuiItemMuteName()))
+                .lore(config.getGuiItemMuteLore().stream().map(this::t).collect(Collectors.toList()))
+                .asGuiItem(event -> openReasonsMenu(player, targetName, "MUTE")));
+
+        gui.setItem(15, ItemBuilder.from(Material.FEATHER).name(t(config.getGuiItemKickName()))
+                .lore(config.getGuiItemKickLore().stream().map(this::t).collect(Collectors.toList()))
+                .asGuiItem(event -> openReasonsMenu(player, targetName, "KICK")));
+
+        gui.open(player);
     }
 
-    public void openReasonsMenu(Player player, String targetName, String type, int page) {
-        ConfigurationSection section = plugin.getMainConfigManager().getReasons(type);
+    public void openReasonsMenu(Player player, String targetName, String type) {
+        MainConfigManager config = plugin.getMainConfigManager();
+        ConfigurationSection section = config.getReasons(type);
         if (section == null) return;
 
-        List<String> keys = new ArrayList<>(section.getKeys(false));
-        int totalPages = (int) Math.ceil(keys.size() / 4.0);
-        
-        String titleTemplate = plugin.getMainConfigManager().getGuiReasonsTitle();
-        String title = MessageUtils.getColoredMessage(titleTemplate
-            .replace("{type}", type)
-            .replace("{target}", targetName)
-            .replace("{page}", String.valueOf(page + 1))
-            .replace("{total}", String.valueOf(totalPages == 0 ? 1 : totalPages)));
-        
-        Inventory gui = Bukkit.createInventory(null, 54, title);
-        setupBorder(gui);
-        
-        int start = page * 4;
-        int end = Math.min(start + 4, keys.size());
-        int[] rowStarts = {10, 19, 28, 37}; 
+        PaginatedGui gui = Gui.paginated()
+                .title(t(config.getGuiReasonsTitle().replace("{type}", type).replace("{target}", targetName)))
+                .rows(6)
+                .pageSize(36) 
+                .create();
 
-        for (int i = start; i < end; i++) {
-            String key = keys.get(i);
-            int baseSlot = rowStarts[i - start];
+        gui.setDefaultClickAction(event -> event.setCancelled(true));
+        gui.getFiller().fillBorder(ItemBuilder.from(config.getBorderMaterial()).name(t(" ")).asGuiItem());
+
+        for (String key : section.getKeys(false)) {
+            String reasonName = config.getReasonName(type, key);
+            List<String> durations = config.getReasonDurations(type, key);
+
+            GuiItem reasonIndicator = ItemBuilder.from(config.getReasonMaterial(type, key))
+                .name(t(config.getGuiReasonsItemName().replace("{reason}", reasonName)))
+                .asGuiItem();
             
-            ItemStack rItem = new ItemStack(plugin.getMainConfigManager().getReasonMaterial(type, key));
-            ItemMeta rMeta = rItem.getItemMeta();
-            
-            String rName = plugin.getMainConfigManager().getGuiReasonsItemName()
-                    .replace("{number}", String.valueOf(i + 1));
-            rMeta.setDisplayName(MessageUtils.getColoredMessage(rName));
-            
-            List<String> rLore = new ArrayList<>();
-            for (String line : plugin.getMainConfigManager().getGuiReasonsItemLore()) {
-                rLore.add(MessageUtils.getColoredMessage(line
-                        .replace("{reason}", plugin.getMainConfigManager().getReasonName(type, key))
-                        .replace("{id}", key)));
-            }
-            rMeta.setLore(rLore);
-            rMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            rItem.setItemMeta(rMeta);
-            gui.setItem(baseSlot, rItem);
+            gui.addItem(reasonIndicator);
 
-            List<String> durations = plugin.getMainConfigManager().getReasonDurations(type, key);
-            int maxDurationsToShow = type.equals("KICK") ? 1 : 4;
-
-            for (int d = 0; d < maxDurationsToShow; d++) {
-                String dur = (d < durations.size()) ? durations.get(d) : (type.equals("KICK") ? "Ahora" : "perm");
-                ItemStack dye = new ItemStack(plugin.getMainConfigManager().getDurationDye(d));
-                ItemMeta dMeta = dye.getItemMeta();
-
-                NamespacedKey reasonKey = new NamespacedKey(plugin, "reason_id");
-                NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
-                dMeta.getPersistentDataContainer().set(reasonKey, PersistentDataType.STRING, key);
-                dMeta.getPersistentDataContainer().set(durationKey, PersistentDataType.STRING, dur);
-
-                String dName = plugin.getMainConfigManager().getGuiReasonsDyeName().replace("{duration}", dur);
-                dMeta.setDisplayName(MessageUtils.getColoredMessage(dName));
-                
-                List<String> dLore = new ArrayList<>();
-                for (String line : plugin.getMainConfigManager().getGuiReasonsDyeLore()) {
-                    dLore.add(MessageUtils.getColoredMessage(line
-                            .replace("{type}", type)
-                            .replace("{reason}", plugin.getMainConfigManager().getReasonName(type, key))
-                            .replace("{id}", key)
-                            .replace("{duration}", dur)));
-                }
-                dMeta.setLore(dLore);
-                dye.setItemMeta(dMeta);
-                gui.setItem(baseSlot + (d + 2), dye);
+            for (int d = 0; d < Math.min(durations.size(), 4); d++) {
+                String dur = durations.get(d);
+                gui.addItem(ItemBuilder.from(config.getDurationDye(d))
+                    .name(t(config.getGuiReasonsDyeName().replace("{duration}", dur)))
+                    .asGuiItem(event -> {
+                        executePunishment(player, targetName, type, reasonName, dur);
+                        player.closeInventory();
+                    }));
             }
         }
 
-        gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar"))));
-        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page))));
-        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2)))));
-        
-        player.openInventory(gui);
+        gui.setItem(49, ItemBuilder.from(config.getNavBackMat()).name(t(config.getNavBackName())).asGuiItem(event -> openSanctionMenu(player, targetName)));
+        gui.open(player);
     }
 
-    private ItemStack createItem(Material mat, String name, List<String> lore) {
-        ItemStack item = new ItemStack(mat);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(MessageUtils.getColoredMessage(name));
-            if (lore != null) {
-                List<String> colored = new ArrayList<>();
-                for (String l : lore) colored.add(MessageUtils.getColoredMessage(l));
-                meta.setLore(colored);
-            }
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            item.setItemMeta(meta);
+    private void executePunishment(Player staff, String target, String type, String reason, String duration) {
+        switch (type) {
+            case "BAN" -> plugin.getPunishmentManager().banPlayer(staff, target, reason, duration);
+            case "MUTE" -> plugin.getPunishmentManager().mutePlayer(staff, target, reason, duration);
+            case "KICK" -> plugin.getPunishmentManager().kickPlayer(staff, target, reason);
         }
-        return item;
     }
 
     private ItemStack createPlayerHead(Player p) {
@@ -210,7 +182,7 @@ public class GuiManager {
         if (meta != null) {
             meta.setDisplayName(MessageUtils.getColoredMessage("&a" + p.getName()));
             meta.setOwningPlayer(p);
-            meta.setLore(Arrays.asList(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
+            meta.setLore(List.of(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
             item.setItemMeta(meta);
         }
         return item;
