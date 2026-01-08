@@ -216,36 +216,65 @@ public class GuiManager {
         return item;
     }
 
-    // Añadir a GuiManager.java
+    //AGREGAR EL MAINCONFIGMANAGER
     public void openHistoryMenu(Player staff, String targetName) {
         MainConfigManager config = plugin.getMainConfigManager();
-        // Título dinámico
         String title = MessageUtils.getColoredMessage("&8Historial: &0" + targetName);
         Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
 
-        // Obtenemos los datos actuales del PunishmentManager
         int bans = plugin.getPunishmentManager().getHistoryCount(targetName, "BAN");
         int mutes = plugin.getPunishmentManager().getHistoryCount(targetName, "MUTE");
         int kicks = plugin.getPunishmentManager().getHistoryCount(targetName, "KICK");
         int warns = plugin.getPunishmentManager().getHistoryCount(targetName, "WARN");
 
-        // Ítem de BAN (Lana Roja o similar)
         gui.setItem(10, createItem(Material.RED_WOOL, "&c&lBaneos", 
             Arrays.asList("&7Total en el registro: &f" + bans, "", "&eSanciones permanentes o temporales.")));
 
-        // Ítem de MUTE (Lana Naranja)
         gui.setItem(12, createItem(Material.ORANGE_WOOL, "&6&lSilencios", 
             Arrays.asList("&7Total en el registro: &f" + mutes, "", "&eInfracciones de chat.")));
 
-        // Ítem de WARN (Lana Amarilla)
         gui.setItem(14, createItem(Material.YELLOW_WOOL, "&e&lAdvertencias", 
             Arrays.asList("&7Total en el registro: &f" + warns, "", "&eAcumulación de avisos.")));
 
-        // Ítem de KICK (Lana Gris)
         gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, "&f&lExpulsiones", 
             Arrays.asList("&7Total en el registro: &f" + kicks, "", "&eExpulsiones directas del servidor.")));
 
+        staff.openInventory(gui);
+    }
+
+
+    //AGREGAR EL MAINCONFIGMANAGER
+    public void openDetailedHistoryMenu(Player staff, String targetName, String type) {
+        MainConfigManager config = plugin.getMainConfigManager();
+        String title = MessageUtils.getColoredMessage("&8Detalles [" + type + "] - " + targetName);
+        Inventory gui = Bukkit.createInventory(null, 45, title);
+        setupBorder(gui);
+
+        List<String> records = plugin.getPunishmentManager().getHistoryDetails(targetName, type);
+        
+        java.util.Collections.reverse(records);
+
+        int slot = 10;
+        for (String record : records) {
+            if (slot > 34) break; 
+            if ((slot + 1) % 9 == 0) slot += 2; 
+
+            String[] parts = record.split("\\|");
+            
+            List<String> lore = Arrays.asList(
+                "&7Fecha: &f" + parts[0],
+                "&7Staff: &c" + parts[1],
+                "&7Motivo: &e" + parts[2],
+                "&7Duración: &b" + parts[3]
+            );
+
+            gui.setItem(slot, createItem(Material.PAPER, "&6&lRegistro #" + (records.indexOf(record) + 1), lore));
+            slot++;
+        }
+
+        gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver al resumen")));
+        
         staff.openInventory(gui);
     }
 }
