@@ -50,17 +50,16 @@ public class MaxStaff extends JavaPlugin {
         registerEvents();
         checkUpdates();
 
-        Bukkit.getConsoleSender().sendMessage("   _____                   _________ __          _____  _____ \r\n" + 
-                        "  /     \\ _____  ___  ___ /   _____//  |______ _/ ____\\/ ____\\\r\n" + 
-                        " /  \\ /  \\\\__  \\ \\  \\/  / \\_____  \\\\   __\\__  \\\\   __\\\\   __\\ \r\n" + 
-                        "/    Y    \\/ __ \\_>    <  /        \\|  |  / __ \\|  |   |  |   \r\n" + 
-                        "\\____|__  (____  /__/\\_ \\/_______  /|__| (____  /__|   |__|   \r\n" + 
-                        "        \\/     \\/      \\/        \\/           \\/              ");   
-
         String prefix = mainConfigManager.getPrefix();
-        Bukkit.getConsoleSender().sendMessage(
-                ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was activated correctly"));
 
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was activated correctly"));  
+        
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"   _____                   _________ __          _____  _____ ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"  /     \\ _____  ___  ___ /   _____//  |______ _/ ____\\/ ____\\");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+" /  \\ /  \\\\__  \\ \\  \\/  / \\_____  \\\\   __\\__  \\\\   __\\\\   __\\ ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"/    Y    \\/ __ \\_>    <  /        \\|  |  / __ \\|  |   |  |   ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"\\____|__  (____  /__/\\_ \\/_______  /|__| (____  /__|   |__|   ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"        \\/     \\/      \\/        \\/           \\/              ");
         
     }
 
