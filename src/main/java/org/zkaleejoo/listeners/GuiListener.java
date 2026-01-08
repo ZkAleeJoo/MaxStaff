@@ -165,6 +165,35 @@ public class GuiListener implements Listener {
                 player.closeInventory();
             }
         }
+
+        //AGREGAR EL MAINCONFIG MANAGER
+        String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage("&8Historial:")).trim();
+
+        if (title.startsWith(historyTitleBase)) {
+            event.setCancelled(true);
+            String targetName = title.replace(historyTitleBase, "").trim();
+            
+            String type = "";
+            if (item.getType() == Material.RED_WOOL) type = "BAN";
+            else if (item.getType() == Material.ORANGE_WOOL) type = "MUTE";
+            else if (item.getType() == Material.YELLOW_WOOL) type = "WARN";
+            else if (item.getType() == Material.LIGHT_GRAY_WOOL) type = "KICK";
+
+            if (!type.isEmpty()) {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+                plugin.getGuiManager().openDetailedHistoryMenu(player, targetName, type);
+            }
+            return;
+        }
+
+        if (title.startsWith("Detalles [")) {
+            event.setCancelled(true);
+            if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+                String targetName = title.split(" - ")[1];
+                plugin.getGuiManager().openHistoryMenu(player, targetName);
+            }
+            return;
+        }
     }
 
     private boolean checkPerm(Player player, String permission) {
