@@ -90,6 +90,8 @@ gui:
           - "&7Mutes: &f{mutes}"
           - "&7Kicks: &f{kicks}"
           - "&7Warns: &f{warns}"
+          - ""
+          - "&7Click to view detailed history"
       action_punish:
         name: "&c&lPunish Player"
         lore:
