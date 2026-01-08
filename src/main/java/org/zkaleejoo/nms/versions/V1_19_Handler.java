@@ -15,9 +15,17 @@ public class V1_19_Handler implements NMSHandler {
         try {
             Object view = event.getView();
             Method getTitle = view.getClass().getMethod("getTitle");
-            return (String) getTitle.invoke(view);
+            Object title = getTitle.invoke(view);
+            
+            return title != null ? title.toString() : "";
         } catch (Exception e) {
-            return "";
+            try {
+                Method titleMethod = event.getView().getClass().getMethod("title");
+                Object component = titleMethod.invoke(event.getView());
+                return component != null ? component.toString() : "";
+            } catch (Exception e2) {
+                return "";
+            }
         }
     }
 
