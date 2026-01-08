@@ -34,7 +34,7 @@ public class GuiListener implements Listener {
         
         String rawTitle = plugin.getNMS().getInventoryTitle(event);
         if (rawTitle == null || rawTitle.isEmpty()) return;
-        String title = org.bukkit.ChatColor.stripColor(rawTitle).trim();
+        String title = org.bukkit.ChatColor.stripColor(rawTitle).toLowerCase().trim();
         
         ItemStack item = event.getCurrentItem();
         if (!item.hasItemMeta()) return;
@@ -47,10 +47,10 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
+        String infoTitleBase = org.bukkit.ChatColor.stripColor(MessageUtils.getColoredMessage(
+        plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).toLowerCase().trim();
 
-        if (title.startsWith(infoTitleBase)) {
+        if (title.contains(infoTitleBase)) {
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             String targetName = title.replace(infoTitleBase, "").trim();
