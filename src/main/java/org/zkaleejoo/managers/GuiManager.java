@@ -253,13 +253,12 @@ public class GuiManager {
 
         List<String> records = plugin.getPunishmentManager().getHistoryDetails(targetName, type);
         
-        java.util.Collections.reverse(records);
-
         int slot = 10;
-        for (String record : records) {
+        for (int i = 0; i < records.size(); i++) {
             if (slot > 34) break; 
             if ((slot + 1) % 9 == 0) slot += 2; 
 
+            String record = records.get(i);
             String[] parts = record.split("\\|");
             
             List<String> lore = Arrays.asList(
@@ -269,7 +268,7 @@ public class GuiManager {
                 "&7Duración: &b" + parts[3]
             );
 
-            gui.setItem(slot, createItem(Material.PAPER, "&6&lRegistro #" + (records.indexOf(record) + 1), lore));
+            gui.setItem(slot, createItem(Material.PAPER, "&6&lRegistro #" + (i + 1), lore));
             slot++;
         }
 
