@@ -8,9 +8,6 @@ import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
 import org.zkaleejoo.managers.StaffManager;
-import org.zkaleejoo.nms.NMSHandler;
-import org.zkaleejoo.nms.versions.V1_19_Handler;
-import org.zkaleejoo.nms.versions.V1_21_Handler;
 import org.zkaleejoo.utils.UpdateChecker;
 import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
@@ -28,7 +25,6 @@ import org.zkaleejoo.commands.PunishmentCommand;
 import org.zkaleejoo.listeners.ChatListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 public class MaxStaff extends JavaPlugin {
 
     private MainConfigManager mainConfigManager;
@@ -37,12 +33,10 @@ public class MaxStaff extends JavaPlugin {
     private FreezeManager freezeManager;
     private PunishmentManager punishmentManager;
     private String latestVersion;
-    private NMSHandler nmsHandler;
 
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
-        setupNMS();
         int pluginId = 28604;
         Metrics metrics = new Metrics(this, pluginId);
         
@@ -115,16 +109,6 @@ public class MaxStaff extends JavaPlugin {
         }
     }
 
-    private void setupNMS() {
-        String v = Bukkit.getBukkitVersion();
-        
-        if (v.contains("1.21") || v.contains("1.22")) {
-            this.nmsHandler = new V1_21_Handler(this);
-        } else {
-            this.nmsHandler = new V1_19_Handler(this);
-        }
-    }
-
     public MainConfigManager getMainConfigManager() {
         return mainConfigManager;
     }
@@ -151,6 +135,4 @@ public class MaxStaff extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
     }
-
-    public NMSHandler getNMS() { return nmsHandler; }
 }

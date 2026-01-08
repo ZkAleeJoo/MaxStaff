@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
+import org.zkaleejoo.utils.CompatibilityUtil;
 
 public class GuiListener implements Listener {
 
@@ -32,9 +33,9 @@ public class GuiListener implements Listener {
         
         Player player = (Player) event.getWhoClicked();
         
-        String rawTitle = plugin.getNMS().getInventoryTitle(event);
+        String rawTitle = CompatibilityUtil.getInventoryTitle(event);
         if (rawTitle == null || rawTitle.isEmpty()) return;
-        String title = org.bukkit.ChatColor.stripColor(rawTitle).toLowerCase().trim();
+        String title = org.bukkit.ChatColor.stripColor(rawTitle).trim();
         
         ItemStack item = event.getCurrentItem();
         if (!item.hasItemMeta()) return;
@@ -47,10 +48,10 @@ public class GuiListener implements Listener {
             return;
         }
 
-        String infoTitleBase = org.bukkit.ChatColor.stripColor(MessageUtils.getColoredMessage(
-        plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).toLowerCase().trim();
+        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
 
-        if (title.contains(infoTitleBase)) {
+        if (title.startsWith(infoTitleBase)) {
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             String targetName = title.replace(infoTitleBase, "").trim();
