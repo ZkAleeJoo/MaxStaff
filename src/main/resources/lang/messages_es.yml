@@ -90,6 +90,8 @@ gui:
           - "&7Mutes: &f{mutes}"
           - "&7Kicks: &f{kicks}"
           - "&7Warns: &f{warns}"
+          - ""
+          - "&7Click para ver el historial detallado"
       action_punish:
         name: "&c&lSancionar Jugador"
         lore:
