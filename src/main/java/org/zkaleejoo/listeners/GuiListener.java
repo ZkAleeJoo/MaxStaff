@@ -58,6 +58,13 @@ public class GuiListener implements Listener {
             
             if (item.getType() == plugin.getMainConfigManager().getGuiInfoActionMat()) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
+            } 
+            else if (item.getType() == plugin.getMainConfigManager().getGuiInfoHistoryMat()) {
+                if (!player.hasPermission("maxstaff.history")) {
+                    sendNoPermission(player); 
+                    return;
+                }
+                plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
             return;
         }
