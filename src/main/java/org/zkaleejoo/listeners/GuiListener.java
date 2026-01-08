@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
-import org.zkaleejoo.utils.CompatibilityUtil;
 
 public class GuiListener implements Listener {
 
@@ -33,7 +32,7 @@ public class GuiListener implements Listener {
         
         Player player = (Player) event.getWhoClicked();
         
-        String rawTitle = CompatibilityUtil.getInventoryTitle(event);
+        String rawTitle = plugin.getNMS().getInventoryTitle(event);
         if (rawTitle == null || rawTitle.isEmpty()) return;
         String title = org.bukkit.ChatColor.stripColor(rawTitle).trim();
         
