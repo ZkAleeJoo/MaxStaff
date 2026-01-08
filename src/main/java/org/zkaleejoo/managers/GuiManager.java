@@ -215,4 +215,37 @@ public class GuiManager {
         }
         return item;
     }
+
+    // Añadir a GuiManager.java
+    public void openHistoryMenu(Player staff, String targetName) {
+        MainConfigManager config = plugin.getMainConfigManager();
+        // Título dinámico
+        String title = MessageUtils.getColoredMessage("&8Historial: &0" + targetName);
+        Inventory gui = Bukkit.createInventory(null, 27, title);
+        setupBorder(gui);
+
+        // Obtenemos los datos actuales del PunishmentManager
+        int bans = plugin.getPunishmentManager().getHistoryCount(targetName, "BAN");
+        int mutes = plugin.getPunishmentManager().getHistoryCount(targetName, "MUTE");
+        int kicks = plugin.getPunishmentManager().getHistoryCount(targetName, "KICK");
+        int warns = plugin.getPunishmentManager().getHistoryCount(targetName, "WARN");
+
+        // Ítem de BAN (Lana Roja o similar)
+        gui.setItem(10, createItem(Material.RED_WOOL, "&c&lBaneos", 
+            Arrays.asList("&7Total en el registro: &f" + bans, "", "&eSanciones permanentes o temporales.")));
+
+        // Ítem de MUTE (Lana Naranja)
+        gui.setItem(12, createItem(Material.ORANGE_WOOL, "&6&lSilencios", 
+            Arrays.asList("&7Total en el registro: &f" + mutes, "", "&eInfracciones de chat.")));
+
+        // Ítem de WARN (Lana Amarilla)
+        gui.setItem(14, createItem(Material.YELLOW_WOOL, "&e&lAdvertencias", 
+            Arrays.asList("&7Total en el registro: &f" + warns, "", "&eAcumulación de avisos.")));
+
+        // Ítem de KICK (Lana Gris)
+        gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, "&f&lExpulsiones", 
+            Arrays.asList("&7Total en el registro: &f" + kicks, "", "&eExpulsiones directas del servidor.")));
+
+        staff.openInventory(gui);
+    }
 }
