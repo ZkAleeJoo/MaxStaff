@@ -4,6 +4,7 @@ import org.zkaleejoo.nms.NMSHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.zkaleejoo.MaxStaff;
+import java.lang.reflect.Method;
 
 public class V1_19_Handler implements NMSHandler {
     private final MaxStaff plugin;
@@ -13,7 +14,8 @@ public class V1_19_Handler implements NMSHandler {
     public String getInventoryTitle(InventoryClickEvent event) {
         try {
             Object view = event.getView();
-            return (String) view.getClass().getMethod("getTitle").invoke(view);
+            Method getTitle = view.getClass().getMethod("getTitle");
+            return (String) getTitle.invoke(view);
         } catch (Exception e) {
             return "";
         }
