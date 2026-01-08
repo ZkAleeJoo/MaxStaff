@@ -14,6 +14,7 @@ import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.TimeUtils;
 import org.bukkit.Sound;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,24 +56,45 @@ public class PunishmentManager {
         dataFile.saveConfig();
     }
 
-    private void logHistory(String targetName, String type) {
+
+    public void logHistory(String targetName, String type, String reason, String staff, String duration) {
         UUID uuid = getUniqueId(targetName);
         FileConfiguration data = dataFile.getConfig();
+        
         int current = data.getInt("history." + uuid + "." + type, 0);
         data.set("history." + uuid + "." + type, current + 1);
+        
+        String pathDetails = "history-details." + uuid + "." + type;
+        List<String> details = data.getStringList(pathDetails);
+        
+        String timestamp = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+        
+        String cleanReason = reason.replace("|", "-");
+        String cleanDuration = (duration == null || duration.isEmpty()) ? "N/A" : duration;
+
+        String record = timestamp + "|" + staff + "|" + cleanReason + "|" + cleanDuration;
+        details.add(record);
+        
+        data.set(pathDetails, details);
         dataFile.saveConfig();
     }
 
     public int getHistoryCount(String targetName, String type) {
         UUID uuid = getUniqueId(targetName);
-        return dataFile.getConfig().getInt("history." + uuid + "." + type, 0);
+        return dataFile.getConfig().getInt("history." + uuid + "." + type.toUpperCase(), 0);
+    }
+
+    public List<String> getHistoryDetails(String targetName, String type) {
+        UUID uuid = getUniqueId(targetName);
+        return dataFile.getConfig().getStringList("history-details." + uuid + "." + type.toUpperCase());
     }
 
     // --- KICK ---
     public void kickPlayer(CommandSender staff, String targetName, String reason) {
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            logHistory(targetName, "KICK");
+            logHistory(targetName, "KICK", reason, staff.getName(), "Ahora");
+            
             String kickScreen = plugin.getMainConfigManager().getScreenKick()
                     .replace("{staff}", staff.getName())
                     .replace("{reason}", reason);
@@ -94,19 +116,19 @@ public class PunishmentManager {
 
     // --- BAN ---
     public void banPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
-        logHistory(targetName, "BAN");
         long duration = TimeUtils.parseDuration(durationStr);
-        Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
-        
         String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
+        
+        // Registro detallado antes del ban
+        logHistory(targetName, "BAN", reason, staff.getName(), timeDisplay);
 
+        Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
         String banScreenTemplate = plugin.getMainConfigManager().getScreenBan()
                 .replace("{staff}", staff.getName())
                 .replace("{reason}", reason)
                 .replace("{duration}", timeDisplay);
         
         String finalBanMessage = MessageUtils.getColoredMessage(banScreenTemplate);
-
         Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, finalBanMessage, expiry, staff.getName());
         
         Player target = Bukkit.getPlayer(targetName);
@@ -136,23 +158,21 @@ public class PunishmentManager {
     // --- MUTE ---
     public void mutePlayer(CommandSender staff, String targetName, String reason, String durationStr) {
         UUID uuid = getUniqueId(targetName);
-        Player target = Bukkit.getPlayer(targetName);
-        
-        logHistory(targetName, "MUTE");
         long duration = TimeUtils.parseDuration(durationStr);
-        long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
-        
         String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
+        
+        logHistory(targetName, "MUTE", reason, staff.getName(), timeDisplay);
 
+        long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
         FileConfiguration data = dataFile.getConfig();
         data.set("mutes." + uuid + ".reason", reason);
         data.set("mutes." + uuid + ".expiry", expiry);
         data.set("mutes." + uuid + ".staff", staff.getName());
         dataFile.saveConfig();
 
+        Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            String muteScreen = plugin.getMainConfigManager().getScreenMute()
-                    .replace("{staff}", staff.getName());
+            String muteScreen = plugin.getMainConfigManager().getScreenMute().replace("{staff}", staff.getName());
             target.sendMessage(MessageUtils.getColoredMessage(muteScreen));
         }
 
@@ -168,11 +188,8 @@ public class PunishmentManager {
         }
     }
 
-    // --- UNMUTE ---
     public void unmutePlayer(CommandSender staff, String targetName) {
         UUID uuid = getUniqueId(targetName);
-        Player target = Bukkit.getPlayer(targetName);
-
         FileConfiguration data = dataFile.getConfig();
         if (data.contains("mutes." + uuid)) {
             data.set("mutes." + uuid, null);
@@ -182,9 +199,8 @@ public class PunishmentManager {
                 plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
             ));
             
-            if (target != null) {
-                target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
-            }
+            Player target = Bukkit.getPlayer(targetName);
+            if (target != null) target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
         } else {
             staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNotMuted()));
         }
@@ -192,15 +208,14 @@ public class PunishmentManager {
 
     // --- WARN ---
     public void warnPlayer(CommandSender staff, String targetName, String reason) {
-        logHistory(targetName, "WARN"); 
+        logHistory(targetName, "WARN", reason, staff.getName(), "N/A"); 
         int count = getHistoryCount(targetName, "WARN");
         
         Player target = Bukkit.getPlayer(targetName);
         MainConfigManager config = plugin.getMainConfigManager();
 
         if (target != null) {
-            target.sendMessage(MessageUtils.getColoredMessage(
-                config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
+            target.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
         }
 
         String bcMsg = config.getBcWarn()
@@ -222,8 +237,7 @@ public class PunishmentManager {
             String command = thresholds.getString(key);
             if (command != null) {
                 String finalCmd = command.replace("{target}", targetName);
-                Bukkit.getScheduler().runTask(plugin, () -> 
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
+                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
             }
         }
     }
@@ -250,12 +264,13 @@ public class PunishmentManager {
     public void resetHistory(String targetName, String type) {
         UUID uuid = getUniqueId(targetName);
         FileConfiguration data = dataFile.getConfig();
-        String path = "history." + uuid;
-
+        
         if (type.equalsIgnoreCase("all")) {
-            data.set(path, null); 
+            data.set("history." + uuid, null);
+            data.set("history-details." + uuid, null);
         } else {
-            data.set(path + "." + type.toUpperCase(), null);
+            data.set("history." + uuid + "." + type.toUpperCase(), null);
+            data.set("history-details." + uuid + "." + type.toUpperCase(), null);
         }
         dataFile.saveConfig();
     }
@@ -268,14 +283,7 @@ public class PunishmentManager {
         int current = data.getInt(path, 0);
         if (current <= 0) return false;
 
-        int newValue = Math.max(0, current - amount);
-        
-        if (newValue == 0) {
-            data.set(path, null); 
-        } else {
-            data.set(path, newValue);
-        }
-        
+        data.set(path, Math.max(0, current - amount));
         dataFile.saveConfig();
         return true;
     }
@@ -289,7 +297,6 @@ public class PunishmentManager {
     public List<String> getMutedPlayerNames() {
         List<String> names = new ArrayList<>();
         FileConfiguration data = dataFile.getConfig();
-        
         if (data.getConfigurationSection("mutes") == null) return names;
 
         for (String uuidStr : data.getConfigurationSection("mutes").getKeys(false)) {
