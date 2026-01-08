@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
@@ -64,6 +65,20 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
             plugin.getPunishmentManager().warnPlayer(sender, target, reason);
             return true;
         }
+        // Dentro de PunishmentCommand.java -> onCommand
+        if (label.equalsIgnoreCase("history")) {
+            if (args.length < 1) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cUsage: /history <player>"));
+                return true;
+            }
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgConsole()));
+                return true;
+            }
+            plugin.getGuiManager().openHistoryMenu((Player) sender, args[0]);
+            return true;
+        }
+
         String time = "perm";
         String reason = plugin.getMainConfigManager().getNoReason();
         
@@ -88,6 +103,8 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
         } else if (label.equalsIgnoreCase("mute") || label.equalsIgnoreCase("tempmute")) {
             plugin.getPunishmentManager().mutePlayer(sender, target, reason, time);
         }
+
+        
 
         return true;
     }
