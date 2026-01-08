@@ -140,10 +140,10 @@ public class StaffManager {
 
         if (isVanished(player)) {
             setVanish(player, false);
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOff()));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgVanishOff()));
         } else {
             setVanish(player, true);
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getMsgVanishOn()));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgVanishOn()));
         }
     }
 
