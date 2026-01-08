@@ -152,7 +152,7 @@ public class StaffManager {
             vanishedPlayers.add(player.getUniqueId());
             for (Player target : Bukkit.getOnlinePlayers()) {
                 if (!target.hasPermission("maxstaff.see.vanish")) {
-                    target.hidePlayer(plugin, player);
+                    plugin.getNMS().hidePlayer(target, player);
                 }
             }
         } else {
