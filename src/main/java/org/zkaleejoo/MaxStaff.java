@@ -116,7 +116,7 @@ public class MaxStaff extends JavaPlugin {
     }
 
     private void setupNMS() {
-        String v = Bukkit.getBukkitVersion(); 
+        String v = Bukkit.getBukkitVersion();
         
         if (v.contains("1.21") || v.contains("1.22")) {
             this.nmsHandler = new V1_21_Handler(this);
