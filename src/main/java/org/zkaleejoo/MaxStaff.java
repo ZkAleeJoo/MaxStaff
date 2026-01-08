@@ -119,7 +119,7 @@ public class MaxStaff extends JavaPlugin {
         String v = Bukkit.getBukkitVersion(); 
         
         if (v.contains("1.21") || v.contains("1.22")) {
-            this.nmsHandler = new V1_21_Handler();
+            this.nmsHandler = new V1_21_Handler(this);
         } else {
             this.nmsHandler = new V1_19_Handler(this);
         }
