@@ -11,7 +11,12 @@ public class V1_19_Handler implements NMSHandler {
 
     @Override
     public String getInventoryTitle(InventoryClickEvent event) {
-        return event.getView().getTitle();
+        try {
+            Object view = event.getView();
+            return (String) view.getClass().getMethod("getTitle").invoke(view);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
