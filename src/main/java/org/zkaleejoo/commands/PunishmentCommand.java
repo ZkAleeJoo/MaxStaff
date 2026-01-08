@@ -65,7 +65,7 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
             plugin.getPunishmentManager().warnPlayer(sender, target, reason);
             return true;
         }
-        // Dentro de PunishmentCommand.java -> onCommand
+
         if (label.equalsIgnoreCase("history")) {
             if (args.length < 1) {
                 sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cUsage: /history <player>"));
