@@ -28,6 +28,8 @@ commands:
     description: Ver el historial de sanciones de un jugador
   vanish:
     description: Alterna tu invisibilidad ante otros jugadores.
+  ban-ip:
+    description: Banear la IP de un jugador de forma permanente.
   tempban-ip:
     description: Banear temporalmente la IP de un jugador
   unban-ip:
