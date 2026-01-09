@@ -55,6 +55,9 @@ public class StaffManager {
         
         staffModePlayers.put(player.getUniqueId(), true);
         
+        setVanish(player, true); 
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgVanishOn()));
+
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
 
@@ -102,6 +105,11 @@ public class StaffManager {
         
         staffModePlayers.remove(player.getUniqueId());
         
+        if (isVanished(player)) {
+        setVanish(player, false);
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgVanishOff()));
+    }
+    
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventoryRestored()));
     }
