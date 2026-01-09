@@ -4,3 +4,4 @@ server-plugins/
 server-data/
 target/
 docker-compose.yml
+dependency-reduced-pom.xml
