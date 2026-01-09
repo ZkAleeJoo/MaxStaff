@@ -172,7 +172,7 @@ public class GuiListener implements Listener {
                 player.closeInventory();
             }
         }
-
+ 
         //AGREGAR EL MAINCONFIG MANAGER
         String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage("&8Historial:")).trim();
 
