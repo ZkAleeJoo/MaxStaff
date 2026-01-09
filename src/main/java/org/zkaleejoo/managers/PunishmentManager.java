@@ -323,26 +323,25 @@ public class PunishmentManager {
         return dataFile.getConfig().getString("ip-cache." + uuid.toString());
     }
 
-    //AGREGAR MAINCONFIG MANAGER
-    public void banIPPlayer(CommandSender staff, String targetName, String reason, String durationStr, String target) {
-        String ip = target;
+    public void banIPPlayer(CommandSender staff, String target, String reason, String durationStr) {
+        String ip = target; 
 
         if (!target.contains(".")) {
-        ip = getPlayerIP(target);
-    }
-    
+            ip = getPlayerIP(target);
+        }
+        
         MainConfigManager config = plugin.getMainConfigManager();
         
         if (ip == null || ip.isEmpty()) {
             staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
             return;
         }
-        
+
         long duration = TimeUtils.parseDuration(durationStr);
         String timeDisplay = TimeUtils.getDurationString(duration, config);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
 
-        logHistory(targetName, "BAN-IP", reason, staff.getName(), timeDisplay);
+        logHistory(target, "BAN-IP", reason, staff.getName(), timeDisplay);
 
         String banMessage = MessageUtils.getColoredMessage(config.getScreenBan()
                 .replace("{staff}", staff.getName())
@@ -359,7 +358,7 @@ public class PunishmentManager {
 
         if (config.isBroadcastEnabled()) {
             String bcMsg = config.getBcBanIP()
-                    .replace("{target}", targetName)
+                    .replace("{target}", target)
                     .replace("{staff}", staff.getName())
                     .replace("{duration}", timeDisplay);
             broadcast(bcMsg); 
