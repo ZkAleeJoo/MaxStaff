@@ -324,15 +324,20 @@ public class PunishmentManager {
     }
 
     //AGREGAR MAINCONFIG MANAGER
-    public void banIPPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
-        String ip = getPlayerIP(targetName);
+    public void banIPPlayer(CommandSender staff, String targetName, String reason, String durationStr, String target) {
+        String ip = target;
+
+        if (!target.contains(".")) {
+        ip = getPlayerIP(target);
+    }
+    
         MainConfigManager config = plugin.getMainConfigManager();
         
-        if (ip == null) {
+        if (ip == null || ip.isEmpty()) {
             staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
             return;
         }
-
+        
         long duration = TimeUtils.parseDuration(durationStr);
         String timeDisplay = TimeUtils.getDurationString(duration, config);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
