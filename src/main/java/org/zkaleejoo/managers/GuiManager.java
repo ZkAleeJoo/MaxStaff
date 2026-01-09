@@ -219,7 +219,7 @@ public class GuiManager {
     //AGREGAR EL MAINCONFIGMANAGER
     public void openHistoryMenu(Player staff, String targetName) {
         MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage("&8Historial: &0" + targetName);
+        String title = MessageUtils.getColoredMessage(config.getGuiHistoryTitle().replace("{target}", targetName));
         Inventory gui = Bukkit.createInventory(null, 27, title);
         setupBorder(gui);
 
@@ -228,17 +228,17 @@ public class GuiManager {
         int kicks = plugin.getPunishmentManager().getHistoryCount(targetName, "KICK");
         int warns = plugin.getPunishmentManager().getHistoryCount(targetName, "WARN");
 
-        gui.setItem(10, createItem(Material.RED_WOOL, "&c&lBaneos", 
-            Arrays.asList("&7Total en el registro: &f" + bans, "", "&eSanciones permanentes o temporales.")));
+        gui.setItem(10, createItem(Material.RED_WOOL, config.getGuiHistoryBansName(), 
+            config.getGuiHistoryBansLore().stream().map(s -> s.replace("{count}", String.valueOf(bans))).toList()));
 
-        gui.setItem(12, createItem(Material.ORANGE_WOOL, "&6&lSilencios", 
-            Arrays.asList("&7Total en el registro: &f" + mutes, "", "&eInfracciones de chat.")));
+        gui.setItem(12, createItem(Material.ORANGE_WOOL, config.getGuiHistoryMutesName(), 
+            config.getGuiHistoryMutesLore().stream().map(s -> s.replace("{count}", String.valueOf(mutes))).toList()));
 
-        gui.setItem(14, createItem(Material.YELLOW_WOOL, "&e&lAdvertencias", 
-            Arrays.asList("&7Total en el registro: &f" + warns, "", "&eAcumulación de avisos.")));
+        gui.setItem(14, createItem(Material.YELLOW_WOOL, config.getGuiHistoryWarnsName(), 
+            config.getGuiHistoryWarnsLore().stream().map(s -> s.replace("{count}", String.valueOf(warns))).toList()));
 
-        gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, "&f&lExpulsiones", 
-            Arrays.asList("&7Total en el registro: &f" + kicks, "", "&eExpulsiones directas del servidor.")));
+        gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, config.getGuiHistoryKicksName(), 
+            config.getGuiHistoryKicksLore().stream().map(s -> s.replace("{count}", String.valueOf(kicks))).toList()));
 
         staff.openInventory(gui);
     }
@@ -247,7 +247,8 @@ public class GuiManager {
     //AGREGAR EL MAINCONFIGMANAGER
     public void openDetailedHistoryMenu(Player staff, String targetName, String type) {
         MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage("&8Detalles [" + type + "] - " + targetName);
+        String title = MessageUtils.getColoredMessage(config.getGuiDetailedTitle()
+                .replace("{type}", type).replace("{target}", targetName));
         Inventory gui = Bukkit.createInventory(null, 45, title);
         setupBorder(gui);
 
@@ -262,18 +263,17 @@ public class GuiManager {
             String[] parts = record.split("\\|");
             
             List<String> lore = Arrays.asList(
-                "&7Fecha: &f" + parts[0],
-                "&7Staff: &c" + parts[1],
-                "&7Motivo: &e" + parts[2],
-                "&7Duración: &b" + parts[3]
+                config.getGuiDetailedDate().replace("{date}", parts[0]),
+                config.getGuiDetailedStaff().replace("{staff}", parts[1]),
+                config.getGuiDetailedReason().replace("{reason}", parts[2]),
+                config.getGuiDetailedDuration().replace("{duration}", parts[3])
             );
 
-            gui.setItem(slot, createItem(Material.PAPER, "&6&lRegistro #" + (i + 1), lore));
+            gui.setItem(slot, createItem(Material.PAPER, config.getGuiDetailedItemName().replace("{number}", String.valueOf(i + 1)), lore));
             slot++;
         }
 
-        gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver al resumen")));
-        
+        gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore()));
         staff.openInventory(gui);
     }
 }
