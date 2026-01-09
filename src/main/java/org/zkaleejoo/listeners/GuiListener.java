@@ -99,7 +99,7 @@ public class GuiListener implements Listener {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 Player targetPlayer = plugin.getServer().getPlayer(targetName);
                 if (targetPlayer != null) {
-                    plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
+                    plugin.getGuiManager().openSanctionMenu(player, targetName);
                 }
                 return;
             }
