@@ -28,6 +28,10 @@ commands:
     description: Ver el historial de sanciones de un jugador
   vanish:
     description: Alterna tu invisibilidad ante otros jugadores.
+  tempban-ip:
+    description: Banear temporalmente la IP de un jugador
+  unban-ip:
+    description: Desbanear una IP
     
 permissions:
   maxstaff.admin:
@@ -44,6 +48,8 @@ permissions:
       maxstaff.see.vanish: true
       maxstaff.history: true
       maxstaff.vanish: true
+      maxstaff.punish.banip: true
+      maxstaff.punish.unbanip: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -73,4 +79,10 @@ permissions:
     default: op
   maxstaff.vanish:
     description: Permite usar el comando /vanish.
+    default: op
+  maxstaff.punish.banip:
+    description: Permite usar /ban-ip y /tempban-ip
+    default: op
+  maxstaff.punish.unbanip:
+    description: Permite usar /unban-ip
     default: op
