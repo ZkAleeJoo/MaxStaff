@@ -63,6 +63,7 @@ public class MainConfigManager {
 
     private String guiDetailedTitle, guiDetailedItemName;
     private String guiDetailedDate, guiDetailedStaff, guiDetailedReason, guiDetailedDuration;
+    private String msgNoIPFound, msgUnbanIPSuccess, msgInvalidIP, bcBanIP;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -231,6 +232,11 @@ public class MainConfigManager {
         guiDetailedStaff = lang.getString("gui.history-detailed.item-lore.staff");
         guiDetailedReason = lang.getString("gui.history-detailed.item-lore.reason");
         guiDetailedDuration = lang.getString("gui.history-detailed.item-lore.duration");
+
+        msgNoIPFound = lang.getString("punishments.feedback.no-ip-found", "&cNo IP found for this player.");
+        msgUnbanIPSuccess = lang.getString("punishments.feedback.unban-ip-success", "&aIP &e{ip} &ahas been unbanned.");
+        msgInvalidIP = lang.getString("punishments.feedback.invalid-ip", "&cCould not find a valid IP for: &e{target}");
+        bcBanIP = lang.getString("punishments.broadcasts.ban-ip", "&c&lIP-BAN &8» &f{target} &7was IP banned by &c{staff} &7({duration}).");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -371,6 +377,10 @@ public class MainConfigManager {
     public String getGuiDetailedStaff() { return guiDetailedStaff; }
     public String getGuiDetailedReason() { return guiDetailedReason; }
     public String getGuiDetailedDuration() { return guiDetailedDuration; }
+    public String getMsgNoIPFound() { return msgNoIPFound; }
+    public String getMsgUnbanIPSuccess() { return msgUnbanIPSuccess; }
+    public String getMsgInvalidIP() { return msgInvalidIP; }
+    public String getBcBanIP() { return bcBanIP; }
     
 
     public ConfigurationSection getReasons(String type) {
