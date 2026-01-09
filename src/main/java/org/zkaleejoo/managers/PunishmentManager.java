@@ -356,4 +356,23 @@ public class PunishmentManager {
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(bcMsg));
         }
     }
+
+    public void unbanIPPlayer(CommandSender staff, String target) {
+        String ip = target;
+
+        if (!target.contains(".")) {
+            ip = getPlayerIP(target);
+        }
+
+        if (ip == null) {
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cNo se pudo encontrar una IP válida para: &e" + target));
+            return;
+        }
+
+        Bukkit.unbanIP(ip);
+        
+        staff.sendMessage(MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getPrefix() + "&aLa IP &e" + ip + " &ahas sido desbaneada correctamente."
+        ));
+    }
 }
