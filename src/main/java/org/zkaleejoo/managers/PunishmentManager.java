@@ -326,19 +326,20 @@ public class PunishmentManager {
     //AGREGAR MAINCONFIG MANAGER
     public void banIPPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
         String ip = getPlayerIP(targetName);
+        MainConfigManager config = plugin.getMainConfigManager();
         
         if (ip == null) {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cNo se encontró una IP registrada para este jugador."));
+            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
             return;
         }
 
         long duration = TimeUtils.parseDuration(durationStr);
-        String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
+        String timeDisplay = TimeUtils.getDurationString(duration, config);
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
 
         logHistory(targetName, "BAN-IP", reason, staff.getName(), timeDisplay);
 
-        String banMessage = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenBan()
+        String banMessage = MessageUtils.getColoredMessage(config.getScreenBan()
                 .replace("{staff}", staff.getName())
                 .replace("{reason}", reason)
                 .replace("{duration}", timeDisplay));
@@ -351,28 +352,32 @@ public class PunishmentManager {
             }
         }
 
-        String bcMsg = plugin.getMainConfigManager().getPrefix() + "&c&lIP-BAN &8» &f" + targetName + " &7fue baneado por IP por &c" + staff.getName() + " &7(" + timeDisplay + ").";
-        if (plugin.getMainConfigManager().isBroadcastEnabled()) {
-            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(bcMsg));
+        if (config.isBroadcastEnabled()) {
+            String bcMsg = config.getBcBanIP()
+                    .replace("{target}", targetName)
+                    .replace("{staff}", staff.getName())
+                    .replace("{duration}", timeDisplay);
+            broadcast(bcMsg); 
         }
     }
 
     public void unbanIPPlayer(CommandSender staff, String target) {
         String ip = target;
+        MainConfigManager config = plugin.getMainConfigManager();
 
         if (!target.contains(".")) {
             ip = getPlayerIP(target);
         }
 
         if (ip == null) {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cNo se pudo encontrar una IP válida para: &e" + target));
+            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgInvalidIP().replace("{target}", target)));
             return;
         }
 
         Bukkit.unbanIP(ip);
         
         staff.sendMessage(MessageUtils.getColoredMessage(
-            plugin.getMainConfigManager().getPrefix() + "&aLa IP &e" + ip + " &ahas sido desbaneada correctamente."
+            config.getPrefix() + config.getMsgUnbanIPSuccess().replace("{ip}", ip)
         ));
     }
 }
