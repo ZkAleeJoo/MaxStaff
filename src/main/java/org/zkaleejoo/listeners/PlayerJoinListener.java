@@ -21,7 +21,9 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         MainConfigManager config = plugin.getMainConfigManager();
 
-        // Manejo de Vanish para jugadores que entran
+        String ip = player.getAddress().getAddress().getHostAddress();
+        plugin.getPunishmentManager().savePlayerIP(player.getUniqueId(), ip);
+
         for (java.util.UUID uuid : plugin.getStaffManager().getVanishedPlayers()) {
             Player staff = org.bukkit.Bukkit.getPlayer(uuid);
             if (staff != null && staff.isOnline()) {
