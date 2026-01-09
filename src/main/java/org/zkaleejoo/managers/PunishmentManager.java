@@ -119,7 +119,6 @@ public class PunishmentManager {
         long duration = TimeUtils.parseDuration(durationStr);
         String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
         
-        // Registro detallado antes del ban
         logHistory(targetName, "BAN", reason, staff.getName(), timeDisplay);
 
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
