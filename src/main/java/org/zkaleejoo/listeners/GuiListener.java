@@ -174,7 +174,6 @@ public class GuiListener implements Listener {
             }
         }
  
-        //AGREGAR EL MAINCONFIG MANAGER
         MainConfigManager config = plugin.getMainConfigManager();
         String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
 
