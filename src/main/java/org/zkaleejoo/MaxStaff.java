@@ -102,7 +102,11 @@ public class MaxStaff extends JavaPlugin {
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
         
-        String[] punCommands = {"ban", "tempban", "mute", "tempmute", "kick", "unban", "unmute", "warn", "history"};
+        String[] punCommands = {
+            "ban", "tempban", "mute", "tempmute", "kick", 
+            "unban", "unmute", "warn", "history",
+            "ban-ip", "tempban-ip", "unban-ip"
+        };
         for (String cmd : punCommands) {
             if (getCommand(cmd) != null) {
                 getCommand(cmd).setExecutor(punCmd);
