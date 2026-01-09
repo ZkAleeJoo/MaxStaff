@@ -154,6 +154,7 @@ time-units:
 punishments:
   broadcasts:
     ban: "&c{target} &fha sido baneado por &c{staff} &f(&e{duration}&f). | Motivo: &e{reason}"
+    ban-ip: "&c&lIP-BAN &8» &f{target} &7fue baneado por IP por &c{staff} &7({duration})."
     mute: "&c{target} &fha sido silenciado por &c{staff} &f(&e{duration}&f). | Motivo: &e{reason}"
     kick: "&e{target} &fha sido expulsado por &c{staff} &f| Motivo: &e{reason}"
     warns:
@@ -171,3 +172,6 @@ punishments:
     unban-success: "&aHas desbaneado a &e{target}"
     unmute-success: "&aHas desilenciado a &e{target}"
     usage: "&cUso: /{command} <jugador> [tiempo] [motivo]"
+    no-ip-found: "&cNo se encontró una IP registrada para este jugador."
+    unban-ip-success: "&aLa IP &e{ip} &ahas sido desbaneada correctamente."
+    invalid-ip: "&cNo se pudo encontrar una IP válida para: &e{target}"
