@@ -135,8 +135,9 @@ gui:
       staff: "&7Staff: &c{staff}"
       reason: "&7Reason: &e{reason}"
       duration: "&7Duration: &b{duration}"
-    back-lore: "&7Back to summary"
-    
+    back-lore: 
+      - "&7Back to summary"
+
 gui-style:
   navigation:
     back-name: "&c« Back"
