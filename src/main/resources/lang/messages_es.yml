@@ -112,7 +112,31 @@ gui:
     navigation:
       lore-back: "&7Volver al menú anterior"
       lore-page: "&7Ir a la página {page}"
-
+  history:
+    title: "&8Historial: &0{target}"
+    items:
+      bans:
+        name: "&c&lBaneos"
+        lore: ["&7Total en el registro: &f{count}", "", "&eSanciones permanentes o temporales."]
+      mutes:
+        name: "&6&lSilencios"
+        lore: ["&7Total en el registro: &f{count}", "", "&eInfracciones de chat."]
+      warns:
+        name: "&e&lAdvertencias"
+        lore: ["&7Total en el registro: &f{count}", "", "&eAcumulación de avisos."]
+      kicks:
+        name: "&f&lExpulsiones"
+        lore: ["&7Total en el registro: &f{count}", "", "&eExpulsiones directas del servidor."]
+  history-detailed:
+    title: "&8Detalles [{type}] - {target}"
+    item-name: "&6&lRegistro #{number}"
+    item-lore:
+      date: "&7Fecha: &f{date}"
+      staff: "&7Staff: &c{staff}"
+      reason: "&7Motivo: &e{reason}"
+      duration: "&7Duración: &b{duration}"
+    back-lore: "&7Volver al resumen"
+    
 gui-style:
   navigation:
     back-name: "&c« Volver"

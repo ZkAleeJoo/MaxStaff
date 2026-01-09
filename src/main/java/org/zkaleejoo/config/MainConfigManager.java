@@ -57,6 +57,13 @@ public class MainConfigManager {
     private String msgUpdateAvailable, msgUpdateCurrent, msgUpdateDownload;
     private String msgActionBar, statusEnabled, statusDisabled;
 
+    private String guiHistoryTitle;
+    private String guiHistoryBansName, guiHistoryMutesName, guiHistoryWarnsName, guiHistoryKicksName;
+    private List<String> guiHistoryBansLore, guiHistoryMutesLore, guiHistoryWarnsLore, guiHistoryKicksLore, guiDetailedBackLore;
+
+    private String guiDetailedTitle, guiDetailedItemName;
+    private String guiDetailedDate, guiDetailedStaff, guiDetailedReason, guiDetailedDuration;
+
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
         configFile = new CustomConfig("config.yml", null, plugin, false);
@@ -206,6 +213,24 @@ public class MainConfigManager {
         msgActionBar = lang.getString("staff-mode.action-bar", "&4&lSTAFF MODE &8| &fVanish: {status}");
         statusEnabled = lang.getString("staff-mode.status-enabled", "&aENABLED");
         statusDisabled = lang.getString("staff-mode.status-disabled", "&cDISABLED");
+
+        guiHistoryTitle = lang.getString("gui.history.title");
+        guiHistoryBansName = lang.getString("gui.history.items.bans.name");
+        guiHistoryBansLore = lang.getStringList("gui.history.items.bans.lore");
+        guiHistoryMutesName = lang.getString("gui.history.items.mutes.name");
+        guiHistoryMutesLore = lang.getStringList("gui.history.items.mutes.lore");
+        guiHistoryWarnsName = lang.getString("gui.history.items.warns.name");
+        guiHistoryWarnsLore = lang.getStringList("gui.history.items.warns.lore");
+        guiHistoryKicksName = lang.getString("gui.history.items.kicks.name");
+        guiHistoryKicksLore = lang.getStringList("gui.history.items.kicks.lore");
+
+        guiDetailedTitle = lang.getString("gui.history-detailed.title");
+        guiDetailedItemName = lang.getString("gui.history-detailed.item-name");
+        guiDetailedBackLore = lang.getStringList("gui.history-detailed.back-lore");
+        guiDetailedDate = lang.getString("gui.history-detailed.item-lore.date");
+        guiDetailedStaff = lang.getString("gui.history-detailed.item-lore.staff");
+        guiDetailedReason = lang.getString("gui.history-detailed.item-lore.reason");
+        guiDetailedDuration = lang.getString("gui.history-detailed.item-lore.duration");
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -330,6 +355,23 @@ public class MainConfigManager {
     public String getMsgActionBar() { return msgActionBar; }
     public String getStatusEnabled() { return statusEnabled; }
     public String getStatusDisabled() { return statusDisabled; }
+    public String getGuiHistoryTitle() { return guiHistoryTitle; }
+    public String getGuiHistoryBansName() { return guiHistoryBansName; }
+    public List<String> getGuiHistoryBansLore() { return guiHistoryBansLore; }
+    public String getGuiHistoryMutesName() { return guiHistoryMutesName; }
+    public List<String> getGuiHistoryMutesLore() { return guiHistoryMutesLore; }
+    public String getGuiHistoryWarnsName() { return guiHistoryWarnsName; }
+    public List<String> getGuiHistoryWarnsLore() { return guiHistoryWarnsLore; }
+    public String getGuiHistoryKicksName() { return guiHistoryKicksName; }
+    public List<String> getGuiHistoryKicksLore() { return guiHistoryKicksLore; }
+    public String getGuiDetailedTitle() { return guiDetailedTitle; }
+    public String getGuiDetailedItemName() { return guiDetailedItemName; }
+    public List<String> getGuiDetailedBackLore() { return guiDetailedBackLore; }
+    public String getGuiDetailedDate() { return guiDetailedDate; }
+    public String getGuiDetailedStaff() { return guiDetailedStaff; }
+    public String getGuiDetailedReason() { return guiDetailedReason; }
+    public String getGuiDetailedDuration() { return guiDetailedDuration; }
+    
 
     public ConfigurationSection getReasons(String type) {
         return configFile.getConfig().getConfigurationSection("punishment-reasons." + type);

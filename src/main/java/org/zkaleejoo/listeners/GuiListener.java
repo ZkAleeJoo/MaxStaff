@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.CompatibilityUtil;
 
@@ -174,7 +175,8 @@ public class GuiListener implements Listener {
         }
  
         //AGREGAR EL MAINCONFIG MANAGER
-        String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage("&8Historial:")).trim();
+        MainConfigManager config = plugin.getMainConfigManager();
+        String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
 
         if (title.startsWith(historyTitleBase)) {
             event.setCancelled(true);
@@ -193,15 +195,17 @@ public class GuiListener implements Listener {
             return;
         }
 
-        if (title.startsWith("Detalles [")) {
-            event.setCancelled(true);
-            if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
-                String targetName = title.split(" - ")[1];
-                plugin.getGuiManager().openHistoryMenu(player, targetName);
+        String detailedTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiDetailedTitle().split("\\[")[0])).trim();
+            if (title.startsWith(detailedTitleBase)) {
+                event.setCancelled(true);
+                if (item.getType() == config.getNavBackMat()) {
+                    // Extraemos el nombre del target: "Detalles [TIPO] - NOMBRE" -> NOMBRE
+                    String targetName = title.split(" - ")[1].trim();
+                    plugin.getGuiManager().openHistoryMenu(player, targetName);
+                }
+                return;
             }
-            return;
         }
-    }
 
     private boolean checkPerm(Player player, String permission) {
         if (!player.hasPermission(permission)) {
