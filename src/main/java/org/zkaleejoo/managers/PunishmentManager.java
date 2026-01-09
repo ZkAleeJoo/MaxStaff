@@ -309,4 +309,51 @@ public class PunishmentManager {
         }
         return names;
     }
+
+    public void savePlayerIP(UUID uuid, String ip) {
+        dataFile.getConfig().set("ip-cache." + uuid.toString(), ip);
+        dataFile.saveConfig();
+    }
+
+    public String getPlayerIP(String targetName) {
+        Player target = Bukkit.getPlayer(targetName);
+        if (target != null) return target.getAddress().getAddress().getHostAddress();
+        
+        UUID uuid = getUniqueId(targetName);
+        return dataFile.getConfig().getString("ip-cache." + uuid.toString());
+    }
+
+    //AGREGAR MAINCONFIG MANAGER
+    public void banIPPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
+        String ip = getPlayerIP(targetName);
+        
+        if (ip == null) {
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cNo se encontró una IP registrada para este jugador."));
+            return;
+        }
+
+        long duration = TimeUtils.parseDuration(durationStr);
+        String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
+        Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
+
+        logHistory(targetName, "BAN-IP", reason, staff.getName(), timeDisplay);
+
+        String banMessage = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenBan()
+                .replace("{staff}", staff.getName())
+                .replace("{reason}", reason)
+                .replace("{duration}", timeDisplay));
+
+        Bukkit.getBanList(BanList.Type.IP).addBan(ip, banMessage, expiry, staff.getName());
+
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            if (online.getAddress().getAddress().getHostAddress().equals(ip)) {
+                online.kickPlayer(banMessage);
+            }
+        }
+
+        String bcMsg = plugin.getMainConfigManager().getPrefix() + "&c&lIP-BAN &8» &f" + targetName + " &7fue baneado por IP por &c" + staff.getName() + " &7(" + timeDisplay + ").";
+        if (plugin.getMainConfigManager().isBroadcastEnabled()) {
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(bcMsg));
+        }
+    }
 }
