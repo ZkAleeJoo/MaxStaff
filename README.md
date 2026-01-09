@@ -61,6 +61,8 @@ Designed for speed, the plugin uses a hierarchical menu system:
 /warn - maxstaff.punish.warn
 /unban - maxstaff.punish.unban
 /unmute - maxstaff.punish.unmute
+/history - maxstaff.history
+/vanish - maxstaff.vanish
 
 maxstaff.admin - It gives you access to the entire plugin
 maxstaff.see.vanish - It allows you to see other staff on Vanish.
