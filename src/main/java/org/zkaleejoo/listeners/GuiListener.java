@@ -99,7 +99,7 @@ public class GuiListener implements Listener {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 Player targetPlayer = plugin.getServer().getPlayer(targetName);
                 if (targetPlayer != null) {
-                    plugin.getGuiManager().openSanctionMenu(player, targetName);
+                    plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
                 }
                 return;
             }
@@ -138,7 +138,7 @@ public class GuiListener implements Listener {
 
             if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
-                plugin.getGuiManager().openUserInfoMenu(player, plugin.getServer().getPlayer(target));
+                plugin.getGuiManager().openSanctionMenu(player, target);
             }
             else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
