@@ -154,6 +154,7 @@ time-units:
 punishments:
   broadcasts:
     ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
+    ban-ip: "&c&lIP-BAN &8» &f{target} &7was IP banned by &c{staff} &7({duration})."
     mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
     kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
     warns:
@@ -171,3 +172,6 @@ punishments:
     unban-success: "&aYou have unbanned &e{target}"
     unmute-success: "&aYou have unmuted &e{target}"
     usage: "&cUsage: /{command} <player> [time] [reason]"
+    no-ip-found: "&cNo registered IP was found for this player."
+    unban-ip-success: "&aThe IP &e{ip} &ahas been successfully unbanned."
+    invalid-ip: "&cCould not find a valid IP for: &e{target}"
