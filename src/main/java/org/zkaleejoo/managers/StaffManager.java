@@ -150,6 +150,9 @@ public class StaffManager {
     public void setVanish(Player player, boolean enable) {
         if (enable) {
             vanishedPlayers.add(player.getUniqueId());
+            
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
+            
             for (Player target : Bukkit.getOnlinePlayers()) {
                 if (!target.hasPermission("maxstaff.see.vanish")) {
                     target.hidePlayer(plugin, player);
@@ -157,6 +160,10 @@ public class StaffManager {
             }
         } else {
             vanishedPlayers.remove(player.getUniqueId());
+            
+            // Sonido privado al desactivar: Un tono un poco más agudo
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
+            
             for (Player target : Bukkit.getOnlinePlayers()) {
                 target.showPlayer(plugin, player);
             }

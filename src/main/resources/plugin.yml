@@ -26,6 +26,8 @@ commands:
     description: Enviar una advertencia a un jugador
   history:
     description: Ver el historial de sanciones de un jugador
+  vanish:
+    description: Alterna tu invisibilidad ante otros jugadores.
     
 permissions:
   maxstaff.admin:
@@ -41,6 +43,7 @@ permissions:
       maxstaff.punish.unmute: true
       maxstaff.see.vanish: true
       maxstaff.history: true
+      maxstaff.vanish: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -67,4 +70,7 @@ permissions:
     default: op
   maxstaff.history:
     description: Permite usar /history.
+    default: op
+  maxstaff.vanish:
+    description: Permite usar el comando /vanish.
     default: op

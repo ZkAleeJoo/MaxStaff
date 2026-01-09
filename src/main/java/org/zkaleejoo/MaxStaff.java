@@ -22,6 +22,7 @@ import org.zkaleejoo.listeners.FreezeListener;
 
 import org.zkaleejoo.managers.PunishmentManager;
 import org.zkaleejoo.commands.PunishmentCommand;
+import org.zkaleejoo.commands.VanishCommand;
 import org.zkaleejoo.listeners.ChatListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -97,6 +98,7 @@ public class MaxStaff extends JavaPlugin {
         MainCommand mainCommand = new MainCommand(this);
         this.getCommand("maxstaff").setExecutor(mainCommand);
         this.getCommand("maxstaff").setTabCompleter(mainCommand);
+        this.getCommand("vanish").setExecutor(new VanishCommand(this));
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
         
