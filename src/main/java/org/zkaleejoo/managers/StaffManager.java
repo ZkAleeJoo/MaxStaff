@@ -136,7 +136,6 @@ public class StaffManager {
     }
 
     public void toggleVanish(Player player) {
-        if (!staffModePlayers.containsKey(player.getUniqueId())) return;
 
         if (isVanished(player)) {
             setVanish(player, false);
@@ -161,7 +160,6 @@ public class StaffManager {
         } else {
             vanishedPlayers.remove(player.getUniqueId());
             
-            // Sonido privado al desactivar: Un tono un poco más agudo
             player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
             
             for (Player target : Bukkit.getOnlinePlayers()) {
