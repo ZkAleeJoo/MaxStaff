@@ -30,131 +30,114 @@ public class GuiListener implements Listener {
         
         if (event.getClickedInventory() != event.getInventory()) return;
 
+        String rawTitle = CompatibilityUtil.getInventoryTitle(event);
+        if (rawTitle == null || rawTitle.isEmpty()) return;
+        String title = ChatColor.stripColor(rawTitle).trim();
+        
+        MainConfigManager config = plugin.getMainConfigManager();
+
+        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiInfoTitle().split("\\{")[0])).trim();
+        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiPlayersTitle())).trim();
+        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().replace("{target}", ""))).trim();
+        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiReasonsTitle().split("\\{")[0])).trim();
+        String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
+        String detailedTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiDetailedTitle().split("\\[")[0])).trim();
+
+        boolean isMaxStaffGui = title.startsWith(infoTitleBase) || 
+                               title.contains(playersTitle) || 
+                               title.contains(sanctionsTitle) || 
+                               title.contains(reasonsBaseTitle) || 
+                               title.startsWith(historyTitleBase) || 
+                               title.startsWith(detailedTitleBase);
+
+        if (!isMaxStaffGui) return;
+
         event.setCancelled(true);
         
         Player player = (Player) event.getWhoClicked();
-        
-        String rawTitle = CompatibilityUtil.getInventoryTitle(event);
-        if (rawTitle == null || rawTitle.isEmpty()) return;
-        String title = org.bukkit.ChatColor.stripColor(rawTitle).trim();
-        
         ItemStack item = event.getCurrentItem();
         if (!item.hasItemMeta()) return;
         
         String itemName = item.getItemMeta().hasDisplayName() ? 
                 ChatColor.stripColor(item.getItemMeta().getDisplayName()) : "";
 
-        if (item.getType() == plugin.getMainConfigManager().getBorderMaterial()) {
-            event.setCancelled(true);
-            return;
-        }
+        if (item.getType() == config.getBorderMaterial()) return;
 
-        String infoTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiInfoTitle().split("\\{")[0])).trim();
 
         if (title.startsWith(infoTitleBase)) {
-            event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             String targetName = title.replace(infoTitleBase, "").trim();
             
-            if (item.getType() == plugin.getMainConfigManager().getGuiInfoActionMat()) {
+            if (item.getType() == config.getGuiInfoActionMat()) {
                 plugin.getGuiManager().openSanctionMenu(player, targetName);
             } 
-            else if (item.getType() == plugin.getMainConfigManager().getGuiInfoHistoryMat()) {
+            else if (item.getType() == config.getGuiInfoHistoryMat()) {
                 if (!player.hasPermission("maxstaff.history")) {
                     sendNoPermission(player); 
                     return;
                 }
                 plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
-            return;
         }
 
-        String playersTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiPlayersTitle())).trim();
-        
-        if (title.contains(playersTitle)) {
-            event.setCancelled(true);
+        else if (title.contains(playersTitle)) {
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             if (item.getType() == Material.PLAYER_HEAD) {
                 Player target = plugin.getServer().getPlayer(itemName);
                 if (target != null) {
                     player.teleport(target);
-                    String tpMsg = plugin.getMainConfigManager().getMsgTeleport();
-                    player.sendMessage(MessageUtils.getColoredMessage(tpMsg.replace("{player}", target.getName())));
+                    player.sendMessage(MessageUtils.getColoredMessage(config.getMsgTeleport().replace("{player}", target.getName())));
                 }
                 player.closeInventory();
             }
-            return;
         }
 
-        String sanctionsTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiSanctionsTitle().replace("{target}", ""))).trim();
-        
-        if (title.contains(sanctionsTitle)) {
-            event.setCancelled(true);
+        else if (title.contains(sanctionsTitle)) {
             String targetName = title.replace(sanctionsTitle, "").trim();
 
-            if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+            if (item.getType() == config.getNavBackMat()) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 Player targetPlayer = plugin.getServer().getPlayer(targetName);
-                if (targetPlayer != null) {
-                    plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
-                }
+                if (targetPlayer != null) plugin.getGuiManager().openUserInfoMenu(player, targetPlayer);
                 return;
             }
 
             if (item.getType() == Material.IRON_SWORD) {
-                if (!checkPerm(player, "maxstaff.punish.ban")) return;
-                plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
+                if (checkPerm(player, "maxstaff.punish.ban")) plugin.getGuiManager().openReasonsMenu(player, targetName, "BAN", 0);
             } 
             else if (item.getType() == Material.PAPER) {
-                if (!checkPerm(player, "maxstaff.punish.mute")) return;
-                plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
+                if (checkPerm(player, "maxstaff.punish.mute")) plugin.getGuiManager().openReasonsMenu(player, targetName, "MUTE", 0);
             } 
             else if (item.getType() == Material.FEATHER) {
-                if (!checkPerm(player, "maxstaff.punish.kick")) return;
-                plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
+                if (checkPerm(player, "maxstaff.punish.kick")) plugin.getGuiManager().openReasonsMenu(player, targetName, "KICK", 0);
             }
-            return;
         }
 
-        String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getGuiReasonsTitle().split("\\{")[0])).trim();
-        
-        if (title.contains(reasonsBaseTitle)) { 
-            event.setCancelled(true);
-            
+        else if (title.contains(reasonsBaseTitle)) { 
             String type = title.contains("[BAN]") ? "BAN" : (title.contains("[MUTE]") ? "MUTE" : "KICK");
             String target;
-            try {
-                target = title.split(" - ")[1].split(" \\(")[0].trim();
-            } catch (Exception e) { return; }
+            try { target = title.split(" - ")[1].split(" \\(")[0].trim(); } catch (Exception e) { return; }
 
             int page;
-            try {
-                page = Integer.parseInt(title.split("\\(")[1].split("/")[0]) - 1;
-            } catch (Exception e) { page = 0; }
+            try { page = Integer.parseInt(title.split("\\(")[1].split("/")[0]) - 1; } catch (Exception e) { page = 0; }
 
-            if (item.getType() == plugin.getMainConfigManager().getNavBackMat()) {
+            if (item.getType() == config.getNavBackMat()) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openSanctionMenu(player, target);
             }
-            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavNextName())))) {
+            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(config.getNavNextName())))) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page + 1);
             }
-            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getNavPrevName())))) {
+            else if (itemName.contains(ChatColor.stripColor(MessageUtils.getColoredMessage(config.getNavPrevName())))) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openReasonsMenu(player, target, type, page - 1);
             }
-            
             else if (item.getType().name().endsWith("_DYE") && item.getItemMeta().hasLore()) {
                 if (!checkPerm(player, "maxstaff.punish." + type.toLowerCase())) {
                     player.closeInventory();
                     return;
                 }
-
                 ItemMeta meta = item.getItemMeta();
                 NamespacedKey reasonKey = new NamespacedKey(plugin, "reason_id");
                 NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
@@ -163,8 +146,7 @@ public class GuiListener implements Listener {
                 String duration = meta.getPersistentDataContainer().get(durationKey, PersistentDataType.STRING);
                 
                 if (reasonId == null || duration == null) return;
-                
-                String reasonName = plugin.getMainConfigManager().getReasonName(type, reasonId);
+                String reasonName = config.getReasonName(type, reasonId);
                 
                 if (type.equals("BAN")) plugin.getPunishmentManager().banPlayer(player, target, reasonName, duration);
                 else if (type.equals("MUTE")) plugin.getPunishmentManager().mutePlayer(player, target, reasonName, duration);
@@ -173,14 +155,9 @@ public class GuiListener implements Listener {
                 player.closeInventory();
             }
         }
- 
-        MainConfigManager config = plugin.getMainConfigManager();
-        String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
 
-        if (title.startsWith(historyTitleBase)) {
-            event.setCancelled(true);
+        else if (title.startsWith(historyTitleBase)) {
             String targetName = title.replace(historyTitleBase, "").trim();
-            
             String type = "";
             if (item.getType() == Material.RED_WOOL) type = "BAN";
             else if (item.getType() == Material.ORANGE_WOOL) type = "MUTE";
@@ -191,20 +168,15 @@ public class GuiListener implements Listener {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
                 plugin.getGuiManager().openDetailedHistoryMenu(player, targetName, type);
             }
-            return;
         }
 
-        String detailedTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiDetailedTitle().split("\\[")[0])).trim();
-            if (title.startsWith(detailedTitleBase)) {
-                event.setCancelled(true);
-                if (item.getType() == config.getNavBackMat()) {
-                    // Extraemos el nombre del target: "Detalles [TIPO] - NOMBRE" -> NOMBRE
-                    String targetName = title.split(" - ")[1].trim();
-                    plugin.getGuiManager().openHistoryMenu(player, targetName);
-                }
-                return;
+        else if (title.startsWith(detailedTitleBase)) {
+            if (item.getType() == config.getNavBackMat()) {
+                String targetName = title.split(" - ")[1].trim();
+                plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
         }
+    }
 
     private boolean checkPerm(Player player, String permission) {
         if (!player.hasPermission(permission)) {
