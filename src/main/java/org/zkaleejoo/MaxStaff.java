@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.zkaleejoo.commands.ChatCommand;
 import org.zkaleejoo.commands.CommandSpyCommand;
+import org.zkaleejoo.commands.GameModeCommand;
 import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
 
@@ -109,6 +110,8 @@ public class MaxStaff extends JavaPlugin {
         this.getCommand("cmdspy").setExecutor(new CommandSpyCommand(this));
         this.getCommand("chat").setExecutor(new ChatCommand(this));
         this.getCommand("chat").setTabCompleter(new ChatCommand(this));
+        this.getCommand("gamemode").setExecutor(new GameModeCommand(this));
+        
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
         
@@ -154,6 +157,7 @@ public class MaxStaff extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GuiListener(this), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
     }
 }
