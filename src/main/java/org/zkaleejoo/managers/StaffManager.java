@@ -209,4 +209,10 @@ public class StaffManager {
     public boolean isSpying(Player player) {
         return commandSpyPlayers.contains(player.getUniqueId());
     }
+
+    public void updateSavedGameMode(Player player, org.bukkit.GameMode newMode) {
+        if (savedGameMode.containsKey(player.getUniqueId())) {
+            savedGameMode.put(player.getUniqueId(), newMode);
+        }
+    }
 }
