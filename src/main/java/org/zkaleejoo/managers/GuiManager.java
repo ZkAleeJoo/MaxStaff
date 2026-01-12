@@ -216,7 +216,6 @@ public class GuiManager {
         return item;
     }
  
-    //AGREGAR EL MAINCONFIGMANAGER
     public void openHistoryMenu(Player staff, String targetName) {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiHistoryTitle().replace("{target}", targetName));
