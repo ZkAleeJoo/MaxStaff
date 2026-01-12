@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.managers.ChatManager;
 import org.zkaleejoo.utils.MessageUtils;
 
 public class ChatListener implements Listener {
@@ -25,7 +26,7 @@ public class ChatListener implements Listener {
         if (plugin.getChatManager().isGlobalMute()) {
             if (!event.getPlayer().hasPermission("maxstaff.staffchat")) {
                 event.setCancelled(true);
-                String msg = plugin.getMainConfigManager().getConfig().getString("chat.chat-is-muted");
+                String msg = plugin.getMainConfigManager().getMsgChatIsMuted();
                 event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
             }
         }
