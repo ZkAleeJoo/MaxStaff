@@ -160,6 +160,5 @@ public class MaxStaff extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
-        getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
     }
 }
