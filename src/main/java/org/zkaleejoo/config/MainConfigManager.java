@@ -55,6 +55,7 @@ public class MainConfigManager {
     private String msgNoIPFound, msgUnbanIPSuccess, msgInvalidIP, bcBanIP;
     private String staffChatFormat;
     private String msgCmdSpyEnabled, msgCmdSpyDisabled, msgCmdSpyFormat;
+    private String msgGlobalMuteEnabled, msgGlobalMuteDisabled, msgChatIsMuted, msgChatCleared, msgChatUsage;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -210,6 +211,11 @@ public class MainConfigManager {
         msgCmdSpyEnabled = lang.getString("messages.command-spy-enabled", "&aModo Espía de Comandos ACTIVADO.");
         msgCmdSpyDisabled = lang.getString("messages.command-spy-disabled", "&cModo Espía de Comandos DESACTIVADO.");
         msgCmdSpyFormat = lang.getString("messages.command-spy-format", "&8[&6Spy&8] &e{player}&8: &f{command}");
+        msgGlobalMuteEnabled = lang.getString("chat.global-mute-enabled", "&cEl chat global ha sido &lSILENCIADO &cpor &e{player}&c.");
+        msgGlobalMuteDisabled = lang.getString("chat.global-mute-disabled", "&aEl chat global ha sido &lACTIVADO &apor &e{player}&a.");
+        msgChatIsMuted = lang.getString("chat.chat-is-muted", "&cEl chat está silenciado globalmente en este momento.");
+        msgChatCleared = lang.getString("chat.cleared", "&6&lCHAT LIMPIADO &7por &e{player}&7.");
+        msgChatUsage = lang.getString("chat.usage", "&cUso: /chat <mute|clear>");
 
     }
 
@@ -359,6 +365,11 @@ public class MainConfigManager {
     public String getMsgCmdSpyEnabled() { return msgCmdSpyEnabled; }
     public String getMsgCmdSpyDisabled() { return msgCmdSpyDisabled; }
     public String getMsgCmdSpyFormat() { return msgCmdSpyFormat; }
+    public String getMsgGlobalMuteEnabled() { return msgGlobalMuteEnabled; }
+    public String getMsgGlobalMuteDisabled() { return msgGlobalMuteDisabled; }
+    public String getMsgChatIsMuted() { return msgChatIsMuted; }
+    public String getMsgChatCleared() { return msgChatCleared; }
+    public String getMsgChatUsage() { return msgChatUsage; }
     
 
     public ConfigurationSection getReasons(String type) {

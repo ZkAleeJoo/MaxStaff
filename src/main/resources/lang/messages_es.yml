@@ -179,3 +179,10 @@ punishments:
     no-ip-found: "&cNo se encontró una IP registrada para este jugador."
     unban-ip-success: "&aLa IP &e{ip} &ahas sido desbaneada correctamente."
     invalid-ip: "&cNo se pudo encontrar una IP válida para: &e{target}"
+
+chat:
+  global-mute-enabled: "&cEl chat global ha sido &lSILENCIADO &cpor &e{player}&c."
+  global-mute-disabled: "&aEl chat global ha sido &lACTIVADO &apor &e{player}&a."
+  chat-is-muted: "&cEl chat está silenciado globalmente en este momento."
+  cleared: "&6&lCHAT LIMPIADO &7por &e{player}&7."
+  usage: "&cUso: /chat <mute|clear>"

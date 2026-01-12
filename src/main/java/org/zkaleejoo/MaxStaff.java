@@ -4,6 +4,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.zkaleejoo.commands.ChatCommand;
 import org.zkaleejoo.commands.CommandSpyCommand;
 import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
@@ -104,6 +105,8 @@ public class MaxStaff extends JavaPlugin {
         this.getCommand("vanish").setExecutor(new VanishCommand(this));
         this.getCommand("sc").setExecutor(new StaffChatCommand(this));
         this.getCommand("cmdspy").setExecutor(new CommandSpyCommand(this));
+        this.getCommand("chat").setExecutor(new ChatCommand(this));
+        this.getCommand("chat").setTabCompleter(new ChatCommand(this));
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
         
