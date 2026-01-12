@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.zkaleejoo.MaxStaff;
-import org.zkaleejoo.managers.ChatManager; // <--- ESTA IMPORTACIÓN ES VITAL
+import org.zkaleejoo.managers.ChatManager; 
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.Arrays;
