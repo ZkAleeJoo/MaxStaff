@@ -56,6 +56,10 @@ public class MainConfigManager {
     private String staffChatFormat;
     private String msgCmdSpyEnabled, msgCmdSpyDisabled, msgCmdSpyFormat;
     private String msgGlobalMuteEnabled, msgGlobalMuteDisabled, msgChatIsMuted, msgChatCleared, msgChatUsage;
+    private String guiGmTitle, guiGmFeedback;
+    private String guiGmSurvivalName, guiGmCreativeName, guiGmAdventureName, guiGmSpectatorName;
+    private List<String> guiGmSurvivalLore, guiGmCreativeLore, guiGmAdventureLore, guiGmSpectatorLore;
+    private Material guiGmSurvivalMat, guiGmCreativeMat, guiGmAdventureMat, guiGmSpectatorMat;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -93,6 +97,10 @@ public class MainConfigManager {
         guiInfoStatsMat = loadMaterial(config.getString("gui.info.items.stats.material"), Material.BOOK);
         guiInfoHistoryMat = loadMaterial(config.getString("gui.info.items.history.material"), Material.PAPER);
         guiInfoActionMat = loadMaterial(config.getString("gui.info.items.action_punish.material"), Material.NETHERITE_SWORD);
+        guiGmSurvivalMat = loadMaterial(lang.getString("gui.gamemode.survival.material"), Material.GRASS_BLOCK);
+        guiGmCreativeMat = loadMaterial(lang.getString("gui.gamemode.creative.material"), Material.BEACON);
+        guiGmAdventureMat = loadMaterial(lang.getString("gui.gamemode.adventure.material"), Material.MAP);
+        guiGmSpectatorMat = loadMaterial(lang.getString("gui.gamemode.spectator.material"), Material.ENDER_EYE);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
 
@@ -216,6 +224,16 @@ public class MainConfigManager {
         msgChatIsMuted = lang.getString("chat.chat-is-muted", "&cEl chat está silenciado globalmente en este momento.");
         msgChatCleared = lang.getString("chat.cleared", "&6&lCHAT LIMPIADO &7por &e{player}&7.");
         msgChatUsage = lang.getString("chat.usage", "&cUso: /chat <mute|clear>");
+        guiGmTitle = lang.getString("gui.gamemode.title", "&8Selector de Modo de Juego");
+        guiGmFeedback = lang.getString("gui.feedback.gamemode-changed", "&aTu modo de juego ha sido cambiado a &e{mode}&a.");
+        guiGmSurvivalName = lang.getString("gui.gamemode.survival.name");
+        guiGmSurvivalLore = lang.getStringList("gui.gamemode.survival.lore");
+        guiGmCreativeName = lang.getString("gui.gamemode.creative.name");
+        guiGmCreativeLore = lang.getStringList("gui.gamemode.creative.lore");
+        guiGmAdventureName = lang.getString("gui.gamemode.adventure.name");
+        guiGmAdventureLore = lang.getStringList("gui.gamemode.adventure.lore");
+        guiGmSpectatorName = lang.getString("gui.gamemode.spectator.name");
+        guiGmSpectatorLore = lang.getStringList("gui.gamemode.spectator.lore");
 
     }
 
@@ -370,6 +388,20 @@ public class MainConfigManager {
     public String getMsgChatIsMuted() { return msgChatIsMuted; }
     public String getMsgChatCleared() { return msgChatCleared; }
     public String getMsgChatUsage() { return msgChatUsage; }
+    public String getGuiGmTitle() { return guiGmTitle; }
+    public String getGuiGmFeedback() { return guiGmFeedback; }
+    public String getGuiGmSurvivalName() { return guiGmSurvivalName; }
+    public List<String> getGuiGmSurvivalLore() { return guiGmSurvivalLore; }
+    public Material getGuiGmSurvivalMat() { return guiGmSurvivalMat; }
+    public String getGuiGmCreativeName() { return guiGmCreativeName; }
+    public List<String> getGuiGmCreativeLore() { return guiGmCreativeLore; }
+    public Material getGuiGmCreativeMat() { return guiGmCreativeMat; }
+    public String getGuiGmAdventureName() { return guiGmAdventureName; }
+    public List<String> getGuiGmAdventureLore() { return guiGmAdventureLore; }
+    public Material getGuiGmAdventureMat() { return guiGmAdventureMat; }
+    public String getGuiGmSpectatorName() { return guiGmSpectatorName; }
+    public List<String> getGuiGmSpectatorLore() { return guiGmSpectatorLore; }
+    public Material getGuiGmSpectatorMat() { return guiGmSpectatorMat; }
     
 
     public ConfigurationSection getReasons(String type) {
