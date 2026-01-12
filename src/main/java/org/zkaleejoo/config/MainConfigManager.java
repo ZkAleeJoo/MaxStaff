@@ -13,7 +13,6 @@ public class MainConfigManager {
     private CustomConfig langFile;
     private MaxStaff plugin;
     
-    //VARIABLES DE CONFIGURACIÓN PRINCIPAL (config.yml)
     private boolean updateCheckEnabled;
     private boolean isBroadcastEnabled;
     private String selectedLanguage;
@@ -23,7 +22,6 @@ public class MainConfigManager {
     private Material[] durationDyes = new Material[4];
     private ConfigurationSection warnThresholds;
 
-    //MENSAJES Y TEXTOS (Se cargan de messages_xx.yml)
     private String prefix, noPermission, pluginReload, subcommandInvalid, subcommandSpecified;
     private String msgConsole, noReason, playerMuted, msgTeleport, helpTitle, msgUsage;
     private List<String> helpLines;
@@ -82,7 +80,6 @@ public class MainConfigManager {
         langFile.registerConfig();
         FileConfiguration lang = langFile.getConfig();
 
-        //CONFIGRACIÓN PRINCIPAL (config.yml)
         prefix = config.getString("general.prefix", "&4&lMaxStaff &8» ");
         updateCheckEnabled = config.getBoolean("general.update-check", true);
         isBroadcastEnabled = config.getBoolean("punishments.broadcast", true);
