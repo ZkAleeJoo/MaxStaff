@@ -60,6 +60,7 @@ public class MainConfigManager {
     private String guiGmSurvivalName, guiGmCreativeName, guiGmAdventureName, guiGmSpectatorName;
     private List<String> guiGmSurvivalLore, guiGmCreativeLore, guiGmAdventureLore, guiGmSpectatorLore;
     private Material guiGmSurvivalMat, guiGmCreativeMat, guiGmAdventureMat, guiGmSpectatorMat;
+    private boolean gmMenuEnabled;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -101,6 +102,7 @@ public class MainConfigManager {
         guiGmCreativeMat = loadMaterial(config.getString("gui-gamemode.creative-material"), Material.BEACON);
         guiGmAdventureMat = loadMaterial(config.getString("gui-gamemode.adventure-material"), Material.MAP);
         guiGmSpectatorMat = loadMaterial(config.getString("gui-gamemode.spectator-material"), Material.ENDER_EYE);
+        gmMenuEnabled = config.getBoolean("gui-gamemode.enabled-menu", true);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
 
@@ -234,6 +236,7 @@ public class MainConfigManager {
         guiGmAdventureLore = lang.getStringList("gui.gamemode.adventure.lore");
         guiGmSpectatorName = lang.getString("gui.gamemode.spectator.name");
         guiGmSpectatorLore = lang.getStringList("gui.gamemode.spectator.lore");
+        
 
     }
 
@@ -402,6 +405,7 @@ public class MainConfigManager {
     public String getGuiGmSpectatorName() { return guiGmSpectatorName; }
     public List<String> getGuiGmSpectatorLore() { return guiGmSpectatorLore; }
     public Material getGuiGmSpectatorMat() { return guiGmSpectatorMat; }
+    public boolean isGmMenuEnabled() { return gmMenuEnabled; }
     
 
     public ConfigurationSection getReasons(String type) {
