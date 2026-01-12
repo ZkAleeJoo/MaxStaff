@@ -28,6 +28,9 @@ messages:
   update-current: "&7Tu versión actual: &c{version}"
   update-download: "&eDescárgala para obtener mejoras y correcciones."
   staff-chat-format: "&8[&4&lSTAFF&8] &b{player}&8: &f{message}"
+  command-spy-enabled: "&aModo Espía de Comandos &lACTIVADO&a."
+  command-spy-disabled: "&cModo Espía de Comandos &lDESACTIVADO&c."
+  command-spy-format: "&8[&6&lSPY&8] &b{player}&8: &f{command}"
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"
