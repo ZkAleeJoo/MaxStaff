@@ -34,6 +34,8 @@ commands:
     description: Banear temporalmente la IP de un jugador
   unban-ip:
     description: Desbanear una IP
+  sc:
+    description: Chat privado para miembros del Staff
     
 permissions:
   maxstaff.admin:
@@ -52,6 +54,7 @@ permissions:
       maxstaff.vanish: true
       maxstaff.punish.banip: true
       maxstaff.punish.unbanip: true
+      maxstaff.staffchat: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -87,4 +90,7 @@ permissions:
     default: op
   maxstaff.punish.unbanip:
     description: Permite usar /unban-ip
+    default: op
+  maxstaff.staffchat:
+    description: Permite usar y ver el chat de staff.
     default: op
