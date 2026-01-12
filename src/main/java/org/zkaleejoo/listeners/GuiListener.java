@@ -43,13 +43,15 @@ public class GuiListener implements Listener {
         String reasonsBaseTitle = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiReasonsTitle().split("\\{")[0])).trim();
         String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
         String detailedTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiDetailedTitle().split("\\[")[0])).trim();
+        String gmTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiGmTitle())).trim();
 
         boolean isMaxStaffGui = title.startsWith(infoTitleBase) || 
                                title.contains(playersTitle) || 
                                title.contains(sanctionsTitle) || 
                                title.contains(reasonsBaseTitle) || 
                                title.startsWith(historyTitleBase) || 
-                               title.startsWith(detailedTitleBase);
+                               title.startsWith(detailedTitleBase) ||
+                               title.equals(gmTitleBase);
 
         if (!isMaxStaffGui) return;
 
@@ -177,8 +179,6 @@ public class GuiListener implements Listener {
                 plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
         }
-
-        String gmTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiGmTitle())).trim();
 
         if (title.equals(gmTitleBase)) {
             event.setCancelled(true);
