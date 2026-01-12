@@ -50,6 +50,12 @@ gui-style:
     duration-3-material: "ORANGE_DYE"  #Long time
     duration-4-material: "RED_DYE"     #Permanent
 
+gui-gamemode:
+  survival-material: "GRASS_BLOCK"
+  creative-material: "BEACON"
+  adventure-material: "MAP"
+  spectator-material: "ENDER_EYE"
+  
 #Sanctions System (Logic)
 punishments:
   #Announce sanctions globally?
