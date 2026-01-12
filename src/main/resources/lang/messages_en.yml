@@ -27,6 +27,7 @@ messages:
   update-available: "&eA new version is available! (&b{version}&e)"
   update-current: "&7Your current version: &c{version}"
   update-download: "&eDownload it to get improvements and fixes."
+  staff-chat-format: "&8[&4&lSTAFF&8] &b{player}&8: &f{message}"
 
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
