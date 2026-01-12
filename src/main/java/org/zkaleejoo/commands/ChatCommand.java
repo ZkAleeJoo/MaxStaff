@@ -27,10 +27,10 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getConfig().getString("chat.usage")));
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgChatUsage())); // Corrección aquí
             return true;
         }
-
+        
         String sub = args[0].toLowerCase();
 
         if (sub.equals("clear")) {
