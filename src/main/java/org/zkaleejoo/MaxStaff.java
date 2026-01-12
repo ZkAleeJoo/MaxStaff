@@ -28,7 +28,6 @@ import org.zkaleejoo.commands.StaffChatCommand;
 import org.zkaleejoo.commands.VanishCommand;
 import org.zkaleejoo.listeners.ChatListener;
 import org.zkaleejoo.listeners.CommandSpyListener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class MaxStaff extends JavaPlugin {
 
