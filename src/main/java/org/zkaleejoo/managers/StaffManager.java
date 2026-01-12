@@ -15,6 +15,8 @@ import org.zkaleejoo.utils.MessageUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 public class StaffManager {
 
@@ -24,6 +26,7 @@ public class StaffManager {
     private final Map<UUID, GameMode> savedGameMode = new HashMap<>();
     private final Map<UUID, Boolean> staffModePlayers = new HashMap<>();
     private final java.util.List<UUID> vanishedPlayers = new java.util.ArrayList<>();
+    private final Set<UUID> commandSpyPlayers = new HashSet<>();    
 
     public StaffManager(MaxStaff plugin) {
         this.plugin = plugin;
@@ -191,5 +194,19 @@ public class StaffManager {
                 disableStaffMode(player);
             }
         }
+    }
+
+    public void toggleCommandSpy(Player player) {
+        if (commandSpyPlayers.contains(player.getUniqueId())) {
+            commandSpyPlayers.remove(player.getUniqueId());
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgCmdSpyDisabled()));
+        } else {
+            commandSpyPlayers.add(player.getUniqueId());
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgCmdSpyEnabled()));
+        }
+    }
+
+    public boolean isSpying(Player player) {
+        return commandSpyPlayers.contains(player.getUniqueId());
     }
 }
