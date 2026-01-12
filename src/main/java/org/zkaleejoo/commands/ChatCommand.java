@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.managers.ChatManager; // <--- ESTA IMPORTACIÓN ES VITAL
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.Arrays;
@@ -27,10 +28,10 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgChatUsage())); // Corrección aquí
+            sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgChatUsage()));
             return true;
         }
-        
+
         String sub = args[0].toLowerCase();
 
         if (sub.equals("clear")) {
@@ -40,8 +41,7 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
             boolean currentStatus = plugin.getChatManager().isGlobalMute();
             plugin.getChatManager().setGlobalMute(!currentStatus);
             
-            String path = !currentStatus ? "chat.global-mute-enabled" : "chat.global-mute-disabled";
-            String msg = plugin.getMainConfigManager().getConfig().getString(path)
+            String msg = (!currentStatus ? plugin.getMainConfigManager().getMsgGlobalMuteEnabled() : plugin.getMainConfigManager().getMsgGlobalMuteDisabled())
                     .replace("{player}", sender.getName());
             
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
