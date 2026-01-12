@@ -54,6 +54,7 @@ public class MainConfigManager {
     private String guiDetailedDate, guiDetailedStaff, guiDetailedReason, guiDetailedDuration;
     private String msgNoIPFound, msgUnbanIPSuccess, msgInvalidIP, bcBanIP;
     private String staffChatFormat;
+    private String msgCmdSpyEnabled, msgCmdSpyDisabled, msgCmdSpyFormat;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -206,6 +207,10 @@ public class MainConfigManager {
         msgInvalidIP = lang.getString("punishments.feedback.invalid-ip", "&cCould not find a valid IP for: &e{target}");
         bcBanIP = lang.getString("punishments.broadcasts.ban-ip", "&c&lIP-BAN &8» &f{target} &7was IP banned by &c{staff} &7({duration}).");
         staffChatFormat = lang.getString("messages.staff-chat-format", "&8[&4&lSTAFF&8] &b{player}&8: &f{message}");
+        msgCmdSpyEnabled = lang.getString("messages.command-spy-enabled", "&aModo Espía de Comandos ACTIVADO.");
+        msgCmdSpyDisabled = lang.getString("messages.command-spy-disabled", "&cModo Espía de Comandos DESACTIVADO.");
+        msgCmdSpyFormat = lang.getString("messages.command-spy-format", "&8[&6Spy&8] &e{player}&8: &f{command}");
+
     }
 
     private Material loadMaterial(String materialName, Material defaultMat) {
@@ -351,6 +356,9 @@ public class MainConfigManager {
     public String getMsgInvalidIP() { return msgInvalidIP; }
     public String getBcBanIP() { return bcBanIP; }
     public String getStaffChatFormat() { return staffChatFormat; }  
+    public String getMsgCmdSpyEnabled() { return msgCmdSpyEnabled; }
+    public String getMsgCmdSpyDisabled() { return msgCmdSpyDisabled; }
+    public String getMsgCmdSpyFormat() { return msgCmdSpyFormat; }
     
 
     public ConfigurationSection getReasons(String type) {
