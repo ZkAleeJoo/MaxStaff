@@ -26,7 +26,7 @@ public class ChatManager {
             Bukkit.broadcastMessage(" ");
         }
         
-        String msg = plugin.getMainConfigManager().getConfig().getString("chat.cleared")
+        String msg = plugin.getMainConfigManager().getMsgChatCleared()
                 .replace("{player}", sender.getName());
         Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
     }
