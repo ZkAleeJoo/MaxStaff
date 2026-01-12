@@ -17,8 +17,8 @@ import org.zkaleejoo.listeners.StaffItemsListener;
 import org.zkaleejoo.listeners.PlayerQuitListener;
 
 import org.zkaleejoo.managers.GuiManager; 
-import org.zkaleejoo.listeners.GuiListener; 
-
+import org.zkaleejoo.listeners.GuiListener;
+import org.zkaleejoo.managers.ChatManager;
 import org.zkaleejoo.managers.FreezeManager;
 import org.zkaleejoo.listeners.FreezeListener;
 
@@ -38,6 +38,8 @@ public class MaxStaff extends JavaPlugin {
     private FreezeManager freezeManager;
     private PunishmentManager punishmentManager;
     private String latestVersion;
+    private ChatManager chatManager;
+    
 
     //PLUGIN SE PRENDE
     @Override
@@ -50,6 +52,7 @@ public class MaxStaff extends JavaPlugin {
         staffManager = new StaffManager(this);
         guiManager = new GuiManager(this);
         punishmentManager = new PunishmentManager(this);
+        chatManager = new ChatManager(this);
 
         registerCommands();
         registerEvents();
@@ -137,6 +140,10 @@ public class MaxStaff extends JavaPlugin {
 
     public FreezeManager getFreezeManager() {
         return freezeManager;
+    }
+
+    public ChatManager getChatManager() {
+        return chatManager;
     }
 
     public PunishmentManager getPunishmentManager() { return punishmentManager; }
