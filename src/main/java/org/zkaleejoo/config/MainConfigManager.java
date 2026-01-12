@@ -97,10 +97,10 @@ public class MainConfigManager {
         guiInfoStatsMat = loadMaterial(config.getString("gui.info.items.stats.material"), Material.BOOK);
         guiInfoHistoryMat = loadMaterial(config.getString("gui.info.items.history.material"), Material.PAPER);
         guiInfoActionMat = loadMaterial(config.getString("gui.info.items.action_punish.material"), Material.NETHERITE_SWORD);
-        guiGmSurvivalMat = loadMaterial(lang.getString("gui-gamemode.survival-material"), Material.GRASS_BLOCK);
-        guiGmCreativeMat = loadMaterial(lang.getString("gui-gamemode.creative-material"), Material.BEACON);
-        guiGmAdventureMat = loadMaterial(lang.getString("gui-gamemode.adventure-material"), Material.MAP);
-        guiGmSpectatorMat = loadMaterial(lang.getString("gui-gamemode.spectator-material"), Material.ENDER_EYE);
+        guiGmSurvivalMat = loadMaterial(config.getString("gui-gamemode.survival-material"), Material.GRASS_BLOCK);
+        guiGmCreativeMat = loadMaterial(config.getString("gui-gamemode.creative-material"), Material.BEACON);
+        guiGmAdventureMat = loadMaterial(config.getString("gui-gamemode.adventure-material"), Material.MAP);
+        guiGmSpectatorMat = loadMaterial(config.getString("gui-gamemode.spectator-material"), Material.ENDER_EYE);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
 
