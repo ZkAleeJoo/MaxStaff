@@ -178,17 +178,29 @@ public class GuiListener implements Listener {
             }
         }
 
-        if (title.contains("Selector de Modo de Juego")) {
-        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
-        
-        if (item.getType() == Material.GRASS_BLOCK) player.setGameMode(GameMode.SURVIVAL);
-        else if (item.getType() == Material.BEACON) player.setGameMode(GameMode.CREATIVE);
-        else if (item.getType() == Material.MAP) player.setGameMode(GameMode.ADVENTURE);
-        else if (item.getType() == Material.ENDER_EYE) player.setGameMode(GameMode.SPECTATOR);
+        String gmTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiGmTitle())).trim();
 
-        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&aModo de juego cambiado."));
-        player.closeInventory();
-    }
+        if (title.equals(gmTitleBase)) {
+            event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            
+            org.bukkit.GameMode mode = null;
+            String modeName = "";
+
+            if (item.getType() == config.getGuiGmSurvivalMat()) { mode = org.bukkit.GameMode.SURVIVAL; modeName = "Survival"; }
+            else if (item.getType() == config.getGuiGmCreativeMat()) { mode = org.bukkit.GameMode.CREATIVE; modeName = "Creative"; }
+            else if (item.getType() == config.getGuiGmAdventureMat()) { mode = org.bukkit.GameMode.ADVENTURE; modeName = "Adventure"; }
+            else if (item.getType() == config.getGuiGmSpectatorMat()) { mode = org.bukkit.GameMode.SPECTATOR; modeName = "Spectator"; }
+
+            if (mode != null) {
+                player.setGameMode(mode);
+                if (plugin.getStaffManager().isInStaffMode(player)) {
+                    plugin.getStaffManager().updateSavedGameMode(player, mode);
+                }
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getGuiGmFeedback().replace("{mode}", modeName)));
+                player.closeInventory();
+            }
+        }
     }
 
     private boolean checkPerm(Player player, String permission) {
