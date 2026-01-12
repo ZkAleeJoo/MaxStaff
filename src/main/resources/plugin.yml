@@ -44,7 +44,7 @@ permissions:
     children:
       maxstaff.mode: true
       maxstaff.punish.ban: true
-      maxstaff.punish.mute: true
+      maxstaff.punish.mute: true 
       maxstaff.punish.kick: true
       maxstaff.punish.warn: true
       maxstaff.punish.unban: true
