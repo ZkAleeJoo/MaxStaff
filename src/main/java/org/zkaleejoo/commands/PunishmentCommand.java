@@ -53,8 +53,6 @@ public class PunishmentCommand implements CommandExecutor, TabCompleter {
 
         String target = args[0];
         
-        // --- COMANDOS SIN DURACIÓN (Kick, Unban, Warn, History, Unban-IP) ---
-
         if (label.equalsIgnoreCase("kick")) {
             String reason = args.length > 1 ? String.join(" ", Arrays.copyOfRange(args, 1, args.length)) : plugin.getMainConfigManager().getNoReason();
             plugin.getPunishmentManager().kickPlayer(sender, target, reason);
