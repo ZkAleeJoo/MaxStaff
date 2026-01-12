@@ -34,6 +34,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        //AGREGAR AL MAINCONFIG MANAGER
         if (args.length == 0) {
             if (plugin.getMainConfigManager().isGmMenuEnabled()) {
                 plugin.getGuiManager().openGameModeMenu(player);
