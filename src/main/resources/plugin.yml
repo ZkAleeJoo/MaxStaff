@@ -36,6 +36,8 @@ commands:
     description: Desbanear una IP
   sc:
     description: Chat privado para miembros del Staff
+  cmdspy:
+    description: Espía los comandos de los jugadores en tiempo real.
     
 permissions:
   maxstaff.admin:
@@ -55,6 +57,7 @@ permissions:
       maxstaff.punish.banip: true
       maxstaff.punish.unbanip: true
       maxstaff.staffchat: true
+      maxstaff.cmdspy: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -93,4 +96,7 @@ permissions:
     default: op
   maxstaff.staffchat:
     description: Permite usar y ver el chat de staff.
+    default: op
+  maxstaff.cmdspy:
+    description: Permite usar /cmdspy para espiar comandos.
     default: op
