@@ -283,8 +283,8 @@ public class GuiManager {
 
         gui.setItem(10, createItem(config.getGuiGmSurvivalMat(), config.getGuiGmSurvivalName(), config.getGuiGmSurvivalLore()));
         gui.setItem(12, createItem(config.getGuiGmCreativeMat(), config.getGuiGmCreativeName(), config.getGuiGmCreativeLore()));
-        gui.setItem(14, config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore()));
-        gui.setItem(16, config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore()));
+        gui.setItem(14, createItem(config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore()));
+        gui.setItem(16, createItem(config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore()));
 
         player.openInventory(gui);
     }
