@@ -67,7 +67,6 @@ public class StaffItemsListener implements Listener {
         MainConfigManager config = plugin.getMainConfigManager();
         String toolType = getStaffToolType(item);
 
-        // --- PRIORIDAD 1: USO DE HERRAMIENTAS DE STAFF ---
         if (toolType != null) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 
@@ -98,7 +97,6 @@ public class StaffItemsListener implements Listener {
             }
         }
 
-        // --- PRIORIDAD 2: INSPECCIÓN SILENCIOSA (Sin herramientas de staff) ---
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
             if (block != null) {
