@@ -274,4 +274,19 @@ public class GuiManager {
         gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore()));
         staff.openInventory(gui);
     }
+
+ 
+    public void openGameModeMenu(Player player) {
+        MainConfigManager config = plugin.getMainConfigManager();
+        String title = MessageUtils.getColoredMessage("&8Selector de Modo de Juego"); 
+        Inventory gui = Bukkit.createInventory(null, 27, title);
+        setupBorder(gui); 
+
+        gui.setItem(10, createItem(Material.GRASS_BLOCK, "&a&lSupervivencia", Arrays.asList("&7Click para cambiar", "&8/gm 0")));
+        gui.setItem(12, createItem(Material.BEACON, "&e&lCreativo", Arrays.asList("&7Click para cambiar", "&8/gm 1")));
+        gui.setItem(14, createItem(Material.MAP, "&c&lAventura", Arrays.asList("&7Click para cambiar", "&8/gm 2")));
+        gui.setItem(16, createItem(Material.ENDER_EYE, "&b&lEspectador", Arrays.asList("&7Click para cambiar", "&8/gm 3")));
+
+        player.openInventory(gui);
+    }
 }

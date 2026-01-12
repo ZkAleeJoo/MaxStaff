@@ -1,6 +1,7 @@
 package org.zkaleejoo.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -176,6 +177,18 @@ public class GuiListener implements Listener {
                 plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
         }
+
+        if (title.contains("Selector de Modo de Juego")) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        
+        if (item.getType() == Material.GRASS_BLOCK) player.setGameMode(GameMode.SURVIVAL);
+        else if (item.getType() == Material.BEACON) player.setGameMode(GameMode.CREATIVE);
+        else if (item.getType() == Material.MAP) player.setGameMode(GameMode.ADVENTURE);
+        else if (item.getType() == Material.ENDER_EYE) player.setGameMode(GameMode.SPECTATOR);
+
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&aModo de juego cambiado."));
+        player.closeInventory();
+    }
     }
 
     private boolean checkPerm(Player player, String permission) {

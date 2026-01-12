@@ -141,6 +141,26 @@ gui:
       duration: "&7Duration: &b{duration}"
     back-lore: 
       - "&7Back to summary"
+  gamemode:
+    title: "&8Game Mode Selector"
+    survival:
+      name: "&a&lSURVIVAL MODE"
+      lore: ["&7Click to switch to survival mode.", "&8Usage: /gm 0"]
+      material: "GRASS_BLOCK"
+    creative:
+      name: "&e&lCREATIVE MODE"
+      lore: ["&7Click to switch to creative mode.", "&8Usage: /gm 1"]
+      material: "BEACON"
+    adventure:
+      name: "&c&lADVENTURE MODE"
+      lore: ["&7Click to switch to adventure mode.", "&8Usage: /gm 2"]
+      material: "MAP"
+    spectator:
+      name: "&b&lSPECTATOR MODE"
+      lore: ["&7Click to switch to spectator mode.", "&8Usage: /gm 3"]
+      material: "ENDER_EYE"
+  feedback:
+    gamemode-changed: "&aYour game mode has been changed to &e{mode}&a."
 
 gui-style:
   navigation:

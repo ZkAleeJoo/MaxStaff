@@ -40,6 +40,9 @@ commands:
     description: Espía los comandos de los jugadores en tiempo real.
   chat:
     description: Gestiona el chat global (mute/clear)
+  gamemode:
+    description: Abre el selector visual de modo de juego.
+    aliases: [gm]
     
 permissions:
   maxstaff.admin:
@@ -61,6 +64,7 @@ permissions:
       maxstaff.staffchat: true
       maxstaff.cmdspy: true
       maxstaff.chat.admin: true
+      maxstaff.gamemode: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -105,4 +109,7 @@ permissions:
     default: op
   maxstaff.chat.admin:
     description: Permite silenciar y limpiar el chat global.
+    default: op
+  maxstaff.gamemode:
+    description: Permite usar /gm para abrir el GUI.
     default: op
