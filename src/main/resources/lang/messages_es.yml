@@ -145,19 +145,19 @@ gui:
     title: "&8Selector de Modo de Juego"
     survival:
       name: "&a&lMODO SUPERVIVENCIA"
-      lore: ["&7Haz click para cambiar a modo supervivencia.", "&8Uso: /gm 0"]
+      lore: ["&7Haz click para cambiar a modo supervivencia.", "&8Command /gm"]
       material: "GRASS_BLOCK"
     creative:
       name: "&e&lMODO CREATIVO"
-      lore: ["&7Haz click para cambiar a modo creativo.", "&8Uso: /gm 1"]
+      lore: ["&7Haz click para cambiar a modo creativo.", "&8Command /gm"]
       material: "BEACON"
     adventure:
       name: "&c&lMODO AVENTURA"
-      lore: ["&7Haz click para cambiar a modo aventura.", "&8Uso: /gm 2"]
+      lore: ["&7Haz click para cambiar a modo aventura.", "&8Command /gm"]
       material: "MAP"
     spectator:
       name: "&b&lMODO ESPECTADOR"
-      lore: ["&7Haz click para cambiar a modo espectador.", "&8Uso: /gm 3"]
+      lore: ["&7Haz click para cambiar a modo espectador.", "&8Command /gm"]
       material: "ENDER_EYE"
   feedback:
     gamemode-changed: "&aTu modo de juego ha sido cambiado a &e{mode}&a."
