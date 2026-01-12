@@ -110,7 +110,9 @@ public class MaxStaff extends JavaPlugin {
         this.getCommand("cmdspy").setExecutor(new CommandSpyCommand(this));
         this.getCommand("chat").setExecutor(new ChatCommand(this));
         this.getCommand("chat").setTabCompleter(new ChatCommand(this));
-        this.getCommand("gamemode").setExecutor(new GameModeCommand(this));
+        GameModeCommand gmCmd = new GameModeCommand(this);
+        this.getCommand("gamemode").setExecutor(gmCmd);
+        this.getCommand("gamemode").setTabCompleter(gmCmd);
         
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
