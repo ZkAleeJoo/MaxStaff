@@ -61,6 +61,8 @@ public class MainConfigManager {
     private List<String> guiGmSurvivalLore, guiGmCreativeLore, guiGmAdventureLore, guiGmSpectatorLore;
     private Material guiGmSurvivalMat, guiGmCreativeMat, guiGmAdventureMat, guiGmSpectatorMat;
     private boolean gmMenuEnabled;
+    private String gmUse;
+    private String gmModeInvalid;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -236,6 +238,8 @@ public class MainConfigManager {
         guiGmAdventureLore = lang.getStringList("gui.gamemode.adventure.lore");
         guiGmSpectatorName = lang.getString("gui.gamemode.spectator.name");
         guiGmSpectatorLore = lang.getStringList("gui.gamemode.spectator.lore");
+        gmUse = lang.getString("messages.gamemode-use", "&cUsage: /gm <0|1|2|3>");
+        gmModeInvalid = lang.getString("messages.gamemode-modeinvalid", "&cInvalid game mode");
         
 
     }
@@ -406,6 +410,8 @@ public class MainConfigManager {
     public List<String> getGuiGmSpectatorLore() { return guiGmSpectatorLore; }
     public Material getGuiGmSpectatorMat() { return guiGmSpectatorMat; }
     public boolean isGmMenuEnabled() { return gmMenuEnabled; }
+    public String getGmUse() { return gmUse; }
+    public String getGmModeInvalid() { return gmModeInvalid; }
     
 
     public ConfigurationSection getReasons(String type) {
