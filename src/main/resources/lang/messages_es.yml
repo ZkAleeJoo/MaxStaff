@@ -31,6 +31,8 @@ messages:
   command-spy-enabled: "&aModo Espía de Comandos &lACTIVADO&a."
   command-spy-disabled: "&cModo Espía de Comandos &lDESACTIVADO&c."
   command-spy-format: "&8[&6&lSPY&8] &b{player}&8: &f{command}"
+  gamemode-use: "&cUso: /gm <0|1|2|3>"
+  gamemode-modeinvalid: "&cModo de juego inválido"
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"
