@@ -18,7 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class PunishmentManager {
@@ -26,10 +28,26 @@ public class PunishmentManager {
     private final MaxStaff plugin;
     private CustomConfig dataFile;
 
+    private final Map<UUID, Long> muteCache = new ConcurrentHashMap<>();
+
     public PunishmentManager(MaxStaff plugin) {
         this.plugin = plugin;
         this.dataFile = new CustomConfig("data.yml", null, plugin, true);
         this.dataFile.registerConfig();
+        loadMuteCache();
+    }
+
+    private void loadMuteCache() {
+        ConfigurationSection section = dataFile.getConfig().getConfigurationSection("mutes");
+        if (section == null) return;
+        
+        for (String key : section.getKeys(false)) {
+            try {
+                UUID uuid = UUID.fromString(key);
+                long expiry = section.getLong(key + ".expiry");
+                muteCache.put(uuid, expiry);
+            } catch (IllegalArgumentException ignored) {}
+        }
     }
 
     private UUID getUniqueId(String targetName) {
@@ -163,6 +181,9 @@ public class PunishmentManager {
         logHistory(targetName, "MUTE", reason, staff.getName(), timeDisplay);
 
         long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
+        
+        muteCache.put(uuid, expiry);
+
         FileConfiguration data = dataFile.getConfig();
         data.set("mutes." + uuid + ".reason", reason);
         data.set("mutes." + uuid + ".expiry", expiry);
@@ -189,6 +210,8 @@ public class PunishmentManager {
 
     public void unmutePlayer(CommandSender staff, String targetName) {
         UUID uuid = getUniqueId(targetName);
+        muteCache.remove(uuid);
+
         FileConfiguration data = dataFile.getConfig();
         if (data.contains("mutes." + uuid)) {
             data.set("mutes." + uuid, null);
@@ -241,16 +264,22 @@ public class PunishmentManager {
         }
     }
 
-    public boolean isMuted(UUID uuid) {
-        FileConfiguration data = dataFile.getConfig();
-        if (!data.contains("mutes." + uuid)) return false;
+        public boolean isMuted(UUID uuid) {
+        if (!muteCache.containsKey(uuid)) return false;
 
-        long expiry = data.getLong("mutes." + uuid + ".expiry");
+        long expiry = muteCache.get(uuid);
+        
         if (expiry != -1 && System.currentTimeMillis() > expiry) {
-            data.set("mutes." + uuid, null);
-            dataFile.saveConfig();
+            muteCache.remove(uuid);
+            
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                dataFile.getConfig().set("mutes." + uuid, null);
+                dataFile.saveConfig();
+            });
+            
             return false;
         }
+        
         return true;
     }
 
@@ -295,17 +324,14 @@ public class PunishmentManager {
 
     public List<String> getMutedPlayerNames() {
         List<String> names = new ArrayList<>();
-        FileConfiguration data = dataFile.getConfig();
-        if (data.getConfigurationSection("mutes") == null) return names;
-
-        for (String uuidStr : data.getConfigurationSection("mutes").getKeys(false)) {
-            try {
-                UUID uuid = UUID.fromString(uuidStr);
-                if (isMuted(uuid)) {
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                    if (op.getName() != null) names.add(op.getName());
+        
+        for (UUID uuid : muteCache.keySet()) {
+            if (isMuted(uuid)) {
+                org.bukkit.OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                if (op.getName() != null) {
+                    names.add(op.getName());
                 }
-            } catch (IllegalArgumentException ignored) {}
+            }
         }
         return names;
     }
