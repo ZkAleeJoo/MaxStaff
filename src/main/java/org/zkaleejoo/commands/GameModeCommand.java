@@ -34,19 +34,18 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        //AGREGAR AL MAINCONFIG MANAGER
         if (args.length == 0) {
             if (plugin.getMainConfigManager().isGmMenuEnabled()) {
                 plugin.getGuiManager().openGameModeMenu(player);
             } else {
-                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cUsage: /gm <0|1|2|3>"));
+                player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getGmUse()));
             }
             return true;
         }
 
         GameMode mode = matchGameMode(args[0]);
         if (mode == null) {
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cModo de juego inválido."));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getGmModeInvalid()));
             return true;
         }
 
