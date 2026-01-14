@@ -63,12 +63,13 @@ Designed for speed, the plugin uses a hierarchical menu system:
 /unmute - maxstaff.punish.unmute
 /history - maxstaff.history
 /vanish - maxstaff.vanish
-/ban-ip - maxstaff.punish.banip
-/tempban-ip - maxstaff.punish.banip
-/unban-ip - maxstaff.punish.unbanip
+/sc - maxstaff.staffchat
+/cmdspy - maxstaff.cmdspy
+/chat [mute] [clear] - maxstaff.chat.admin
+/gm - maxstaff.gamemode
 
 maxstaff.admin - It gives you access to the entire plugin
-maxstaff.see.vanish - It allows you to see other staff on Vanish.
+maxstaff.see.vanish - It allows you to see other staff on Vanish
 ```
 
 ---
