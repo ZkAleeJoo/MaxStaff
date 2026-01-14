@@ -33,11 +33,12 @@ import org.bukkit.Sound;
 public class StaffItemsListener implements Listener {
 
     private final MaxStaff plugin;
+    
     private final Map<UUID, Block> silentViewers = new HashMap<>();
+    private final Map<Block, UUID> activeInspections = new HashMap<>();
 
     public StaffItemsListener(MaxStaff plugin) {
         this.plugin = plugin;
-        
     }
 
     @EventHandler
@@ -106,6 +107,17 @@ public class StaffItemsListener implements Listener {
                     if (block.getType() == Material.ENDER_CHEST) {
                         player.openInventory(player.getEnderChest());
                     } else {
+                        if (activeInspections.containsKey(block)) {
+                            UUID inspectorUUID = activeInspections.get(block);
+                            Player inspector = Bukkit.getPlayer(inspectorUUID);
+                            String name = (inspector != null) ? inspector.getName() : "otro Staff";
+                            
+                            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + 
+                                "&cError: El contenedor ya está siendo inspeccionado por &e" + name));
+                            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                            return;
+                        }
+
                         Container container = (Container) block.getState();
                         Inventory realInv = container.getInventory();
                         
@@ -115,6 +127,8 @@ public class StaffItemsListener implements Listener {
                         silentInv.setContents(realInv.getContents());
                         
                         silentViewers.put(player.getUniqueId(), block);
+                        activeInspections.put(block, player.getUniqueId());
+                        
                         player.openInventory(silentInv);
                     }
                 }
@@ -164,8 +178,11 @@ public class StaffItemsListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         UUID uuid = player.getUniqueId();
+        
         if (silentViewers.containsKey(uuid)) {
             Block block = silentViewers.remove(uuid); 
+            activeInspections.remove(block);
+
             if (block.getState() instanceof Container) {
                 Container container = (Container) block.getState();
                 container.getInventory().setContents(event.getInventory().getContents());
@@ -184,7 +201,11 @@ public class StaffItemsListener implements Listener {
 
     @EventHandler
     public void onQuit(org.bukkit.event.player.PlayerQuitEvent event) {
-        silentViewers.remove(event.getPlayer().getUniqueId());
+        UUID uuid = event.getPlayer().getUniqueId();
+        if (silentViewers.containsKey(uuid)) {
+            Block block = silentViewers.remove(uuid);
+            activeInspections.remove(block);
+        }
     }
 
 }
