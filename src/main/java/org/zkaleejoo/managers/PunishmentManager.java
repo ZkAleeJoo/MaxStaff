@@ -288,7 +288,7 @@ public class PunishmentManager {
             if (msg.startsWith("\n") || msg.startsWith("\r")) {
                 Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
             } else {
-                Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+                Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
             }
         }
     }
