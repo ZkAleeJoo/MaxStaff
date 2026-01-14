@@ -29,6 +29,7 @@ import org.zkaleejoo.commands.StaffChatCommand;
 import org.zkaleejoo.commands.VanishCommand;
 import org.zkaleejoo.listeners.ChatListener;
 import org.zkaleejoo.listeners.CommandSpyListener;
+import org.zkaleejoo.utils.MessageUtils;
 
 public class MaxStaff extends JavaPlugin {
 
@@ -60,7 +61,7 @@ public class MaxStaff extends JavaPlugin {
 
         String prefix = mainConfigManager.getPrefix();
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was activated correctly"));  
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + "&fIt was activated correctly")); 
         
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"   _____                   _________ __          _____  _____ ");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"  /     \\ _____  ___  ___ /   _____//  |______ _/ ____\\/ ____\\");
@@ -97,8 +98,7 @@ public class MaxStaff extends JavaPlugin {
         }
 
         String prefix = (mainConfigManager != null) ? mainConfigManager.getPrefix() : "&4MaxStaff ";
-        Bukkit.getConsoleSender().sendMessage(
-            ChatColor.translateAlternateColorCodes('&', prefix + "&fIt was successfully deactivated"));
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + "&fIt was successfully deactivated"));
     }
 
     public void registerCommands() {
