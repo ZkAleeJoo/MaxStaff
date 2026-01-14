@@ -33,6 +33,7 @@ messages:
   command-spy-format: "&8[&6&lSPY&8] &b{player}&8: &f{command}"
   gamemode-use: "&cUse: /gm <0|1|2|3>"
   gamemode-modeinvalid: "&cInvalid game mode"
+  chatstaff-use: "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>"
   
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
