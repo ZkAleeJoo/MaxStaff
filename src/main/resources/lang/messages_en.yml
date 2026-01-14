@@ -179,13 +179,40 @@ time-units:
 
 punishments:
   broadcasts:
-    ban: "&c{target} &fhas been banned by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
-    ban-ip: "&c&lIP-BAN &8» &f{target} &7was IP banned by &c{staff} &7({duration})."
-    mute: "&c{target} &fhas been muted by &c{staff} &f(&e{duration}&f). | Reason: &e{reason}"
-    kick: "&e{target} &fhas been kicked by &c{staff} &f| Reason: &e{reason}"
+    ban: |
+      &r
+      &8(&4&l⚡&8) &c&lSANCTIONED USER
+      &7  ▸ &fThe user &c{target} &fhas been banned.
+      &7  ▸ &7Staff: &e{staff} &8/ &7Duration: &6{duration}
+      &7  ▸ &7Reason: &f{reason}
+      &r
+    ban-ip: |
+      &r
+      &8(&4&l⚡&8) &c&lIP-BAN ISSUED
+      &7  ▸ &fThe user &c{target} &7was IP banned.
+      &7  ▸ &7Staff: &c{staff} &8/ &7Duration: &6{duration}
+      &r
+    mute: |
+      &r
+      &8(&e&l●&8) &e&lUSER MUTED
+      &7  ▸ &fThe user &e{target} &fhas been muted.
+      &7  ▸ &7Staff: &f{staff} &8/ &7Duration: &6{duration}
+      &7  ▸ &7Reason: &f{reason}
+      &r
+    kick: |
+      &r
+      &8(&b&l!&8) &b&lUSER KICKED
+      &7  ▸ &fThe user &b{target} &fhas been kicked.
+      &7  ▸ &7Staff: &f{staff} &8/ &7Reason: &f{reason}
+      &r
     warns:
-      broadcast: "&c{target} &fhas been warned by &c{staff}. &8(&e{count} warns&8) | Reason: &e{reason}"
-      received: "&c&lWARNING! &fYou have been warned by: &e{reason}"
+      broadcast: |
+        &r
+        &8(&6&l⚠&8) &6&lWARNING ISSUED
+        &7  ▸ &fPlayer: &e{target} &8(&c{count} warns&8)
+        &7  ▸ &7Staff: &f{staff} &8/ &7Reason: &f{reason}
+        &r
+      received: "&c&l¡WARNING! &fYou have been warned by: &e{reason}"
   screens:
     ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
     kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
