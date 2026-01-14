@@ -25,9 +25,10 @@ public class StaffChatCommand implements CommandExecutor {
             return true;
         }
 
-        //AGREGAR A LOS MENSAJES
         if (args.length == 0) {
-            sender.sendMessage(MessageUtils.getColoredMessage("&c&l(!) &cEscribe un mensaje para el staff. Uso: /sc <mensaje>"));
+            sender.sendMessage(MessageUtils.getColoredMessage(
+                plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getChatStaffUse()
+            ));
             return true;
         }
 
