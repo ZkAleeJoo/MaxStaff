@@ -179,34 +179,34 @@ time-units:
 
 punishments:
   broadcasts:
-    ban: |
+    ban: | #NO DELETE
       &r
       &8(&4&l⚡&8) &c&lSANCTIONED USER
       &7  ▸ &fThe user &c{target} &fhas been banned.
       &7  ▸ &7Staff: &e{staff} &8/ &7Duration: &6{duration}
       &7  ▸ &7Reason: &f{reason}
       &r
-    ban-ip: |
+    ban-ip: | #NO DELETE
       &r
       &8(&4&l⚡&8) &c&lIP-BAN ISSUED
       &7  ▸ &fThe user &c{target} &7was IP banned.
       &7  ▸ &7Staff: &c{staff} &8/ &7Duration: &6{duration}
       &r
-    mute: |
+    mute: | #NO DELETE
       &r
       &8(&e&l●&8) &e&lUSER MUTED
       &7  ▸ &fThe user &e{target} &fhas been muted.
       &7  ▸ &7Staff: &f{staff} &8/ &7Duration: &6{duration}
       &7  ▸ &7Reason: &f{reason}
       &r
-    kick: |
+    kick: | #NO DELETE
       &r
       &8(&b&l!&8) &b&lUSER KICKED
       &7  ▸ &fThe user &b{target} &fhas been kicked.
       &7  ▸ &7Staff: &f{staff} &8/ &7Reason: &f{reason}
       &r
     warns:
-      broadcast: |
+      broadcast: | #NO DELETE
         &r
         &8(&6&l⚠&8) &6&lWARNING ISSUED
         &7  ▸ &fPlayer: &e{target} &8(&c{count} warns&8)
