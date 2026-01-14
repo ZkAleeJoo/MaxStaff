@@ -209,11 +209,30 @@ punishments:
         &7  ▸ &7Staff: &f{staff} &8/ &7Motivo: &f{reason}
       received: "&c&l¡ADVERTENCIA! &fHas sido advertido por: &e{reason}"
   screens:
-    ban: "&c¡Has sido baneado!\n\n&fPor: &c{staff}\n&fDuración: &e{duration}\n&fMotivo: &e{reason}"
-    kick: "&c¡Has sido expulsado!\n\n&fPor: &c{staff}\n&fMotivo: &e{reason}"
-    mute: "&c¡Has sido silenciado por {staff}!"
-    unmute: "&a¡Ya puedes hablar de nuevo!"
-    muted-chat: "&c¡Estás silenciado! No puedes hablar."
+    ban: | #NO BORRAR
+      &f
+      &4&l¡ACCESO DENEGADO! &8(&4&l⚡&8)
+      &7Has sido sancionado por incumplir las reglas.
+      
+      &8&m-----------------------------------
+      &7 ▸ &fAdministrador: &c{staff}
+      &7 ▸ &fDuración: &e{duration}
+      &7 ▸ &fMotivo: &6{reason}
+      &8&m-----------------------------------
+      
+      &f¿Crees que es un error? Apela en:
+      &bdiscord.tuservidor.com
+    kick: | #NO BORRAR  
+      &f
+      &b&lEXPULSIÓN DEL SERVIDOR &8(&b&l!&8)
+      
+      &7 ▸ &fStaff: &f{staff}
+      &7 ▸ &fMotivo: &e{reason}
+      
+      &fPor favor, mantén un comportamiento adecuado.
+    mute: "&8(&e&l●&8) &c¡Has sido silenciado por &e{staff}&c!"
+    unmute: "&8(&a&l✔&8) &a¡Tu silencio ha sido retirado! Ya puedes hablar."
+    muted-chat: "&c&l¡MUTE! &7No puedes hablar en este momento."
   feedback:
     player-offline: "&cEse jugador no está conectado."
     not-muted: "&cEse jugador no está silenciado."
