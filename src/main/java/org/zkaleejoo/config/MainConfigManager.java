@@ -63,6 +63,7 @@ public class MainConfigManager {
     private boolean gmMenuEnabled;
     private String gmUse;
     private String gmModeInvalid;
+    private String chatStaffUse;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -240,6 +241,7 @@ public class MainConfigManager {
         guiGmSpectatorLore = lang.getStringList("gui.gamemode.spectator.lore");
         gmUse = lang.getString("messages.gamemode-use", "&cUsage: /gm <0|1|2|3>");
         gmModeInvalid = lang.getString("messages.gamemode-modeinvalid", "&cInvalid game mode");
+        chatStaffUse = lang.getString("messages.chatstaff-use", "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>");
         
 
     }
@@ -412,6 +414,7 @@ public class MainConfigManager {
     public boolean isGmMenuEnabled() { return gmMenuEnabled; }
     public String getGmUse() { return gmUse; }
     public String getGmModeInvalid() { return gmModeInvalid; }
+    public String getChatStaffUse() { return chatStaffUse; }
     
 
     public ConfigurationSection getReasons(String type) {
