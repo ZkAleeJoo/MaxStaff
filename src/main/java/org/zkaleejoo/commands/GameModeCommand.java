@@ -74,7 +74,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("0", "1", "2", "3", "survival", "creative", "adventure", "spectator")
+            return Arrays.asList("0", "1", "2", "3")
                     .stream().filter(s -> s.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         }
         return null;
