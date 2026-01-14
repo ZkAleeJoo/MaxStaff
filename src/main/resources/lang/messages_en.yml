@@ -209,11 +209,30 @@ punishments:
         &7  ▸ &7Staff: &f{staff} &8/ &7Reason: &f{reason}
       received: "&c&l¡WARNING! &fYou have been warned by: &e{reason}"
   screens:
-    ban: "&cYou have been banned!\n\n&fBy: &c{staff}\n&fDuration: &e{duration}\n&fReason: &e{reason}"
-    kick: "&cYou have been kicked!\n\n&fBy: &c{staff}\n&fReason: &e{reason}"
-    mute: "&cYou are muted by {staff}!"
-    unmute: "&aYou may now speak again!"
-    muted-chat: "&cYou are muted! You cannot speak."
+    ban: | #NO DELETE
+      &f
+      &4&lACCESS DENIED! &8(&4&l⚡&8)
+      &7You have been sanctioned for violating the rules.
+      
+      &8&m-----------------------------------
+      &7 ▸ &fAdministrator: &c{staff}
+      &7 ▸ &fDuration: &e{duration}
+      &7 ▸ &fReason: &6{reason}
+      &8&m-----------------------------------
+      
+      &fThink this is a mistake? Appeal at:
+      &bdiscord.yourserver.com
+    kick: | #NO DELETE
+      &f
+      &b&lKICKED FROM SERVER &8(&b&l!&8)
+      
+      &7 ▸ &fStaff: &f{staff}
+      &7 ▸ &fReason: &e{reason}
+      
+      &fPlease maintain appropriate behavior.
+    mute: "&8(&e&l●&8) &cYou have been muted by &e{staff}&c!"
+    unmute: "&8(&a&l✔&8) &aYour mute has been removed! You may now speak."
+    muted-chat: "&c&lMUTE! &7You cannot speak at this time."
   feedback:
     player-offline: "&cThat player is not online."
     not-muted: "&cThat player is not muted."
