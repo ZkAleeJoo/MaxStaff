@@ -75,6 +75,20 @@ maxstaff.admin - It gives you access to the entire plugin
 maxstaff.see.vanish - It allows you to see other staff on Vanish
 ```
 
+### **Placeholders**
+```yaml
+%maxstaff_in_staff_mode%      - Returns whether the staff member is in staff mode.
+%maxstaff_vanished%          - Returns whether the staff member is vanished.
+%maxstaff_frozen%            - Returns whether the player is frozen.
+%maxstaff_is_spy%            - Returns whether the staff member has CommandSpy active.
+%maxstaff_warn_count%        - Number of warnings for the player.
+%maxstaff_ban_count%         - Number of bans in the history.
+%maxstaff_mute_count%        - Number of mutes in the history.
+%maxstaff_kick_count%        - Number of kicks in the history.
+%maxstaff_total_punishments% - Total sum of sanctions (Ban + Mute + Kick).
+%maxstaff_playtime%          - Formatted playtime (H and M).
+```
+
 ---
 
 ### **Configuration and Localization**
