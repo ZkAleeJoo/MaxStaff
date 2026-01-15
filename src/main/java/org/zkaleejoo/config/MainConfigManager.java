@@ -64,6 +64,7 @@ public class MainConfigManager {
     private String gmUse;
     private String gmModeInvalid;
     private String chatStaffUse;
+    private String placeholderTrue, placeholderFalse;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -242,6 +243,8 @@ public class MainConfigManager {
         gmUse = lang.getString("messages.gamemode-use", "&cUsage: /gm <0|1|2|3>");
         gmModeInvalid = lang.getString("messages.gamemode-modeinvalid", "&cInvalid game mode");
         chatStaffUse = lang.getString("messages.chatstaff-use", "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>");
+        placeholderTrue = lang.getString("placeholders.status-true", "&aYes");
+        placeholderFalse = lang.getString("placeholders.status-false", "&cNo");
         
 
     }
@@ -341,7 +344,6 @@ public class MainConfigManager {
     public Material getNavPrevMat() { return navPrevMat; }
     public Material getDurationDye(int index) { return durationDyes[index]; }
     public String getPlayerClickPls() {return playerClickPls;}
-
     public String getGuiInfoTitle() { return guiInfoTitle; }
     public Material getGuiInfoStatsMat() { return guiInfoStatsMat; }
     public String getGuiInfoStatsName() { return guiInfoStatsName; }
@@ -415,6 +417,8 @@ public class MainConfigManager {
     public String getGmUse() { return gmUse; }
     public String getGmModeInvalid() { return gmModeInvalid; }
     public String getChatStaffUse() { return chatStaffUse; }
+    public String getPlaceholderTrue() { return placeholderTrue; }
+    public String getPlaceholderFalse() { return placeholderFalse; }
     
 
     public ConfigurationSection getReasons(String type) {

@@ -250,3 +250,7 @@ chat:
   chat-is-muted: "&cEl chat está silenciado globalmente en este momento."
   cleared: "&6&lCHAT LIMPIADO &7por &e{player}&7."
   usage: "&cUso: /chat <mute|clear>"
+
+placeholders:
+  status-true: "&aSí"
+  status-false: "&cNo"

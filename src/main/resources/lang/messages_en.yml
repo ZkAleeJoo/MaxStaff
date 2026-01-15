@@ -250,3 +250,7 @@ chat:
   chat-is-muted: "&cThe global chat is currently muted."
   cleared: "&6&lCHAT CLEARED &7by &e{player}&7."
   usage: "&cUsage: /chat <mute|clear>"
+
+placeholders:
+  status-true: "&aYes"
+  status-false: "&cNo"

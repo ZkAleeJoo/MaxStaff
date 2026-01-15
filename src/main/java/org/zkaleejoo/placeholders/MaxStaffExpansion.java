@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.utils.MessageUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class MaxStaffExpansion extends PlaceholderExpansion {
@@ -15,44 +16,42 @@ public class MaxStaffExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public @NotNull String getAuthor() {
-        return "ZkAleeJoo";
-    }
+    public @NotNull String getAuthor() { return "ZkAleeJoo"; }
 
     @Override
-    public @NotNull String getIdentifier() {
-        return "maxstaff";
-    }
+    public @NotNull String getIdentifier() { return "maxstaff"; }
 
     @Override
-    public @NotNull String getVersion() {
-        return plugin.getDescription().getVersion();
-    }
+    public @NotNull String getVersion() { return plugin.getDescription().getVersion(); }
 
     @Override
-    public boolean persist() {
-        return true; 
-    }
+    public boolean persist() { return true; }
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-        if (player == null || !player.isOnline()) return "";
+        if (player == null) return "";
         
-        Player onlinePlayer = player.getPlayer();
+        String textTrue = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPlaceholderTrue());
+        String textFalse = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPlaceholderFalse());
+
+        Player online = player.isOnline() ? player.getPlayer() : null;
 
         //%maxstaff_in_staff_mode%
         if (params.equalsIgnoreCase("in_staff_mode")) {
-            return plugin.getStaffManager().isInStaffMode(onlinePlayer) ? "Yes" : "No";
+            if (online == null) return textFalse;
+            return plugin.getStaffManager().isInStaffMode(online) ? textTrue : textFalse;
         }
 
         //%maxstaff_vanished%
         if (params.equalsIgnoreCase("vanished")) {
-            return plugin.getStaffManager().isVanished(onlinePlayer) ? "Yes" : "No";
+            if (online == null) return textFalse;
+            return plugin.getStaffManager().isVanished(online) ? textTrue : textFalse;
         }
 
         //%maxstaff_frozen%
         if (params.equalsIgnoreCase("frozen")) {
-            return plugin.getFreezeManager().isFrozen(onlinePlayer) ? "Yes" : "No";
+            if (online == null) return textFalse;
+            return plugin.getFreezeManager().isFrozen(online) ? textTrue : textFalse;
         }
 
         //%maxstaff_warn_count%
@@ -60,14 +59,6 @@ public class MaxStaffExpansion extends PlaceholderExpansion {
             return String.valueOf(plugin.getPunishmentManager().getHistoryCount(player.getName(), "WARN"));
         }
 
-        //%maxstaff_total_punishments%
-        if (params.equalsIgnoreCase("total_punishments")) {
-            int total = plugin.getPunishmentManager().getHistoryCount(player.getName(), "BAN")
-                      + plugin.getPunishmentManager().getHistoryCount(player.getName(), "MUTE")
-                      + plugin.getPunishmentManager().getHistoryCount(player.getName(), "KICK");
-            return String.valueOf(total);
-        }
-
-        return null; 
+        return null;
     }
 }
