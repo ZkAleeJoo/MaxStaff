@@ -65,7 +65,7 @@ public class MainConfigManager {
     private String gmModeInvalid;
     private String chatStaffUse;
     private String placeholderTrue, placeholderFalse;
-    private String placeholderPlaytimeFormat;
+    private String placeholderPlaytimeFormat, restoredinventory;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -247,6 +247,7 @@ public class MainConfigManager {
         placeholderTrue = lang.getString("placeholders.status-true", "&aYes");
         placeholderFalse = lang.getString("placeholders.status-false", "&cNo");
         placeholderPlaytimeFormat = lang.getString("placeholders.playtime-format", "{hours}h {minutes}m");
+        restoredinventory = lang.getString("messages.restore-inventory", "&6&l[!] &eYour inventory has been automatically restored after the restart.");
         
 
     }
@@ -422,6 +423,7 @@ public class MainConfigManager {
     public String getPlaceholderTrue() { return placeholderTrue; }
     public String getPlaceholderFalse() { return placeholderFalse; }
     public String getPlaceholderPlaytimeFormat() { return placeholderPlaytimeFormat; }
+    public String getRestoredInventory() { return restoredinventory; }
     
 
     public ConfigurationSection getReasons(String type) {

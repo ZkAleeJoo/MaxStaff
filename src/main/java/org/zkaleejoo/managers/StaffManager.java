@@ -228,4 +228,8 @@ public class StaffManager {
             savedGameMode.put(player.getUniqueId(), newMode);
         }
     }
+
+    public boolean hasPersistentStaffData(UUID uuid) {
+        return staffData.getConfig().contains("data." + uuid);
+    }
 }

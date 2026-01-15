@@ -21,6 +21,11 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         MainConfigManager config = plugin.getMainConfigManager();
 
+        if (plugin.getStaffManager().hasPersistentStaffData(player.getUniqueId())) {
+            plugin.getStaffManager().disableStaffMode(player);
+            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + plugin.getMainConfigManager().getRestoredInventory()));
+        }
+
         String ip = player.getAddress().getAddress().getHostAddress();
         plugin.getPunishmentManager().savePlayerIP(player.getUniqueId(), ip);
 

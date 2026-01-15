@@ -21,9 +21,10 @@ messages:
   player-no-history: "&cThat player has no punishment history."
   command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
   command-help-list:
-    - "&9> &a/maxstaff reload &7- Reload configuration"
-    - "&9> &a/maxstaff mode &7- Enable/Disable staff mode"
-    - "&9> &a/maxstaff help &7- View command list"
+    - "&9> &7/ms reload - /ms mode - /ms help - /ms reset - /ms take"
+    - "&9> &7/ban - /tempban - /mute - /tempmute - /kick - /warn"
+    - "&9> &7/unban - /unmute - /history - /vanish - /sc - /cmdspy"
+    - "&9> &7/gm - /chat - /ban-ip - /unban-ip - /tempban-ip"
   update-available: "&eA new version is available! (&b{version}&e)"
   update-current: "&7Your current version: &c{version}"
   update-download: "&eDownload it to get improvements and fixes."
@@ -34,6 +35,7 @@ messages:
   gamemode-use: "&cUse: /gm <0|1|2|3>"
   gamemode-modeinvalid: "&cInvalid game mode"
   chatstaff-use: "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>"
+  restore-inventory: "&6&l[!] &eYour inventory has been automatically restored after the restart."
   
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"

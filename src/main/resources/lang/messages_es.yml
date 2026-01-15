@@ -21,9 +21,10 @@ messages:
   player-no-history: "&cEse jugador no tiene historial de sanciones."
   command-help-title: "&4&lMaxStaff &fLista de Comandos: &b{version}"
   command-help-list:
-    - "&9> &a/maxstaff reload &7- Recargar configuración"
-    - "&9> &a/maxstaff mode &7- Activar/Desactivar modo staff"
-    - "&9> &a/maxstaff help &7- Ver lista de comandos"
+    - "&9> &7/ms reload - /ms mode - /ms help - /ms reset - /ms take"
+    - "&9> &7/ban - /tempban - /mute - /tempmute - /kick - /warn"
+    - "&9> &7/unban - /unmute - /history - /vanish - /sc - /cmdspy"
+    - "&9> &7/gm - /chat - /ban-ip - /unban-ip - /tempban-ip"
   update-available: "&e¡Hay una nueva versión disponible! (&b{version}&e)"
   update-current: "&7Tu versión actual: &c{version}"
   update-download: "&eDescárgala para obtener mejoras y correcciones."
@@ -34,6 +35,7 @@ messages:
   gamemode-use: "&cUso: /gm <0|1|2|3>"
   gamemode-modeinvalid: "&cModo de juego inválido"
   chatstaff-use: "&c&l(!) &cEscribe un mensaje para el staff. Uso: /sc <mensaje>"
+  restore-inventory: "&6&l[!] &eTu inventario ha sido restaurado automáticamente tras el reinicio."
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"
