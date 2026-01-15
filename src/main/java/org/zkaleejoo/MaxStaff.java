@@ -69,6 +69,13 @@ public class MaxStaff extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"        \\/     \\/      \\/        \\/           \\/              ");
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + "&4It was activated correctly")); 
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new org.zkaleejoo.placeholders.MaxStaffExpansion(this).register();
+            getLogger().info("PlaceholderAPI Hook successfully registered!");
+        } else {
+            getLogger().warning("PlaceholderAPI not found, placeholders will not work.");
+        }
         
     }
 
