@@ -65,6 +65,7 @@ public class MainConfigManager {
     private String gmModeInvalid;
     private String chatStaffUse;
     private String placeholderTrue, placeholderFalse;
+    private String placeholderPlaytimeFormat;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -245,6 +246,7 @@ public class MainConfigManager {
         chatStaffUse = lang.getString("messages.chatstaff-use", "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>");
         placeholderTrue = lang.getString("placeholders.status-true", "&aYes");
         placeholderFalse = lang.getString("placeholders.status-false", "&cNo");
+        placeholderPlaytimeFormat = lang.getString("placeholders.playtime-format", "{hours}h {minutes}m");
         
 
     }
@@ -419,6 +421,7 @@ public class MainConfigManager {
     public String getChatStaffUse() { return chatStaffUse; }
     public String getPlaceholderTrue() { return placeholderTrue; }
     public String getPlaceholderFalse() { return placeholderFalse; }
+    public String getPlaceholderPlaytimeFormat() { return placeholderPlaytimeFormat; }
     
 
     public ConfigurationSection getReasons(String type) {

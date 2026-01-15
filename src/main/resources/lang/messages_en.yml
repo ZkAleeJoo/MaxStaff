@@ -254,3 +254,4 @@ chat:
 placeholders:
   status-true: "&aYes"
   status-false: "&cNo"
+  playtime-format: "{hours}h {minutes}m"
