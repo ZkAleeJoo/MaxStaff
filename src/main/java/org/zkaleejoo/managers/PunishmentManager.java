@@ -117,6 +117,9 @@ public class PunishmentManager {
                     .replace("{staff}", staff.getName())
                     .replace("{reason}", reason);
             target.kickPlayer(MessageUtils.getColoredMessage(kickScreen));
+        
+            //LOG CONSOLE
+            Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has kicked " + targetName);
             
             String bcMsg = plugin.getMainConfigManager().getBcKick()
                 .replace("{target}", target.getName())
@@ -147,6 +150,8 @@ public class PunishmentManager {
         
         String finalBanMessage = MessageUtils.getColoredMessage(banScreenTemplate);
         Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, finalBanMessage, expiry, staff.getName());
+
+        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has banned " + targetName);
         
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
@@ -196,6 +201,8 @@ public class PunishmentManager {
             target.sendMessage(MessageUtils.getColoredMessage(muteScreen));
         }
 
+        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has muted " + targetName);
+
         String bcMsg = plugin.getMainConfigManager().getBcMute()
                 .replace("{target}", targetName)
                 .replace("{staff}", staff.getName())
@@ -240,6 +247,8 @@ public class PunishmentManager {
             target.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
         }
 
+        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has warned " + targetName);
+        
         String bcMsg = config.getBcWarn()
                 .replace("{target}", targetName)
                 .replace("{staff}", staff.getName())
@@ -285,13 +294,7 @@ public class PunishmentManager {
 
     private void broadcast(String msg) {
         if (plugin.getMainConfigManager().isBroadcastEnabled()) {
-            org.zkaleejoo.utils.MessageUtils.broadcastToPlayersOnly(msg);
-
-            String colored = org.zkaleejoo.utils.MessageUtils.getColoredMessage(msg);
-            
-            org.bukkit.Bukkit.getConsoleSender().sendMessage(
-                org.bukkit.ChatColor.GRAY + "[MaxStaff Log] " + org.bukkit.ChatColor.stripColor(colored)
-            );
+            MessageUtils.broadcastToPlayersOnly(msg);
         }
     }
 
