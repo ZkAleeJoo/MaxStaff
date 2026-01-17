@@ -4,6 +4,9 @@ import net.md_5.bungee.api.ChatColor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 public class MessageUtils {
     
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
@@ -23,5 +26,12 @@ public class MessageUtils {
         message = matcher.appendTail(buffer).toString();
 
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public static void broadcastToPlayersOnly(String message) {
+        String coloredMessage = getColoredMessage(message);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(coloredMessage);
+        }
     }
 }
