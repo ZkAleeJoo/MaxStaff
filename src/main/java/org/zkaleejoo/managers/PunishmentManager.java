@@ -285,11 +285,13 @@ public class PunishmentManager {
 
     private void broadcast(String msg) {
         if (plugin.getMainConfigManager().isBroadcastEnabled()) {
-            if (msg.startsWith("\n") || msg.startsWith("\r")) {
-                Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
-            } else {
-                Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
-            }
+            org.zkaleejoo.utils.MessageUtils.broadcastToPlayersOnly(msg);
+
+            String colored = org.zkaleejoo.utils.MessageUtils.getColoredMessage(msg);
+            
+            org.bukkit.Bukkit.getConsoleSender().sendMessage(
+                org.bukkit.ChatColor.GRAY + "[MaxStaff Log] " + org.bukkit.ChatColor.stripColor(colored)
+            );
         }
     }
 

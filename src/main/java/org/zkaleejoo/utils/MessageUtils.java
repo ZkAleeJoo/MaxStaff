@@ -29,8 +29,9 @@ public class MessageUtils {
     }
 
     public static void broadcastToPlayersOnly(String message) {
+        if (message == null || message.isEmpty()) return; 
         String coloredMessage = getColoredMessage(message);
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
             player.sendMessage(coloredMessage);
         }
     }

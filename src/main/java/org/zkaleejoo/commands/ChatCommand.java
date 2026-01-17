@@ -44,7 +44,7 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
             String msg = (!currentStatus ? plugin.getMainConfigManager().getMsgGlobalMuteEnabled() : plugin.getMainConfigManager().getMsgGlobalMuteDisabled())
                     .replace("{player}", sender.getName());
             
-            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + msg));
+            MessageUtils.broadcastToPlayersOnly(plugin.getMainConfigManager().getPrefix() + msg);
         }
 
         return true;

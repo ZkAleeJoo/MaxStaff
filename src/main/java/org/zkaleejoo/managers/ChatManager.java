@@ -23,11 +23,11 @@ public class ChatManager {
 
     public void clearChat(CommandSender sender) {
         for (int i = 0; i < 100; i++) {
-            Bukkit.broadcastMessage(" ");
+            MessageUtils.broadcastToPlayersOnly(" ");
         }
         
         String msg = plugin.getMainConfigManager().getMsgChatCleared()
                 .replace("{player}", sender.getName());
-        Bukkit.broadcastMessage(MessageUtils.getColoredMessage(msg));
+        MessageUtils.broadcastToPlayersOnly(msg);
     }
 }
