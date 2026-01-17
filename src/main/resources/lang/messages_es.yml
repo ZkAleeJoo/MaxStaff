@@ -188,28 +188,33 @@ punishments:
       &7  ▸ &fEl usuario &c{target} &fha sido baneado.
       &7  ▸ &7Staff: &e{staff} &8/ &7Duración: &6{duration}
       &7  ▸ &7Motivo: &f{reason}
+      &r
     ban-ip: | #NO BORRAR
       &r
       &8(&4&l⚡&8) &c&lIP-BAN EMITIDO
       &7  ▸ &fEl usuario &c{target} &7fue baneado por IP.
       &7  ▸ &7Staff: &c{staff} &8/ &7Duración: &6{duration}
+      &r
     mute: | #NO BORRAR
       &r
       &8(&e&l●&8) &e&lUSUARIO SILENCIADO
       &7  ▸ &fEl usuario &e{target} &fha sido muteado.
       &7  ▸ &7Staff: &f{staff} &8/ &7Duración: &6{duration}
       &7  ▸ &7Motivo: &f{reason}
+      &r
     kick: | #NO BORRAR
       &r
       &8(&b&l!&8) &b&lUSUARIO EXPULSADO
       &7  ▸ &fEl usuario &b{target} &fha sido expulsado.
       &7  ▸ &7Staff: &f{staff} &8/ &7Motivo: &f{reason}
+      &r
     warns:
       broadcast: | #NO BORRAR
         &r
         &8(&6&l⚠&8) &6&lADVERTENCIA EMITIDA
         &7  ▸ &fJugador: &e{target} &8(&c{count} warns&8)
         &7  ▸ &7Staff: &f{staff} &8/ &7Motivo: &f{reason}
+        &r
       received: "&c&l¡ADVERTENCIA! &fHas sido advertido por: &e{reason}"
   screens:
     ban: | #NO BORRAR
