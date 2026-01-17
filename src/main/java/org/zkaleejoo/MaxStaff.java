@@ -45,6 +45,9 @@ public class MaxStaff extends JavaPlugin {
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
+
+        Bukkit.getLogger().setFilter(new org.zkaleejoo.utils.ConsoleFilter());
+        
         int pluginId = 28604;
         Metrics metrics = new Metrics(this, pluginId);
         
