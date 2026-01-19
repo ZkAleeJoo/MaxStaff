@@ -43,6 +43,9 @@ commands:
   gamemode:
     description: Abre el selector visual de modo de juego.
     aliases: [gm]
+  alts:
+    description: Ver cuentas alternativas de un jugador.
+    aliases: [alt, accs]
     
 permissions:
   maxstaff.admin:
@@ -65,6 +68,7 @@ permissions:
       maxstaff.cmdspy: true
       maxstaff.chat.admin: true
       maxstaff.gamemode: true
+      maxstaff.alts: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -112,4 +116,7 @@ permissions:
     default: op
   maxstaff.gamemode:
     description: Permite usar /gm para abrir el GUI.
+    default: op
+  maxstaff.alts:
+    description: Permite usar el sistema de rastreo de alts.
     default: op
