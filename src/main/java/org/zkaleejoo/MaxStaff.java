@@ -4,6 +4,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.zkaleejoo.commands.AltsCommand;
 import org.zkaleejoo.commands.ChatCommand;
 import org.zkaleejoo.commands.CommandSpyCommand;
 import org.zkaleejoo.commands.GameModeCommand;
@@ -121,6 +122,8 @@ public class MaxStaff extends JavaPlugin {
         GameModeCommand gmCmd = new GameModeCommand(this);
         this.getCommand("gamemode").setExecutor(gmCmd);
         this.getCommand("gamemode").setTabCompleter(gmCmd);
+        AltsCommand altsCmd = new AltsCommand(this);
+        getCommand("alts").setExecutor(altsCmd);
         
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
