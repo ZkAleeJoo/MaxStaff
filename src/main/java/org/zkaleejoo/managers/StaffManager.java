@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class StaffManager {
@@ -48,12 +49,13 @@ public class StaffManager {
         MainConfigManager config = plugin.getMainConfigManager();
         UUID uuid = player.getUniqueId();
         
-        ItemStack[] items = player.getInventory().getContents();
-        ItemStack[] armor = player.getInventory().getArmorContents();
+        ItemStack[] contents = player.getInventory().getContents();
+        String gm = player.getGameMode().name();
         
-        staffData.getConfig().set("data." + uuid + ".inventory", items);
-        staffData.getConfig().set("data." + uuid + ".armor", armor);
-        staffData.getConfig().set("data." + uuid + ".gamemode", player.getGameMode().name());
+        savedInventory.put(uuid, contents);
+        
+        staffData.getConfig().set("data." + uuid + ".inventory", contents);
+        staffData.getConfig().set("data." + uuid + ".gamemode", gm);
         staffData.saveConfig(); 
 
         player.getInventory().clear();
@@ -93,43 +95,52 @@ public class StaffManager {
     }
 
         public void disableStaffMode(Player player) {
-            MainConfigManager config = plugin.getMainConfigManager();
-            UUID uuid = player.getUniqueId();
-            player.getInventory().clear();
-            
-            if (staffData.getConfig().contains("data." + uuid)) {
-                java.util.List<?> itemsObj = staffData.getConfig().getList("data." + uuid + ".inventory");
-                java.util.List<?> armorObj = staffData.getConfig().getList("data." + uuid + ".armor");
-                
-                if (itemsObj != null) {
-                    player.getInventory().setContents(itemsObj.toArray(new ItemStack[0]));
-                }
-                if (armorObj != null) {
-                    player.getInventory().setArmorContents(armorObj.toArray(new ItemStack[0]));
-                }
+        MainConfigManager config = plugin.getMainConfigManager();
+        UUID uuid = player.getUniqueId();
+        
+        player.getInventory().clear();
+        
+        ItemStack[] toRestore = null;
 
-                String gmName = staffData.getConfig().getString("data." + uuid + ".gamemode", "SURVIVAL");
+        if (savedInventory.containsKey(uuid)) {
+            toRestore = savedInventory.remove(uuid);
+        } 
+        else if (staffData.getConfig().contains("data." + uuid)) {
+            List<?> list = staffData.getConfig().getList("data." + uuid + ".inventory");
+            if (list != null) {
+                toRestore = list.toArray(new ItemStack[0]);
+            }
+        }
+
+        if (toRestore != null) {
+            player.getInventory().setContents(toRestore);
+            
+            String gmName = staffData.getConfig().getString("data." + uuid + ".gamemode", "SURVIVAL");
+            try {
                 GameMode originalMode = GameMode.valueOf(gmName);
                 player.setGameMode(originalMode);
                 player.setAllowFlight(originalMode == GameMode.CREATIVE || originalMode == GameMode.SPECTATOR);
-
-                staffData.getConfig().set("data." + uuid, null);
-                staffData.saveConfig();
+            } catch (IllegalArgumentException e) {
+                player.setGameMode(GameMode.SURVIVAL);
             }
-            
-            player.setFlying(false);
-            player.setInvulnerable(false);
-            staffModePlayers.remove(uuid);
-            
-            if (isVanished(player)) {
-                setVanish(player, false);
-                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgVanishOff()));
-            }
-        
-            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
-            player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventoryRestored()));
         }
 
+        staffData.getConfig().set("data." + uuid, null);
+        staffData.saveConfig();
+        
+        player.setFlying(false);
+        player.setInvulnerable(false);
+        staffModePlayers.remove(uuid);
+        
+        if (isVanished(player)) {
+            setVanish(player, false);
+        }
+
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
+        player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventoryRestored()));
+    }
+
+    
     public boolean isInStaffMode(Player player) {
         return staffModePlayers.containsKey(player.getUniqueId());
     }
