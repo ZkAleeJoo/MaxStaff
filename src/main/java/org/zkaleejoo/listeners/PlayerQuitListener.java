@@ -15,8 +15,7 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
-            plugin.getStaffManager().disableStaffMode(event.getPlayer());
-        }
     }
+
+    
 }
