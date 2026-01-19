@@ -44,6 +44,7 @@ public class GuiListener implements Listener {
         String historyTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiHistoryTitle().split("\\{")[0])).trim();
         String detailedTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiDetailedTitle().split("\\[")[0])).trim();
         String gmTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiGmTitle())).trim();
+        String altsTitleBase = ChatColor.stripColor(MessageUtils.getColoredMessage(config.getGuiAltsTitle().split("\\{")[0])).trim();
 
         boolean isMaxStaffGui = title.startsWith(infoTitleBase) || 
                                title.contains(playersTitle) || 
@@ -51,7 +52,8 @@ public class GuiListener implements Listener {
                                title.contains(reasonsBaseTitle) || 
                                title.startsWith(historyTitleBase) || 
                                title.startsWith(detailedTitleBase) ||
-                               title.equals(gmTitleBase);
+                               title.equals(gmTitleBase) ||
+                               title.startsWith(altsTitleBase);
 
         if (!isMaxStaffGui) return;
 
