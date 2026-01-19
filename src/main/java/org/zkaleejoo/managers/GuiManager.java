@@ -296,34 +296,39 @@ public class GuiManager {
         MainConfigManager config = plugin.getMainConfigManager();
         
         if (ip == null) {
-            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&cNo hay registros de IP para este usuario."));
+            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
             return;
         }
 
         List<UUID> altsUUIDs = plugin.getPunishmentManager().getAllAccountsByIP(ip);
-        Inventory gui = Bukkit.createInventory(null, 45, MessageUtils.getColoredMessage("&8Cuentas de: &0" + targetName));
-        setupBorder(gui); 
+        Inventory gui = Bukkit.createInventory(null, 45, MessageUtils.getColoredMessage(config.getGuiAltsTitle().replace("{target}", targetName)));
+        setupBorder(gui);
 
         for (UUID uuid : altsUUIDs) {
             OfflinePlayer altPlayer = Bukkit.getOfflinePlayer(uuid);
             String name = altPlayer.getName();
             if (name == null) continue;
 
+            String status;
             String color;
-            List<String> lore = new ArrayList<>();
 
             if (Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(name)) {
-                color = "&4"; 
-                lore.add("&7Estado: &c&lBANEADO");
+                status = config.getGuiAltsStatusBanned();
+                color = "&4";
             } else if (altPlayer.isOnline()) {
-                color = "&a"; 
-                lore.add("&7Estado: &aEn línea");
+                status = config.getGuiAltsStatusOnline();
+                color = "&a";
             } else {
-                color = "&c"; 
-                lore.add("&7Estado: &7Desconectado");
+                status = config.getGuiAltsStatusOffline();
+                color = "&c";
             }
-            
-            lore.add("&8IP: " + ip);
+
+            String finalStatus = status;
+            List<String> lore = config.getGuiAltsLore().stream()
+                    .map(line -> line.replace("{dynamic}", config.getGuiAltsDynamic())
+                                    .replace("{status}", finalStatus)
+                                    .replace("{ip}", ip))
+                    .collect(Collectors.toList());
 
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) head.getItemMeta();
@@ -334,7 +339,6 @@ public class GuiManager {
 
             gui.addItem(head);
         }
-
         staff.openInventory(gui);
     }
 
