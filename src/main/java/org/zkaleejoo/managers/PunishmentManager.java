@@ -419,4 +419,22 @@ public class PunishmentManager {
             config.getPrefix() + config.getMsgUnbanIPSuccess().replace("{ip}", ip)
         ));
     }
+
+    public List<UUID> getAllAccountsByIP(String ip) {
+        List<UUID> alts = new ArrayList<>();
+        ConfigurationSection section = dataFile.getConfig().getConfigurationSection("ip-cache");
+        if (section == null) return alts;
+
+        for (String uuidStr : section.getKeys(false)) {
+            if (section.getString(uuidStr).equals(ip)) {
+                try {
+                    alts.add(UUID.fromString(uuidStr));
+                } catch (IllegalArgumentException ignored) {}
+            }
+        }
+        return alts;
+    }
+
+
+
 }
