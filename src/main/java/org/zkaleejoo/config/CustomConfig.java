@@ -77,12 +77,44 @@ public class CustomConfig {
             if (resourceStream == null) return;
 
             YamlConfiguration jarConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resourceStream, StandardCharsets.UTF_8));
-            fileConfiguration.setDefaults(jarConfig);
-            fileConfiguration.options().copyDefaults(true);
-            saveConfig();
+            
+            boolean changed = false;
+            for (String key : jarConfig.getKeys(true)) {
+                if (!fileConfiguration.contains(key)) {
+                    if (isInsideProtectedSection(key)) {
+                        String protectedParent = getProtectedParent(key);
+                        
+                        if (!fileConfiguration.contains(protectedParent)) {
+                            fileConfiguration.set(key, jarConfig.get(key));
+                            changed = true;
+                        }
+                    } else {
+                        fileConfiguration.set(key, jarConfig.get(key));
+                        changed = true;
+                    }
+                }
+            }
+            
+            if (changed) {
+                saveConfig();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+ 
+    private boolean isInsideProtectedSection(String key) {
+        return key.startsWith("punishment-reasons.") || key.startsWith("gui-gamemode."); 
+    }
+
+
+    private String getProtectedParent(String key) {
+        String[] parts = key.split("\\.");
+        if (parts.length >= 2) {
+            return parts[0] + "." + parts[1];
+        }
+        return parts[0];
     }
 
     public void saveConfig() {
