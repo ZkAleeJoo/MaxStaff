@@ -166,6 +166,16 @@ gui:
       material: "ENDER_EYE"
   feedback:
     gamemode-changed: "&aTu modo de juego ha sido cambiado a &e{mode}&a."
+  alts:
+    title: "&8Cuentas de: &0{target}"
+    dynamic: "Dinámico"
+    status-online: "&aEn línea"
+    status-offline: "&7Desconectado"
+    status-banned: "&c&lBANEADO"
+    head-lore:
+      - "&f{dynamic}"
+      - "&7Estado: {status}"
+      - "&8IP: {ip}"
 
 gui-style:
   navigation:
