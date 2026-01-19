@@ -3,7 +3,8 @@ package org.zkaleejoo.managers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.NamespacedKey; 
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -19,6 +20,7 @@ import org.zkaleejoo.utils.MessageUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class GuiManager {
@@ -288,4 +290,55 @@ public class GuiManager {
 
         player.openInventory(gui);
     }
+
+    public void openAltsMenu(Player staff, String targetName) {
+        String ip = plugin.getPunishmentManager().getPlayerIP(targetName);
+        MainConfigManager config = plugin.getMainConfigManager();
+        
+        if (ip == null) {
+            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&cNo hay registros de IP para este usuario."));
+            return;
+        }
+
+        List<UUID> altsUUIDs = plugin.getPunishmentManager().getAllAccountsByIP(ip);
+        Inventory gui = Bukkit.createInventory(null, 45, MessageUtils.getColoredMessage("&8Cuentas de: &0" + targetName));
+        setupBorder(gui); 
+
+        for (UUID uuid : altsUUIDs) {
+            OfflinePlayer altPlayer = Bukkit.getOfflinePlayer(uuid);
+            String name = altPlayer.getName();
+            if (name == null) continue;
+
+            String color;
+            List<String> lore = new ArrayList<>();
+
+            if (Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(name)) {
+                color = "&4"; 
+                lore.add("&7Estado: &c&lBANEADO");
+            } else if (altPlayer.isOnline()) {
+                color = "&a"; 
+                lore.add("&7Estado: &aEn línea");
+            } else {
+                color = "&c"; 
+                lore.add("&7Estado: &7Desconectado");
+            }
+            
+            lore.add("&8IP: " + ip);
+
+            ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta meta = (SkullMeta) head.getItemMeta();
+            meta.setOwningPlayer(altPlayer);
+            meta.setDisplayName(MessageUtils.getColoredMessage(color + name));
+            meta.setLore(lore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+            head.setItemMeta(meta);
+
+            gui.addItem(head);
+        }
+
+        staff.openInventory(gui);
+    }
+
+
+
+
 }
