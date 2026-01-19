@@ -66,6 +66,8 @@ public class MainConfigManager {
     private String chatStaffUse;
     private String placeholderTrue, placeholderFalse;
     private String placeholderPlaytimeFormat, restoredinventory;
+    private String guiAltsTitle, guiAltsDynamic, guiAltsStatusOnline, guiAltsStatusOffline, guiAltsStatusBanned;
+    private List<String> guiAltsLore;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -248,6 +250,12 @@ public class MainConfigManager {
         placeholderFalse = lang.getString("placeholders.status-false", "&cNo");
         placeholderPlaytimeFormat = lang.getString("placeholders.playtime-format", "{hours}h {minutes}m");
         restoredinventory = lang.getString("messages.restore-inventory", "&6&l[!] &eYour inventory has been automatically restored after the restart.");
+        guiAltsTitle = lang.getString("gui.alts.title", "&8Cuentas de: &0{target}");
+        guiAltsDynamic = lang.getString("gui.alts.dynamic", "Dinámico");
+        guiAltsStatusOnline = lang.getString("gui.alts.status-online", "&aEn línea");
+        guiAltsStatusOffline = lang.getString("gui.alts.status-offline", "&7Desconectado");
+        guiAltsStatusBanned = lang.getString("gui.alts.status-banned", "&c&lBANEADO");
+        guiAltsLore = lang.getStringList("gui.alts.head-lore");
         
 
     }
@@ -424,6 +432,12 @@ public class MainConfigManager {
     public String getPlaceholderFalse() { return placeholderFalse; }
     public String getPlaceholderPlaytimeFormat() { return placeholderPlaytimeFormat; }
     public String getRestoredInventory() { return restoredinventory; }
+    public String getGuiAltsTitle() { return guiAltsTitle; }
+    public String getGuiAltsDynamic() { return guiAltsDynamic; }
+    public String getGuiAltsStatusOnline() { return guiAltsStatusOnline; }
+    public String getGuiAltsStatusOffline() { return guiAltsStatusOffline; }
+    public String getGuiAltsStatusBanned() { return guiAltsStatusBanned; }
+    public List<String> getGuiAltsLore() { return guiAltsLore; }
     
 
     public ConfigurationSection getReasons(String type) {
