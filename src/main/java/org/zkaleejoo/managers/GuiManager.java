@@ -46,41 +46,61 @@ public class GuiManager {
     public void openUserInfoMenu(Player staff, Player target) {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
-        Inventory gui = Bukkit.createInventory(null, 27, title);
+        Inventory gui = Bukkit.createInventory(null, 45, title); 
         setupBorder(gui);
 
         long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
         long hours = ticks / 72000;
         long minutes = (ticks % 72000) / 1200;
         String playtime = hours + "h " + minutes + "m";
-        
+
         int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
         int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
         int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
         int warns = plugin.getPunishmentManager().getHistoryCount(target.getName(), "WARN");
         int total = bans + mutes + kicks;
 
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+        headMeta.setOwningPlayer(target);
+        headMeta.setDisplayName(MessageUtils.getColoredMessage("&6&lVisualizando a: &e" + target.getName()));
+        headMeta.setLore(Arrays.asList(
+            MessageUtils.getColoredMessage("&7Estado: " + (target.isOnline() ? "&aEn línea" : "&cDesconectado")),
+            MessageUtils.getColoredMessage("&7Vida: &c" + (int)target.getHealth() + "&7/&c20 ❤"),
+            MessageUtils.getColoredMessage("&7Hambre: &6" + target.getFoodLevel() + "&7/&620 🍖"),
+            MessageUtils.getColoredMessage("&7Gamemode: &f" + target.getGameMode().name()),
+            MessageUtils.getColoredMessage("&7IP Actual: &b" + target.getAddress().getAddress().getHostAddress())
+        ));
+        head.setItemMeta(headMeta);
+        gui.setItem(13, head);
+
         List<String> statsLore = config.getGuiInfoStatsLore().stream()
                 .map(line -> line.replace("{target}", target.getName())
-                                 .replace("{uuid}", target.getUniqueId().toString())
-                                 .replace("{playtime}", playtime)
-                                 .replace("{total_punishments}", String.valueOf(total)))
+                                .replace("{uuid}", target.getUniqueId().toString())
+                                .replace("{playtime}", playtime)
+                                .replace("{total_punishments}", String.valueOf(total)))
                 .collect(Collectors.toList());
-        ItemStack stats = createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore);
+        gui.setItem(20, createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore));
 
         List<String> historyLore = config.getGuiInfoHistoryLore().stream()
                 .map(line -> line.replace("{bans}", String.valueOf(bans))
-                                 .replace("{mutes}", String.valueOf(mutes))
-                                 .replace("{kicks}", String.valueOf(kicks))
-                                 .replace("{warns}", String.valueOf(warns)) )
+                                .replace("{mutes}", String.valueOf(mutes))
+                                .replace("{kicks}", String.valueOf(kicks))
+                                .replace("{warns}", String.valueOf(warns)))
                 .collect(Collectors.toList());
-        ItemStack history = createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore);
+        gui.setItem(21, createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore));
 
-        ItemStack action = createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore());
+        gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore()));
 
-        gui.setItem(11, stats);
-        gui.setItem(13, history);
-        gui.setItem(15, action);
+        List<String> altsLore = Arrays.asList(
+            MessageUtils.getColoredMessage("&7Haz click para rastrear posibles"),
+            MessageUtils.getColoredMessage("&7cuentas vinculadas a su IP."),
+            MessageUtils.getColoredMessage(""),
+            MessageUtils.getColoredMessage("&eClick para ver Alts")
+        );
+        gui.setItem(23, createItem(Material.COMPASS, "&b&lCuentas Relacionadas", altsLore));
+
+        gui.setItem(24, createItem(Material.CHEST, "&6&lVer Inventario Real", Arrays.asList(MessageUtils.getColoredMessage("&7Inspecciona su inventario"), MessageUtils.getColoredMessage("&7en tiempo real."))));
 
         staff.openInventory(gui);
     }
