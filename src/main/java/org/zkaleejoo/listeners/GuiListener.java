@@ -1,5 +1,6 @@
 package org.zkaleejoo.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -83,7 +84,19 @@ public class GuiListener implements Listener {
                 }
                 plugin.getGuiManager().openHistoryMenu(player, targetName);
             }
+
+            if (item.getType() == Material.COMPASS) {
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            plugin.getGuiManager().openAltsMenu(player, targetName);
         }
+        else if (item.getType() == Material.CHEST) {
+            Player target = Bukkit.getPlayer(targetName);
+            if (target != null) {
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
+                player.openInventory(target.getInventory());
+            }
+        }
+     }
 
         else if (title.contains(playersTitle)) {
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
