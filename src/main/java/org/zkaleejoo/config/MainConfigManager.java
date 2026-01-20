@@ -69,6 +69,10 @@ public class MainConfigManager {
     private String guiAltsTitle, guiAltsDynamic, guiAltsStatusOnline, guiAltsStatusOffline, guiAltsStatusBanned;
     private List<String> guiAltsLore;
     private String commandsanctionuse, commandsanctionself;
+    private Material guiInfoAltsMat, guiInfoInvMat;
+    private String guiInfoHeadName, guiInfoAltsName, guiInfoInvName;
+    private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
+    private String statusOnline, statusOffline;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -111,6 +115,8 @@ public class MainConfigManager {
         guiGmAdventureMat = loadMaterial(config.getString("gui-gamemode.adventure-material"), Material.MAP);
         guiGmSpectatorMat = loadMaterial(config.getString("gui-gamemode.spectator-material"), Material.ENDER_EYE);
         gmMenuEnabled = config.getBoolean("gui-gamemode.enabled-menu", true);
+        guiInfoAltsMat = loadMaterial(config.getString("gui.info.items.alts.material"), Material.COMPASS);
+        guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
 
@@ -259,6 +265,14 @@ public class MainConfigManager {
         guiAltsLore = lang.getStringList("gui.alts.head-lore");
         commandsanctionuse = lang.getString("messages.command-sanction-use", "&cUsage: /sanction <player>");
         commandsanctionself = lang.getString("messages.command-sanction-self", "&cYou cannot sanction yourself.");
+        guiInfoHeadName = lang.getString("gui.info.items.head.name", "&6&lVisualizando a: &e{target}");
+        guiInfoHeadLore = lang.getStringList("gui.info.items.head.lore");
+        guiInfoAltsName = lang.getString("gui.info.items.alts.name", "&b&lCuentas Relacionadas");
+        guiInfoAltsLore = lang.getStringList("gui.info.items.alts.lore");
+        guiInfoInvName = lang.getString("gui.info.items.inventory.name", "&6&lVer Inventario Real");
+        guiInfoInvLore = lang.getStringList("gui.info.items.inventory.lore");
+        statusOnline = lang.getString("gui.info.status.online", "&aOnline");
+        statusOffline = lang.getString("gui.info.status.offline", "&cOffline");
         
 
     }
@@ -443,6 +457,16 @@ public class MainConfigManager {
     public List<String> getGuiAltsLore() { return guiAltsLore; }
     public String getCommandSanctionUse() { return commandsanctionuse; }
     public String getCommandSanctionSelf() { return commandsanctionself; }
+    public Material getGuiInfoAltsMat() { return guiInfoAltsMat; }
+    public Material getGuiInfoInvMat() { return guiInfoInvMat; }
+    public String getGuiInfoHeadName() { return guiInfoHeadName; }
+    public List<String> getGuiInfoHeadLore() { return guiInfoHeadLore; }
+    public String getGuiInfoAltsName() { return guiInfoAltsName; }
+    public List<String> getGuiInfoAltsLore() { return guiInfoAltsLore; }
+    public String getGuiInfoInvName() { return guiInfoInvName; }
+    public List<String> getGuiInfoInvLore() { return guiInfoInvLore; }
+    public String getStatusOnline() { return statusOnline; }
+    public String getStatusOffline() { return statusOffline; }
     
 
     public ConfigurationSection getReasons(String type) {

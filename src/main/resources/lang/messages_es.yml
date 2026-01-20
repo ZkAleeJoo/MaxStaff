@@ -85,29 +85,32 @@ gui:
       kick: { name: "&b&lEXPULSAR", lore: ["&7Click para expulsar ahora"] }
   info:
     title: "&8Información: &0{target}"
+    status:
+      online: "&aEn línea"
+      offline: "&cDesconectado"
     items:
-      stats:
-        name: "&b&lEstadísticas de Usuario"
+      head:
+        name: "&6&lVisualizando a: &e{target}"
         lore:
-          - "&7Nick: &f{target}"
-          - "&7UUID: &f{uuid}"
-          - "&7Tiempo jugado: &f{playtime}"
+          - "&7Estado: {status}"
+          - "&7Vida: &c{health}&7/&c20 ❤"
+          - "&7Hambre: &6{food}&7/&620 🍖"
+          - "&7Gamemode: &f{gm}"
+          - "&7IP Actual: &b{ip}"
+      alts:
+        name: "&b&lCuentas Relacionadas"
+        lore:
+          - "&7Haz click para rastrear posibles"
+          - "&7cuentas vinculadas a su IP."
           - ""
-          - "&7Sanciones Totales: &c{total_punishments}"
-      history:
-        name: "&e&lHistorial de Sanciones"
+          - "&eClick para ver Alts"
+      inventory:
+        name: "&6&lVer Inventario Real"
         lore:
-          - "&7Baneos: &f{bans}"
-          - "&7Mutes: &f{mutes}"
-          - "&7Kicks: &f{kicks}"
-          - "&7Warns: &f{warns}"
+          - "&7Inspecciona su inventario"
+          - "&7en tiempo real."
           - ""
-          - "&7Click para ver el historial detallado"
-      action_punish:
-        name: "&c&lSancionar Jugador"
-        lore:
-          - "&7Click para abrir el menú"
-          - "&7de tipos de sanciones."
+          - "&eClick para abrir"
   reasons:
     title: "&8Sanción [{type}] - {target} ({page}/3)"
     item-name: "&c&lSanción #{number}"

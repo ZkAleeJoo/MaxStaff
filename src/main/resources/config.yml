@@ -35,6 +35,10 @@ gui:
         material: "PAPER"
       action_punish:
         material: "NETHERITE_SWORD"
+      alts:
+        material: "COMPASS"
+      inventory:
+        material: "CHEST"
 
 #Visual Style and Navigation (Materials Only)
 gui-style:

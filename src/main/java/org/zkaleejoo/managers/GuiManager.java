@@ -47,7 +47,7 @@ public class GuiManager {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
         Inventory gui = Bukkit.createInventory(null, 45, title); 
-        setupBorder(gui);
+        setupBorder(gui); 
 
         long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
         long hours = ticks / 72000;
@@ -62,16 +62,24 @@ public class GuiManager {
 
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        headMeta.setOwningPlayer(target);
-        headMeta.setDisplayName(MessageUtils.getColoredMessage("&6&lVisualizando a: &e" + target.getName()));
-        headMeta.setLore(Arrays.asList(
-            MessageUtils.getColoredMessage("&7Estado: " + (target.isOnline() ? "&aEn línea" : "&cDesconectado")),
-            MessageUtils.getColoredMessage("&7Vida: &c" + (int)target.getHealth() + "&7/&c20 ❤"),
-            MessageUtils.getColoredMessage("&7Hambre: &6" + target.getFoodLevel() + "&7/&620 🍖"),
-            MessageUtils.getColoredMessage("&7Gamemode: &f" + target.getGameMode().name()),
-            MessageUtils.getColoredMessage("&7IP Actual: &b" + target.getAddress().getAddress().getHostAddress())
-        ));
-        head.setItemMeta(headMeta);
+        if (headMeta != null) {
+            headMeta.setOwningPlayer(target);
+            headMeta.setDisplayName(MessageUtils.getColoredMessage(config.getGuiInfoHeadName().replace("{target}", target.getName())));
+            
+            String statusText = target.isOnline() ? config.getStatusOnline() : config.getStatusOffline();
+            String ip = target.getAddress() != null ? target.getAddress().getAddress().getHostAddress() : "Offline";
+            
+            List<String> headLore = config.getGuiInfoHeadLore().stream()
+                    .map(line -> line.replace("{status}", statusText)
+                                    .replace("{health}", String.valueOf((int)target.getHealth()))
+                                    .replace("{food}", String.valueOf(target.getFoodLevel()))
+                                    .replace("{gm}", target.getGameMode().name())
+                                    .replace("{ip}", ip))
+                    .collect(Collectors.toList());
+            
+            headMeta.setLore(headLore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+            head.setItemMeta(headMeta);
+        }
         gui.setItem(13, head);
 
         List<String> statsLore = config.getGuiInfoStatsLore().stream()
@@ -92,15 +100,9 @@ public class GuiManager {
 
         gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore()));
 
-        List<String> altsLore = Arrays.asList(
-            MessageUtils.getColoredMessage("&7Haz click para rastrear posibles"),
-            MessageUtils.getColoredMessage("&7cuentas vinculadas a su IP."),
-            MessageUtils.getColoredMessage(""),
-            MessageUtils.getColoredMessage("&eClick para ver Alts")
-        );
-        gui.setItem(23, createItem(Material.COMPASS, "&b&lCuentas Relacionadas", altsLore));
+        gui.setItem(23, createItem(config.getGuiInfoAltsMat(), config.getGuiInfoAltsName(), config.getGuiInfoAltsLore()));
 
-        gui.setItem(24, createItem(Material.CHEST, "&6&lVer Inventario Real", Arrays.asList(MessageUtils.getColoredMessage("&7Inspecciona su inventario"), MessageUtils.getColoredMessage("&7en tiempo real."))));
+        gui.setItem(24, createItem(config.getGuiInfoInvMat(), config.getGuiInfoInvName(), config.getGuiInfoInvLore()));
 
         staff.openInventory(gui);
     }

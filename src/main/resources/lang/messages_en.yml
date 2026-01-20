@@ -85,29 +85,32 @@ gui:
       kick: { name: "&b&lKICK", lore: ["&7Click to kick now"] }
   info:
     title: "&8Information: &0{target}"
+    status:
+      online: "&aOnline"
+      offline: "&cOffline"
     items:
-      stats:
-        name: "&b&lUser Statistics"
+      head:
+        name: "&6&lViewing: &e{target}"
         lore:
-          - "&7Nick: &f{target}"
-          - "&7UUID: &f{uuid}"
-          - "&7Playtime: &f{playtime}"
+          - "&7Status: {status}"
+          - "&7Health: &c{health}&7/&c20 ❤"
+          - "&7Hunger: &6{food}&7/&620 🍖"
+          - "&7Gamemode: &f{gm}"
+          - "&7Current IP: &b{ip}"
+      alts:
+        name: "&b&lRelated Accounts"
+        lore:
+          - "&7Click to track possible"
+          - "&7accounts linked to their IP."
           - ""
-          - "&7Total Punishments: &c{total_punishments}"
-      history:
-        name: "&e&lPunishment History"
+          - "&eClick to view Alts"
+      inventory:
+        name: "&6&lView Real Inventory"
         lore:
-          - "&7Bans: &f{bans}"
-          - "&7Mutes: &f{mutes}"
-          - "&7Kicks: &f{kicks}"
-          - "&7Warns: &f{warns}"
+          - "&7Inspect their inventory"
+          - "&7in real-time."
           - ""
-          - "&7Click to view detailed history"
-      action_punish:
-        name: "&c&lPunish Player"
-        lore:
-          - "&7Click to open punishment menu"
-          - "&7types of sanctions."
+          - "&eClick to open"
   reasons:
     title: "&8Sanction [{type}] - {target} ({page}/3)"
     item-name: "&c&lSanction #{number}"
