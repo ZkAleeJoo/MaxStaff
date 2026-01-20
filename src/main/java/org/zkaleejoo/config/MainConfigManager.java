@@ -68,6 +68,7 @@ public class MainConfigManager {
     private String placeholderPlaytimeFormat, restoredinventory;
     private String guiAltsTitle, guiAltsDynamic, guiAltsStatusOnline, guiAltsStatusOffline, guiAltsStatusBanned;
     private List<String> guiAltsLore;
+    private String commandsanctionuse, commandsanctionself;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -256,6 +257,8 @@ public class MainConfigManager {
         guiAltsStatusOffline = lang.getString("gui.alts.status-offline", "&7Desconectado");
         guiAltsStatusBanned = lang.getString("gui.alts.status-banned", "&c&lBANEADO");
         guiAltsLore = lang.getStringList("gui.alts.head-lore");
+        commandsanctionuse = lang.getString("messages.command-sanction-use", "&cUsage: /sanction <player>");
+        commandsanctionself = lang.getString("messages.command-sanction-self", "&cYou cannot sanction yourself.");
         
 
     }
@@ -438,6 +441,8 @@ public class MainConfigManager {
     public String getGuiAltsStatusOffline() { return guiAltsStatusOffline; }
     public String getGuiAltsStatusBanned() { return guiAltsStatusBanned; }
     public List<String> getGuiAltsLore() { return guiAltsLore; }
+    public String getCommandSanctionUse() { return commandsanctionuse; }
+    public String getCommandSanctionSelf() { return commandsanctionself; }
     
 
     public ConfigurationSection getReasons(String type) {

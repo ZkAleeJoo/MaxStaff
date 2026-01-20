@@ -36,7 +36,9 @@ messages:
   gamemode-modeinvalid: "&cInvalid game mode"
   chatstaff-use: "&c&l(!) &cWrite a message for the staff. Usage: /sc <message>"
   restore-inventory: "&6&l[!] &eYour inventory has been automatically restored after the restart."
-  
+  command-sanction-use: "&cUsage: /sanction <player>"
+  command-sanction-self: "&cYou cannot sanction yourself."
+
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"
   disabled: "&cStaff Mode &lDISABLED&c."

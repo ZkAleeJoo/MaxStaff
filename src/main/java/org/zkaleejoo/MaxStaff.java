@@ -26,6 +26,7 @@ import org.zkaleejoo.listeners.FreezeListener;
 
 import org.zkaleejoo.managers.PunishmentManager;
 import org.zkaleejoo.commands.PunishmentCommand;
+import org.zkaleejoo.commands.SanctionCommand;
 import org.zkaleejoo.commands.StaffChatCommand;
 import org.zkaleejoo.commands.VanishCommand;
 import org.zkaleejoo.listeners.ChatListener;
@@ -124,6 +125,9 @@ public class MaxStaff extends JavaPlugin {
         this.getCommand("gamemode").setTabCompleter(gmCmd);
         AltsCommand altsCmd = new AltsCommand(this);
         getCommand("alts").setExecutor(altsCmd);
+        SanctionCommand sanctionCmd = new SanctionCommand(this);
+        getCommand("sanction").setExecutor(sanctionCmd);
+        getCommand("sanction").setTabCompleter(sanctionCmd);
         
 
         PunishmentCommand punCmd = new PunishmentCommand(this);

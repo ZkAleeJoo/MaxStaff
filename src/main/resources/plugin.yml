@@ -46,6 +46,8 @@ commands:
   alts:
     description: Ver cuentas alternativas de un jugador.
     aliases: [alt, accs]
+  sanction:
+    description: Opens the advanced sanction menu for a player.
     
 permissions:
   maxstaff.admin:
@@ -69,6 +71,7 @@ permissions:
       maxstaff.chat.admin: true
       maxstaff.gamemode: true
       maxstaff.alts: true
+      maxstaff.punish: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -119,4 +122,7 @@ permissions:
     default: op
   maxstaff.alts:
     description: Permite usar el sistema de rastreo de alts.
+    default: op
+  maxstaff.punish:
+    description: Permiso usar /sanction para abrir el menú avanzado de sanciones.
     default: op

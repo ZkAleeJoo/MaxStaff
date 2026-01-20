@@ -36,6 +36,8 @@ messages:
   gamemode-modeinvalid: "&cModo de juego inválido"
   chatstaff-use: "&c&l(!) &cEscribe un mensaje para el staff. Uso: /sc <mensaje>"
   restore-inventory: "&6&l[!] &eTu inventario ha sido restaurado automáticamente tras el reinicio."
+  command-sanction-use: "&cUso: /sanction <jugador>"
+  command-sanction-self: "&cNo puedes sancionarte a ti mismo."
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"
