@@ -1,0 +1,36 @@
+webhook-url: "TU_URL_AQUI"
+enabled: false
+
+punishments:
+  ban:
+    title: "⚡ Banned User"
+    color: "#ff0000" 
+    format: |
+      **User:** {target}
+      **Staff:** {staff}
+      **Duration:** {duration}
+      **Reason:** {reason}
+      **Date:** {date}
+  mute:
+    title: "● Muted User"
+    color: "#ffaa00" 
+    format: |
+      **User:** {target}
+      **Staff:** {staff}
+      **Duration:** {duration}
+      **Reason:** {reason}
+  kick:
+    title: "¡ User Kicked"
+    color: "#00aaff" 
+    format: |
+      **User:** {target}
+      **Staff:** {staff}
+      **Reason:** {reason}
+  warn:
+    title: "⚠ Warning Issued"
+    color: "#ffff00" 
+    format: |
+      **User:** {target}
+      **Staff:** {staff}
+      **Total warnings:** {count}
+      **Reason:** {reason}
