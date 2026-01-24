@@ -55,51 +55,6 @@ Designed for speed, the plugin uses a hierarchical menu system:
 +-----------------+---------------------------------------+
 ```
 
-### **Commands and Permissions**
-```yaml
-/maxstaff reload - maxstaff.admin
-/maxstaff mode - maxstaff.mode
-/maxstaff help - maxstaff.mode o maxstaff.admin
-/maxstaff reset - maxstaff.admin
-/maxstaff take - maxstaff.admin
-/ban - maxstaff.punish.ban
-/tempban - maxstaff.punish.ban
-/mute - maxstaff.punish.mute
-/tempmute - maxstaff.punish.mute
-/kick - maxstaff.punish.kick
-/warn - maxstaff.punish.warn
-/unban - maxstaff.punish.unban
-/unmute - maxstaff.punish.unmute
-/history - maxstaff.history
-/vanish - maxstaff.vanish
-/sc - maxstaff.staffchat
-/cmdspy - maxstaff.cmdspy
-/chat [mute] [clear] - maxstaff.chat.admin
-/gm - maxstaff.gamemode
-/ban-ip - maxstaff.punish.banip
-/tempban-ip - maxstaff.punish.banip
-/unban-ip - maxstaff.punish.unbanip
-
-maxstaff.admin - It gives you access to the entire plugin
-maxstaff.see.vanish - It allows you to see other staff on Vanish
-```
-
-### **Placeholders**
-```yaml
-%maxstaff_in_staff_mode%      - Returns whether the staff member is in staff mode.
-%maxstaff_vanished%          - Returns whether the staff member is vanished.
-%maxstaff_frozen%            - Returns whether the player is frozen.
-%maxstaff_is_spy%            - Returns whether the staff member has CommandSpy active.
-%maxstaff_warn_count%        - Number of warnings for the player.
-%maxstaff_ban_count%         - Number of bans in the history.
-%maxstaff_mute_count%        - Number of mutes in the history.
-%maxstaff_kick_count%        - Number of kicks in the history.
-%maxstaff_total_punishments% - Total sum of sanctions (Ban + Mute + Kick).
-%maxstaff_playtime%          - Formatted playtime (H and M).
-```
-
----
-
 ### **Configuration and Localization**
 **MaxStaff** is fully customizable through the `config.yml` files and the language files in the `lang/` folder:
 * **Dynamic Materials**: Choose any Minecraft material for the GUI borders and staff tools.
