@@ -182,6 +182,12 @@ public class StaffItemsListener implements Listener {
             plugin.getGuiManager().openUserInfoMenu(player, target);
         }
         else if (toolType.equals("freeze_tool")) {
+
+            if (target.hasPermission("maxstaff.admin") || target.hasPermission("maxstaff.freeze")) {
+                player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + "&cNo puedes congelar a este usuario."));
+                return;
+            }
+            
             event.setCancelled(true);
             plugin.getFreezeManager().toggleFreeze(player, target);
         }   
