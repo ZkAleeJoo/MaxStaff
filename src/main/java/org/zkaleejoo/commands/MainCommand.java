@@ -29,6 +29,9 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             plugin.getMainConfigManager().reloadConfig();
+            if (plugin.getDiscordManager() != null) {
+                plugin.getDiscordManager().reload();
+            }
             sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getPluginReload()));
             return true;
         }
