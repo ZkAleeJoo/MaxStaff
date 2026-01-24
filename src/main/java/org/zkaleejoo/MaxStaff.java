@@ -15,7 +15,7 @@ import org.zkaleejoo.managers.StaffManager;
 import org.zkaleejoo.utils.UpdateChecker;
 import org.zkaleejoo.listeners.PlayerJoinListener;
 import org.zkaleejoo.listeners.StaffItemsListener;
-
+import org.zkaleejoo.listeners.StaffModeListener;
 import org.zkaleejoo.listeners.PlayerQuitListener;
 
 import org.zkaleejoo.managers.GuiManager; 
@@ -175,5 +175,6 @@ public class MaxStaff extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
+        getServer().getPluginManager().registerEvents(new StaffModeListener(this), this);
     }
 }

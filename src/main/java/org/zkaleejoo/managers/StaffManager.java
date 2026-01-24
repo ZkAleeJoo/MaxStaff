@@ -51,14 +51,17 @@ public class StaffManager {
         
         ItemStack[] contents = player.getInventory().getContents();
         String gm = player.getGameMode().name();
+        int foodLevel = player.getFoodLevel();
         
         savedInventory.put(uuid, contents);
         
         staffData.getConfig().set("data." + uuid + ".inventory", contents);
         staffData.getConfig().set("data." + uuid + ".gamemode", gm);
+        staffData.getConfig().set("data." + uuid + ".food", foodLevel);
         staffData.saveConfig(); 
 
         player.getInventory().clear();
+        player.setFoodLevel(20);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(true);
         player.setFlying(true);
@@ -123,6 +126,9 @@ public class StaffManager {
             } catch (IllegalArgumentException e) {
                 player.setGameMode(GameMode.SURVIVAL);
             }
+
+            int originalFood = staffData.getConfig().getInt("data." + uuid + ".food", 20);
+            player.setFoodLevel(originalFood);
         }
 
         staffData.getConfig().set("data." + uuid, null);
