@@ -6,58 +6,58 @@ api-version: 1.19
 
 commands:
   maxstaff:
-    description: Comando principal de MaxStaff
+    description: Main MaxStaff command
     aliases: [staff, ms]
   ban:
-    description: Banear jugador (Permanente o Temporal)
+    description: Ban a player (Permanent or Temporary)
   tempban:
-    description: Banear temporalmente a un jugador
+    description: Temporarily ban a player
   mute:
-    description: Silenciar jugador (Permanente o Temporal)
+    description: Mute a player (Permanent or Temporary)
   tempmute:
-    description: Silenciar temporalmente a un jugador
+    description: Temporarily mute a player
   kick:
-    description: Expulsar jugador del servidor
+    description: Kick a player from the server
   unban:
-    description: Perdonar el baneo de un jugador
+    description: Unban a player
   unmute:
-    description: Devolver el habla a un jugador
+    description: Unmute a player
   warn:
-    description: Enviar una advertencia a un jugador
+    description: Send a warning to a player
   history:
-    description: Ver el historial de sanciones de un jugador
+    description: View a player's sanction history
   vanish:
-    description: Alterna tu invisibilidad ante otros jugadores.
+    description: Toggle your invisibility to other players
   ban-ip:
-    description: Banear la IP de un jugador de forma permanente.
+    description: Permanently ban a player's IP
   tempban-ip:
-    description: Banear temporalmente la IP de un jugador
+    description: Temporarily ban a player's IP
   unban-ip:
-    description: Desbanear una IP
+    description: Unban an IP
   sc:
-    description: Chat privado para miembros del Staff
+    description: Private chat for Staff members
   cmdspy:
-    description: Espía los comandos de los jugadores en tiempo real.
+    description: Spy on player commands in real time
   chat:
-    description: Gestiona el chat global (mute/clear)
+    description: Manage global chat (mute/clear)
   gamemode:
-    description: Abre el selector visual de modo de juego.
+    description: Open the gamemode selector
     aliases: [gm]
   alts:
-    description: Ver cuentas alternativas de un jugador.
+    description: View a player's alternate accounts
     aliases: [alt, accs]
   sanction:
-    description: Opens the advanced sanction menu for a player.
+    description: Opens the advanced sanction menu for a player
   freeze:
-    description: Congela a un jugador para revisión.
+    description: Freeze a player for review
     aliases: [ss]
   unfreeze:
-    description: Descongela a un jugador.
+    description: Unfreeze a player
     aliases: [uss]
     
 permissions:
   maxstaff.admin:
-    description: Acceso total a MaxStaff y comandos administrativos.
+    description: Full access to MaxStaff and administrative commands.
     default: op
     children:
       maxstaff.mode: true
@@ -80,59 +80,59 @@ permissions:
       maxstaff.punish: true
       maxstaff.freeze: true
   maxstaff.punish.ban:
-    description: Permite usar /ban y /tempban.
+    description: Allows using /ban and /tempban.
     default: op
   maxstaff.punish.mute:
-    description: Permite usar /mute y /tempmute.
+    description: Allows using /mute and /tempmute.
     default: op
   maxstaff.punish.kick:
-    description: Permite usar /kick.
+    description: Allows using /kick.
     default: op
   maxstaff.punish.warn:
-    description: Permite usar /warn.
+    description: Allows using /warn.
     default: op
   maxstaff.punish.unban:
-    description: Permite usar /unban.
+    description: Allows using /unban.
     default: op
   maxstaff.punish.unmute:
-    description: Permite usar /unmute.
+    description: Allows using /unmute.
     default: op
   maxstaff.mode:
-    description: Permite entrar en modo staff (/staff mode).
+    description: Allows entering staff mode (/staff mode).
     default: op
   maxstaff.see.vanish:
-    description: Permite ver a otros miembros del staff en vanish.
+    description: Allows seeing other staff members in vanish.
     default: op
   maxstaff.history:
-    description: Permite usar /history.
+    description: Allows using /history.
     default: op
   maxstaff.vanish:
-    description: Permite usar el comando /vanish.
+    description: Allows using the /vanish command.
     default: op
   maxstaff.punish.banip:
-    description: Permite usar /ban-ip y /tempban-ip
+    description: Allows using /ban-ip and /tempban-ip.
     default: op
   maxstaff.punish.unbanip:
-    description: Permite usar /unban-ip
+    description: Allows using /unban-ip.
     default: op
   maxstaff.staffchat:
-    description: Permite usar y ver el chat de staff.
+    description: Allows using and viewing staff chat.
     default: op
   maxstaff.cmdspy:
-    description: Permite usar /cmdspy para espiar comandos.
+    description: Allows using /cmdspy to spy on commands.
     default: op
   maxstaff.chat.admin:
-    description: Permite silenciar y limpiar el chat global.
+    description: Allows muting and clearing global chat.
     default: op
   maxstaff.gamemode:
-    description: Permite usar /gm para abrir el GUI.
+    description: Allows using /gm to open the GUI.
     default: op
   maxstaff.alts:
-    description: Permite usar el sistema de rastreo de alts.
+    description: Allows using the alt tracking system.
     default: op
   maxstaff.punish:
-    description: Permiso usar /sanction para abrir el menú avanzado de sanciones.
+    description: Allows using /sanction to open the advanced sanction menu.
     default: op
   maxstaff.freeze:
-    description: Permite usar /freeze y /unfreeze.
+    description: Allows using /freeze and /unfreeze.
     default: op
