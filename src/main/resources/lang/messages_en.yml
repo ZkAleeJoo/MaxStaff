@@ -21,10 +21,12 @@ messages:
   player-no-history: "&cThat player has no punishment history."
   command-help-title: "&4&lMaxStaff &fCommands List: &b{version}"
   command-help-list:
-    - "&9> &7/ms reload - /ms mode - /ms help - /ms reset - /ms take"
-    - "&9> &7/ban - /tempban - /mute - /tempmute - /kick - /warn"
-    - "&9> &7/unban - /unmute - /history - /vanish - /sc - /cmdspy"
-    - "&9> &7/gm - /chat - /ban-ip - /unban-ip - /tempban-ip"
+    - '&9> &a/ms help &7- View the list of commands'
+    - '&9> &a/ms mode &7- Activate/Deactivate staff mode'
+    - '&9> &a/ms reload &7- Reload configuration'
+    - '&9> &a/ms reset <player> &7- Reset a player sanctions'
+    - '&9> &a/ms take <player> <type> [quantity] &7- Remove sanctions from a player'
+    - '&9> &9To see the full list visit: https://github.com/ZkAleeJoo/MaxStaff/wiki'
   update-available: "&eA new version is available! (&b{version}&e)"
   update-current: "&7Your current version: &c{version}"
   update-download: "&eDownload it to get improvements and fixes."
