@@ -1,6 +1,7 @@
 package org.zkaleejoo.managers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.CustomConfig;
 import java.io.OutputStream;
@@ -25,51 +26,60 @@ public class DiscordManager {
         if (!discordConfig.getConfig().getBoolean("enabled")) return;
 
         String webhookUrl = discordConfig.getConfig().getString("webhook-url");
-        if (webhookUrl == null || webhookUrl.isEmpty() || webhookUrl.equals("TU_URL_AQUI")) return;
+        if (webhookUrl == null || webhookUrl.isEmpty() || webhookUrl.contains("URL")) return;
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 String title = discordConfig.getConfig().getString("punishments." + type + ".title");
-                String colorStr = discordConfig.getConfig().getString("punishments." + type + ".color", "#ffffff");
-                int color = Integer.parseInt(colorStr.replace("#", ""), 16);
+                String colorStr = discordConfig.getConfig().getString("punishments." + type + ".color", "#ffffff").replace("#", "");
+                int color = Integer.parseInt(colorStr, 16);
                 
                 String date = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
                 
+                String cleanTarget = ChatColor.stripColor(target);
+                String cleanStaff = ChatColor.stripColor(staff);
+                String cleanReason = ChatColor.stripColor(reason);
+
                 String description = discordConfig.getConfig().getString("punishments." + type + ".format")
-                        .replace("{target}", target)
-                        .replace("{staff}", staff)
-                        .replace("{reason}", reason)
+                        .replace("{target}", cleanTarget)
+                        .replace("{staff}", cleanStaff)
+                        .replace("{reason}", cleanReason)
                         .replace("{duration}", duration != null ? duration : "N/A")
                         .replace("{count}", count != null ? count : "0")
-                        .replace("{date}", date)
-                        .replace("\n", "\\n"); 
+                        .replace("{date}", date);
+
+                description = description.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "");
 
                 String jsonPayload = "{"
                         + "\"embeds\": [{"
                         + "\"title\": \"" + title + "\","
                         + "\"description\": \"" + description + "\","
                         + "\"color\": " + color + ","
-                        + "\"footer\": {\"text\": \"MaxStaff Audit Log • " + date + "\"}"
+                        + "\"footer\": {\"text\": \"MaxStaff Logging System\"}"
                         + "}]"
                         + "}";
 
                 URL url = new URL(webhookUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.addRequestProperty("Content-Type", "application/json");
-                connection.addRequestProperty("User-Agent", "Java-MaxStaff-Webhook");
+                connection.addRequestProperty("User-Agent", "Java-MaxStaff");
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
 
                 try (OutputStream os = connection.getOutputStream()) {
                     byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
                     os.write(input, 0, input.length);
+                    os.flush();
                 }
 
-                connection.getInputStream().close();
-                connection.disconnect();
+                int responseCode = connection.getResponseCode();
+                if (responseCode >= 400) {
+                    plugin.getLogger().warning("Discord Webhook error! Code: " + responseCode);
+                }
 
+                connection.disconnect();
             } catch (Exception e) {
-                plugin.getLogger().warning("Error al enviar webhook a Discord: " + e.getMessage());
+                plugin.getLogger().warning("Could not send Discord Webhook: " + e.getMessage());
             }
         });
     }
