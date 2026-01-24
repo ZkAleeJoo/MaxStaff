@@ -48,6 +48,12 @@ commands:
     aliases: [alt, accs]
   sanction:
     description: Opens the advanced sanction menu for a player.
+  freeze:
+    description: Congela a un jugador para revisión.
+    aliases: [ss]
+  unfreeze:
+    description: Descongela a un jugador.
+    aliases: [uss]
     
 permissions:
   maxstaff.admin:
@@ -72,6 +78,7 @@ permissions:
       maxstaff.gamemode: true
       maxstaff.alts: true
       maxstaff.punish: true
+      maxstaff.freeze: true
   maxstaff.punish.ban:
     description: Permite usar /ban y /tempban.
     default: op
@@ -125,4 +132,7 @@ permissions:
     default: op
   maxstaff.punish:
     description: Permiso usar /sanction para abrir el menú avanzado de sanciones.
+    default: op
+  maxstaff.freeze:
+    description: Permite usar /freeze y /unfreeze.
     default: op
