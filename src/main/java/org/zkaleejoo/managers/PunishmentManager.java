@@ -133,6 +133,8 @@ public class PunishmentManager {
         if (staff instanceof Player) {
             ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 0.5f);
         }
+
+        plugin.getDiscordManager().sendWebhook("kick", targetName, staff.getName(), reason, "N/A", null);
     }
 
     // --- BAN ---
@@ -168,6 +170,8 @@ public class PunishmentManager {
         if (staff instanceof Player) {
             ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
         }
+
+        plugin.getDiscordManager().sendWebhook("ban", targetName, staff.getName(), reason, timeDisplay, null);
     }
 
     public void unbanPlayer(CommandSender staff, String targetName) {
@@ -213,6 +217,8 @@ public class PunishmentManager {
         if (staff instanceof Player) {
             ((Player) staff).playSound(((Player) staff).getLocation(), Sound.BLOCK_ANVIL_LAND, 0.8f, 1.2f);
         }
+
+        plugin.getDiscordManager().sendWebhook("mute", targetName, staff.getName(), reason, timeDisplay, null);
     }
 
     public void unmutePlayer(CommandSender staff, String targetName) {
@@ -257,6 +263,8 @@ public class PunishmentManager {
         broadcast(bcMsg);
 
         checkWarnThresholds(targetName, count);
+
+        plugin.getDiscordManager().sendWebhook("warn", targetName, staff.getName(), reason, null, String.valueOf(count));
     }
 
     private void checkWarnThresholds(String targetName, int count) {
@@ -398,6 +406,8 @@ public class PunishmentManager {
                     .replace("{duration}", timeDisplay);
             broadcast(bcMsg); 
         }
+
+        plugin.getDiscordManager().sendWebhook("ban", target + " (IP)", staff.getName(), reason, timeDisplay, null);
     }
 
     public void unbanIPPlayer(CommandSender staff, String target) {
