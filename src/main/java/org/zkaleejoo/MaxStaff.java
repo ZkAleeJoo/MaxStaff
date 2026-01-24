@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.zkaleejoo.commands.AltsCommand;
 import org.zkaleejoo.commands.ChatCommand;
 import org.zkaleejoo.commands.CommandSpyCommand;
+import org.zkaleejoo.commands.FreezeCommand;
 import org.zkaleejoo.commands.GameModeCommand;
 import org.zkaleejoo.commands.MainCommand;
 import org.zkaleejoo.config.MainConfigManager;
@@ -128,6 +129,11 @@ public class MaxStaff extends JavaPlugin {
         SanctionCommand sanctionCmd = new SanctionCommand(this);
         getCommand("sanction").setExecutor(sanctionCmd);
         getCommand("sanction").setTabCompleter(sanctionCmd);
+        FreezeCommand freezeCmd = new FreezeCommand(this);
+        this.getCommand("freeze").setExecutor(freezeCmd);
+        this.getCommand("freeze").setTabCompleter(freezeCmd);
+        this.getCommand("unfreeze").setExecutor(freezeCmd);
+        this.getCommand("unfreeze").setTabCompleter(freezeCmd);
         
 
         PunishmentCommand punCmd = new PunishmentCommand(this);
