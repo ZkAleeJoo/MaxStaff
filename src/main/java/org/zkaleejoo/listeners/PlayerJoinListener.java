@@ -45,6 +45,7 @@ public class PlayerJoinListener implements Listener {
                 player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgUpdateAvailable().replace("{version}", latest)));
                 player.sendMessage(MessageUtils.getColoredMessage(config.getMsgUpdateCurrent().replace("{version}", plugin.getDescription().getVersion())));
                 player.sendMessage(MessageUtils.getColoredMessage(config.getMsgUpdateDownload()));
+                player.sendMessage(MessageUtils.getColoredMessage("&7https://modrinth.com/plugin/maxstaff"));
                 player.sendMessage(" ");
             }
         }
