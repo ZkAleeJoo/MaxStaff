@@ -49,7 +49,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
         }
 
         if (target.hasPermission("maxstaff.admin") || target.hasPermission("maxstaff.freeze")) {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&c¡Error! No puedes congelar a otro miembro del Staff."));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getFreezeStaff()));
             return true;
         }
 
@@ -57,14 +57,14 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
 
         if (action.equals("freeze") || action.equals("ss")) {
             if (isFrozen) {
-                staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cEste jugador ya está congelado."));
+                staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getFreezeAlready()));
             } else {
                 plugin.getFreezeManager().setFrozen(target, true);
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgFreezeStaff().replace("{player}", target.getName())));
             }
         } else if (action.equals("unfreeze") || action.equals("uss")) {
             if (!isFrozen) {
-                staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cEste jugador no está congelado."));
+                staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUnfreezeAlready()));
             } else {
                 plugin.getFreezeManager().setFrozen(target, false);
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnfreezeStaff().replace("{player}", target.getName())));
