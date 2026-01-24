@@ -23,63 +23,62 @@ public class DiscordManager {
     }
 
     public void sendWebhook(String type, String target, String staff, String reason, String duration, String count) {
-        if (!discordConfig.getConfig().getBoolean("enabled")) return;
+        if (!discordConfig.getConfig().getBoolean("enabled", false)) return;
 
         String webhookUrl = discordConfig.getConfig().getString("webhook-url");
-        if (webhookUrl == null || webhookUrl.isEmpty() || webhookUrl.contains("URL")) return;
+        if (webhookUrl == null || webhookUrl.isEmpty() || webhookUrl.contains("discord.com/api/webhooks")) {
+             if(webhookUrl.equals("https://discord.com/api/webhooks/ID/TOKEN")) return;
+        } else {
+            return;
+        }
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                String title = discordConfig.getConfig().getString("punishments." + type + ".title");
-                String colorStr = discordConfig.getConfig().getString("punishments." + type + ".color", "#ffffff").replace("#", "");
+                String path = "punishments." + type;
+                String title = discordConfig.getConfig().getString(path + ".title", "Staff Action");
+                String colorStr = discordConfig.getConfig().getString(path + ".color", "#ffffff").replace("#", "");
                 int color = Integer.parseInt(colorStr, 16);
                 
                 String date = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
                 
-                String cleanTarget = ChatColor.stripColor(target);
-                String cleanStaff = ChatColor.stripColor(staff);
-                String cleanReason = ChatColor.stripColor(reason);
+                String format = discordConfig.getConfig().getString(path + ".format");
+                if (format == null) return;
 
-                String description = discordConfig.getConfig().getString("punishments." + type + ".format")
-                        .replace("{target}", cleanTarget)
-                        .replace("{staff}", cleanStaff)
-                        .replace("{reason}", cleanReason)
+                String description = format
+                        .replace("{target}", ChatColor.stripColor(target))
+                        .replace("{staff}", ChatColor.stripColor(staff))
+                        .replace("{reason}", ChatColor.stripColor(reason))
                         .replace("{duration}", duration != null ? duration : "N/A")
                         .replace("{count}", count != null ? count : "0")
                         .replace("{date}", date);
 
-                description = description.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "");
+                description = description.replace("\"", "\\\"").replace("\n", "\\n");
 
                 String jsonPayload = "{"
                         + "\"embeds\": [{"
                         + "\"title\": \"" + title + "\","
                         + "\"description\": \"" + description + "\","
                         + "\"color\": " + color + ","
-                        + "\"footer\": {\"text\": \"MaxStaff Logging System\"}"
+                        + "\"footer\": {\"text\": \"MaxStaff Logger • " + date + "\"}"
                         + "}]"
                         + "}";
 
                 URL url = new URL(webhookUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.addRequestProperty("Content-Type", "application/json");
-                connection.addRequestProperty("User-Agent", "Java-MaxStaff");
+                connection.addRequestProperty("User-Agent", "MaxStaff-Plugin");
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
 
                 try (OutputStream os = connection.getOutputStream()) {
-                    byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
-                    os.write(input, 0, input.length);
-                    os.flush();
+                    os.write(jsonPayload.getBytes(StandardCharsets.UTF_8));
                 }
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode >= 400) {
-                    plugin.getLogger().warning("Discord Webhook error! Code: " + responseCode);
-                }
-
+                connection.getResponseCode(); 
                 connection.disconnect();
+
             } catch (Exception e) {
-                plugin.getLogger().warning("Could not send Discord Webhook: " + e.getMessage());
+                plugin.getLogger().warning("Error processing Webhook (Check your discord.yml): " + e.getMessage());
             }
         });
     }
