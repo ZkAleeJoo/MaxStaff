@@ -121,7 +121,6 @@ public class MainConfigManager {
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
 
-        //MENSAJES
         noPermission = lang.getString("messages.no-permission");
         pluginReload = lang.getString("messages.plugin-reload");
         subcommandInvalid = lang.getString("messages.subcommand-invalid");
