@@ -43,17 +43,38 @@ public class StaffItemsListener implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotDrop()));
+        Player player = event.getPlayer();
+        
+        if (plugin.getStaffManager().isInStaffMode(player)) {
+            ItemStack item = event.getItemDrop().getItemStack();
+            
+            String toolType = getStaffToolType(item);
+            
+            if (toolType != null) {
+                event.setCancelled(true);
+                player.sendMessage(MessageUtils.getColoredMessage(
+                    plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotDrop()
+                ));
+            } 
         }
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (plugin.getStaffManager().isInStaffMode(event.getPlayer())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotPlace()));
+        Player player = event.getPlayer();
+
+        if (plugin.getStaffManager().isInStaffMode(player)) {
+            ItemStack itemInHand = event.getItemInHand();
+            
+            String toolType = getStaffToolType(itemInHand);
+
+            if (toolType != null) {
+                event.setCancelled(true);
+                
+                player.sendMessage(MessageUtils.getColoredMessage(
+                    plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getCannotPlace()
+                ));
+            }
         }
     }
 
