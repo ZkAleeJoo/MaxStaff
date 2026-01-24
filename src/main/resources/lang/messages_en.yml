@@ -38,6 +38,9 @@ messages:
   restore-inventory: "&6&l[!] &eYour inventory has been automatically restored after the restart."
   command-sanction-use: "&cUsage: /sanction <player>"
   command-sanction-self: "&cYou cannot sanction yourself."
+  freeze-staff: "&cYou cannot freeze another staff member."
+  freeze-already: "&cThis player is already frozen."
+  unfreeze-already: "&cThis player is not frozen."
 
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"

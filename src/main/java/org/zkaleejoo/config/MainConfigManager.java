@@ -73,6 +73,7 @@ public class MainConfigManager {
     private String guiInfoHeadName, guiInfoAltsName, guiInfoInvName;
     private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
     private String statusOnline, statusOffline;
+    private String freezeStaff, freezeAlready, unfreezeAlready;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -273,6 +274,9 @@ public class MainConfigManager {
         guiInfoInvLore = lang.getStringList("gui.info.items.inventory.lore");
         statusOnline = lang.getString("gui.info.status.online", "&aOnline");
         statusOffline = lang.getString("gui.info.status.offline", "&cOffline");
+        freezeStaff = lang.getString("messages.freeze-staff", "&cYou cannot freeze another staff member.");
+        freezeAlready = lang.getString("messages.freeze-already", "&cThis player is already frozen.");
+        unfreezeAlready = lang.getString("messages.unfreeze-already", "&cThis player is not frozen.");
         
 
     }
@@ -467,6 +471,9 @@ public class MainConfigManager {
     public List<String> getGuiInfoInvLore() { return guiInfoInvLore; }
     public String getStatusOnline() { return statusOnline; }
     public String getStatusOffline() { return statusOffline; }
+    public String getFreezeStaff() { return freezeStaff; }
+    public String getFreezeAlready() { return freezeAlready; }
+    public String getUnfreezeAlready() { return unfreezeAlready; }
     
 
     public ConfigurationSection getReasons(String type) {

@@ -38,6 +38,9 @@ messages:
   restore-inventory: "&6&l[!] &eTu inventario ha sido restaurado automáticamente tras el reinicio."
   command-sanction-use: "&cUso: /sanction <jugador>"
   command-sanction-self: "&cNo puedes sancionarte a ti mismo."
+  freeze-staff: "&cNo puedes congelar a otro miembro del Staff"
+  freeze-already: "&cEste jugador ya está congelado."
+  unfreeze-already: "&cEste jugador no está congelado."
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"
