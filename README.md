@@ -4,6 +4,8 @@ Copyright © 2025 ZkAleeJoo. All rights reserved. This code is viewable for educ
 
 **MaxStaff** It is a robust moderation suite designed specifically for Survival environments in Minecraft 1.19+. It offers a high-performance interface for staff members to manage players and maintain server integrity without the need for multiple external plugins.
 
+https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXpuMHk5eWxrYXBwZjRmemtpaXppODhkeWVhZmx4ODR5dDFnMjlvbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d5CiO8v8kGLfEneMoX/giphy.gif
+
 ---
 
 ### **Main Features**
