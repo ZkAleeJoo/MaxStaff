@@ -88,14 +88,15 @@ public class MaxStaff extends JavaPlugin {
 
     private void checkUpdates() {
     if (!getMainConfigManager().isUpdateCheckEnabled()) return;
-    new UpdateChecker(this, 130851).getVersion(version -> {
-        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-            getLogger().info("You are using the latest version!");
-        } else {
-            this.latestVersion = version;
-            getLogger().warning("A new version is available: " + version);
-            getLogger().warning("Download it at: https://www.spigotmc.org/resources/130851/");
-        }
+
+        new UpdateChecker(this).getVersion(version -> { 
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                getLogger().info("You are using the latest version!");
+            } else {
+                this.latestVersion = version;
+                getLogger().warning("A new version is available: " + version);
+                getLogger().warning("Download it at: https://modrinth.com/plugin/maxstaff"); 
+            }
         });
     }
 
