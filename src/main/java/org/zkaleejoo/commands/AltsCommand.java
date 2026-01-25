@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
-public class AltsCommand implements CommandExecutor {
+public class AltsCommand implements CommandExecutor { 
     private final MaxStaff plugin;
 
     public AltsCommand(MaxStaff plugin) { this.plugin = plugin; }

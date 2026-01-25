@@ -43,6 +43,8 @@ messages:
   freeze-staff: "&cYou cannot freeze another staff member."
   freeze-already: "&cThis player is already frozen."
   unfreeze-already: "&cThis player is not frozen."
+  alts-use: "&cUse: /alts <player>"
+  freeze-use: "&cUse: /freeze <player>"
 
 staff-mode:
   enabled: "&aStaff Mode &lACTIVATED&a!"

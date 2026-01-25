@@ -37,7 +37,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cUsage: /" + label + " <player>"));
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getFreezeUse()));
             return true;
         }
 

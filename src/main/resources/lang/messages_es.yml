@@ -43,6 +43,8 @@ messages:
   freeze-staff: "&cNo puedes congelar a otro miembro del Staff"
   freeze-already: "&cEste jugador ya está congelado."
   unfreeze-already: "&cEste jugador no está congelado."
+  alts-use: "&cUso: /alts <jugador>"
+  freeze-use: "&cUso: /freeze <jugador>"
 
 staff-mode:
   enabled: "&aModo Staff &lACTIVADO&a!"

@@ -73,7 +73,7 @@ public class MainConfigManager {
     private String guiInfoHeadName, guiInfoAltsName, guiInfoInvName;
     private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
     private String statusOnline, statusOffline;
-    private String freezeStaff, freezeAlready, unfreezeAlready;
+    private String freezeStaff, freezeAlready, unfreezeAlready, altsUse, frezzeUse;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -276,7 +276,8 @@ public class MainConfigManager {
         freezeStaff = lang.getString("messages.freeze-staff", "&cYou cannot freeze another staff member.");
         freezeAlready = lang.getString("messages.freeze-already", "&cThis player is already frozen.");
         unfreezeAlready = lang.getString("messages.unfreeze-already", "&cThis player is not frozen.");
-        
+        altsUse = lang.getString("messages.alts-use", "&cUse: /alts <player>");
+        frezzeUse = lang.getString("messages.freeze-use", "&cUse: /freeze <player>");
 
     }
 
@@ -473,6 +474,8 @@ public class MainConfigManager {
     public String getFreezeStaff() { return freezeStaff; }
     public String getFreezeAlready() { return freezeAlready; }
     public String getUnfreezeAlready() { return unfreezeAlready; }
+    public String getAltsUse() { return altsUse; }
+    public String getFreezeUse() { return frezzeUse; }
     
 
     public ConfigurationSection getReasons(String type) {
