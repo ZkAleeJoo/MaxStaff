@@ -26,9 +26,10 @@ public class DiscordManager {
         if (!discordConfig.getConfig().getBoolean("enabled", false)) return;
 
         String webhookUrl = discordConfig.getConfig().getString("webhook-url");
-        if (webhookUrl == null || webhookUrl.isEmpty() || webhookUrl.contains("discord.com/api/webhooks")) {
-             if(webhookUrl.equals("https://discord.com/api/webhooks/ID/TOKEN")) return;
-        } else {
+        if (webhookUrl == null || webhookUrl.isEmpty() || !webhookUrl.contains("discord.com/api/webhooks")) {
+            return;
+        }
+        if (webhookUrl.equals("https://discord.com/api/webhooks/ID/TOKEN")) {
             return;
         }
 
