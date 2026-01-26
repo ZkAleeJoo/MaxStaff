@@ -23,11 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class PunishmentManager {
 
     private final MaxStaff plugin;
@@ -86,33 +81,20 @@ public class PunishmentManager {
         
         int current = data.getInt("history." + uuid + "." + type, 0);
         data.set("history." + uuid + "." + type, current + 1);
+        
         String pathDetails = "history-details." + uuid + "." + type;
         List<String> details = data.getStringList(pathDetails);
+        
         String timestamp = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+        
         String cleanReason = reason.replace("|", "-");
         String cleanDuration = (duration == null || duration.isEmpty()) ? "N/A" : duration;
+
         String record = timestamp + "|" + staff + "|" + cleanReason + "|" + cleanDuration;
         details.add(record);
+        
         data.set(pathDetails, details);
         dataFile.saveConfig();
-
-        //MYSQL
-        if (plugin.getMainConfigManager().isSqlEnabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try (Connection conn = plugin.getDatabaseManager().getConnection();
-                    PreparedStatement ps = conn.prepareStatement(
-                            "INSERT INTO ms_history (uuid, type, reason, staff, duration) VALUES (?, ?, ?, ?, ?)")) {
-                    ps.setString(1, uuid.toString());
-                    ps.setString(2, type.toUpperCase());
-                    ps.setString(3, cleanReason);
-                    ps.setString(4, staff);
-                    ps.setString(5, cleanDuration);
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    plugin.getLogger().severe("Error al guardar historial en MySQL: " + e.getMessage());
-                }
-            });
-        }
     }
 
     public int getHistoryCount(String targetName, String type) {
@@ -217,23 +199,6 @@ public class PunishmentManager {
         data.set("mutes." + uuid + ".staff", staff.getName());
         dataFile.saveConfig();
 
-        //MYSQL
-        if (plugin.getMainConfigManager().isSqlEnabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try (Connection conn = plugin.getDatabaseManager().getConnection();
-                    PreparedStatement ps = conn.prepareStatement(
-                            "REPLACE INTO ms_mutes (uuid, expiry, reason, staff) VALUES (?, ?, ?, ?)")) {
-                    ps.setString(1, uuid.toString());
-                    ps.setLong(2, expiry);
-                    ps.setString(3, reason);
-                    ps.setString(4, staff.getName());
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    plugin.getLogger().severe("Error al registrar mute en MySQL: " + e.getMessage());
-                }
-            });
-        }
-
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
             String muteScreen = plugin.getMainConfigManager().getScreenMute().replace("{staff}", staff.getName());
@@ -256,7 +221,6 @@ public class PunishmentManager {
         plugin.getDiscordManager().sendWebhook("mute", targetName, staff.getName(), reason, timeDisplay, null);
     }
 
-    // -- UN MUTE --
     public void unmutePlayer(CommandSender staff, String targetName) {
         UUID uuid = getUniqueId(targetName);
         muteCache.remove(uuid);
@@ -265,19 +229,6 @@ public class PunishmentManager {
         if (data.contains("mutes." + uuid)) {
             data.set("mutes." + uuid, null);
             dataFile.saveConfig();
-
-        //MYSQL
-        if (plugin.getMainConfigManager().isSqlEnabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try (Connection conn = plugin.getDatabaseManager().getConnection();
-                    PreparedStatement ps = conn.prepareStatement("DELETE FROM ms_mutes WHERE uuid = ?")) {
-                    ps.setString(1, uuid.toString());
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    plugin.getLogger().severe("Error al borrar mute en MySQL: " + e.getMessage());
-                }
-            });
-        }
             
             staff.sendMessage(MessageUtils.getColoredMessage(
                 plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
@@ -405,22 +356,6 @@ public class PunishmentManager {
     public void savePlayerIP(UUID uuid, String ip) {
         dataFile.getConfig().set("ip-cache." + uuid.toString(), ip);
         dataFile.saveConfig();
-
-        //MYSQL
-        if (plugin.getMainConfigManager().isSqlEnabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try (Connection conn = plugin.getDatabaseManager().getConnection();
-                    PreparedStatement ps = conn.prepareStatement(
-                            "INSERT INTO ms_ips (uuid, ip) VALUES (?, ?) ON DUPLICATE KEY UPDATE ip = ?")) {
-                    ps.setString(1, uuid.toString());
-                    ps.setString(2, ip);
-                    ps.setString(3, ip);
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    plugin.getLogger().severe("Error al guardar IP en MySQL: " + e.getMessage());
-                }
-            });
-        }
     }
 
     public String getPlayerIP(String targetName) {

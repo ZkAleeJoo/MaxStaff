@@ -74,8 +74,6 @@ public class MainConfigManager {
     private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
     private String statusOnline, statusOffline;
     private String freezeStaff, freezeAlready, unfreezeAlready, altsUse, frezzeUse;
-    private boolean sqlEnabled;
-    private String sqlHost, sqlPort, sqlDatabase, sqlUsername, sqlPassword;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -122,12 +120,6 @@ public class MainConfigManager {
         guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
-        sqlEnabled = config.getBoolean("database.enabled", false);
-        sqlHost = config.getString("database.host", "localhost");
-        sqlPort = config.getString("database.port", "3306");
-        sqlDatabase = config.getString("database.name", "maxstaff");
-        sqlUsername = config.getString("database.user", "root");
-        sqlPassword = config.getString("database.password", "");
 
         noPermission = lang.getString("messages.no-permission");
         pluginReload = lang.getString("messages.plugin-reload");
@@ -484,12 +476,6 @@ public class MainConfigManager {
     public String getUnfreezeAlready() { return unfreezeAlready; }
     public String getAltsUse() { return altsUse; }
     public String getFreezeUse() { return frezzeUse; }
-    public boolean isSqlEnabled() { return sqlEnabled; }
-    public String getSqlHost() { return sqlHost; }
-    public String getSqlPort() { return sqlPort; }
-    public String getSqlDatabase() { return sqlDatabase; }
-    public String getSqlUsername() { return sqlUsername; }
-    public String getSqlPassword() { return sqlPassword; }
     
 
     public ConfigurationSection getReasons(String type) {
