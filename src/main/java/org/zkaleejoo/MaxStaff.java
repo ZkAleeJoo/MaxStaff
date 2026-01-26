@@ -19,7 +19,8 @@ import org.zkaleejoo.listeners.StaffItemsListener;
 import org.zkaleejoo.listeners.StaffModeListener;
 import org.zkaleejoo.listeners.PlayerQuitListener;
 
-import org.zkaleejoo.managers.GuiManager; 
+import org.zkaleejoo.managers.GuiManager;
+import org.zkaleejoo.managers.IPunishmentManager;
 import org.zkaleejoo.listeners.GuiListener;
 import org.zkaleejoo.managers.ChatManager;
 import org.zkaleejoo.managers.DiscordManager;
@@ -27,6 +28,7 @@ import org.zkaleejoo.managers.FreezeManager;
 import org.zkaleejoo.listeners.FreezeListener;
 
 import org.zkaleejoo.managers.PunishmentManager;
+import org.zkaleejoo.managers.PunishmentManagerMysql;
 import org.zkaleejoo.commands.PunishmentCommand;
 import org.zkaleejoo.commands.SanctionCommand;
 import org.zkaleejoo.commands.StaffChatCommand;
@@ -41,7 +43,7 @@ public class MaxStaff extends JavaPlugin {
     private StaffManager staffManager;
     private GuiManager guiManager;
     private FreezeManager freezeManager;
-    private PunishmentManager punishmentManager;
+    private IPunishmentManager punishmentManager;
     private String latestVersion;
     private ChatManager chatManager;
     private DiscordManager discordManager;
@@ -58,7 +60,19 @@ public class MaxStaff extends JavaPlugin {
         freezeManager = new FreezeManager(this);
         staffManager = new StaffManager(this);
         guiManager = new GuiManager(this);
-        punishmentManager = new PunishmentManager(this);
+        if (mainConfigManager.isDbEnabled()) {
+            try {
+                punishmentManager = new PunishmentManagerMysql(this);
+                getLogger().info("Sistema de sanciones cargado: MySQL");
+            } catch (Exception e) {
+                getLogger().severe("Error connecting to MySQL, switching to local system: " + e.getMessage());
+                punishmentManager = new PunishmentManager(this);
+            }
+        } else {
+            punishmentManager = new PunishmentManager(this);
+            getLogger().info("Sanctions system loaded: Local (YAML)");
+        }
+
         chatManager = new ChatManager(this);
         this.discordManager = new DiscordManager(this);
 
@@ -107,6 +121,10 @@ public class MaxStaff extends JavaPlugin {
     // PLUGIN SE APAGA
     @Override
     public void onDisable() {
+
+        if (punishmentManager != null) {
+            punishmentManager.close();
+        }
 
         if (staffManager != null) {
             staffManager.disableAllStaff();
@@ -175,7 +193,7 @@ public class MaxStaff extends JavaPlugin {
         return chatManager;
     }
 
-    public PunishmentManager getPunishmentManager() { 
+    public IPunishmentManager getPunishmentManager() { 
         return punishmentManager; 
     }
 
