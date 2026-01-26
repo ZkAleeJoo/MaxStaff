@@ -263,4 +263,10 @@ public class PunishmentManager {
     public void savePlayerIP(UUID uuid, String ip) {
         storage.saveIP(uuid, ip);
     }
+
+    public void stop() {
+        if (storage != null) {
+            storage.close();
+        }
+    }
 }
