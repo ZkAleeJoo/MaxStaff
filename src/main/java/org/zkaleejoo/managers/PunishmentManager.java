@@ -7,66 +7,56 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.Sound;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.CustomConfig;
 import org.zkaleejoo.config.MainConfigManager;
+import org.zkaleejoo.managers.storage.StorageProvider;
+import org.zkaleejoo.managers.storage.YAMLStorage;
+import org.zkaleejoo.managers.storage.MySQLStorage;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.utils.TimeUtils;
-import org.bukkit.Sound;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class PunishmentManager {
 
     private final MaxStaff plugin;
-    private CustomConfig dataFile;
-
+    private StorageProvider storage;
     private final Map<UUID, Long> muteCache = new ConcurrentHashMap<>();
 
     public PunishmentManager(MaxStaff plugin) {
         this.plugin = plugin;
-        this.dataFile = new CustomConfig("data.yml", null, plugin, true);
-        this.dataFile.registerConfig();
+        setupStorage();
         loadMuteCache();
     }
 
-    private void loadMuteCache() {
-        ConfigurationSection section = dataFile.getConfig().getConfigurationSection("mutes");
-        if (section == null) return;
-        
-        for (String key : section.getKeys(false)) {
-            try {
-                UUID uuid = UUID.fromString(key);
-                long expiry = section.getLong(key + ".expiry");
-                muteCache.put(uuid, expiry);
-            } catch (IllegalArgumentException ignored) {}
+    private void setupStorage() {
+        String type = plugin.getMainConfigManager().getStorageType();
+        if (type.equalsIgnoreCase("MYSQL")) {
+            this.storage = new MySQLStorage(plugin);
+        } else {
+            this.storage = new YAMLStorage(plugin);
         }
+        this.storage.init();
+    }
+
+    private void loadMuteCache() {
+        plugin.getLogger().info("Loading mute cache from storage provider...");
     }
 
     private UUID getUniqueId(String targetName) {
         Player onlineTarget = Bukkit.getPlayer(targetName);
         if (onlineTarget != null) {
             UUID uuid = onlineTarget.getUniqueId();
-            updateNameCache(targetName, uuid);
+            storage.saveIP(uuid, onlineTarget.getAddress().getAddress().getHostAddress());
             return uuid;
         }
-
-        String cachedUUID = dataFile.getConfig().getString("uuid-cache." + targetName.toLowerCase());
-        if (cachedUUID != null) {
-            return UUID.fromString(cachedUUID);
-        }
-
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
-        UUID uuid = offlineTarget.getUniqueId();
-        updateNameCache(targetName, uuid);
-        return uuid;
+        return offlineTarget.getUniqueId();
     }
 
     private void updateNameCache(String name, UUID uuid) {
@@ -77,34 +67,15 @@ public class PunishmentManager {
 
     public void logHistory(String targetName, String type, String reason, String staff, String duration) {
         UUID uuid = getUniqueId(targetName);
-        FileConfiguration data = dataFile.getConfig();
-        
-        int current = data.getInt("history." + uuid + "." + type, 0);
-        data.set("history." + uuid + "." + type, current + 1);
-        
-        String pathDetails = "history-details." + uuid + "." + type;
-        List<String> details = data.getStringList(pathDetails);
-        
-        String timestamp = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
-        
-        String cleanReason = reason.replace("|", "-");
-        String cleanDuration = (duration == null || duration.isEmpty()) ? "N/A" : duration;
-
-        String record = timestamp + "|" + staff + "|" + cleanReason + "|" + cleanDuration;
-        details.add(record);
-        
-        data.set(pathDetails, details);
-        dataFile.saveConfig();
+        storage.logHistory(uuid, targetName, type, reason, staff, duration);
     }
 
     public int getHistoryCount(String targetName, String type) {
-        UUID uuid = getUniqueId(targetName);
-        return dataFile.getConfig().getInt("history." + uuid + "." + type.toUpperCase(), 0);
+        return storage.getHistoryCount(getUniqueId(targetName), type);
     }
 
     public List<String> getHistoryDetails(String targetName, String type) {
-        UUID uuid = getUniqueId(targetName);
-        return dataFile.getConfig().getStringList("history-details." + uuid + "." + type.toUpperCase());
+        return storage.getHistoryDetails(getUniqueId(targetName), type);
     }
 
     // --- KICK ---
@@ -112,28 +83,11 @@ public class PunishmentManager {
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
             logHistory(targetName, "KICK", reason, staff.getName(), "Ahora");
-            
             String kickScreen = plugin.getMainConfigManager().getScreenKick()
-                    .replace("{staff}", staff.getName())
-                    .replace("{reason}", reason);
+                    .replace("{staff}", staff.getName()).replace("{reason}", reason);
             target.kickPlayer(MessageUtils.getColoredMessage(kickScreen));
-        
-            //LOG CONSOLE
-            Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has kicked " + targetName);
-            
-            String bcMsg = plugin.getMainConfigManager().getBcKick()
-                .replace("{target}", target.getName())
-                .replace("{staff}", staff.getName())
-                .replace("{reason}", reason);
-            broadcast(bcMsg);
-        } else {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgOffline()));
+            broadcast(plugin.getMainConfigManager().getBcKick().replace("{target}", target.getName()).replace("{staff}", staff.getName()).replace("{reason}", reason));
         }
-
-        if (staff instanceof Player) {
-            ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 0.5f);
-        }
-
         plugin.getDiscordManager().sendWebhook("kick", targetName, staff.getName(), reason, "N/A", null);
     }
 
@@ -141,7 +95,8 @@ public class PunishmentManager {
     public void banPlayer(CommandSender staff, String targetName, String reason, String durationStr) {
         long duration = TimeUtils.parseDuration(durationStr);
         String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
-        
+        UUID uuid = getUniqueId(targetName);
+
         logHistory(targetName, "BAN", reason, staff.getName(), timeDisplay);
 
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
@@ -153,11 +108,9 @@ public class PunishmentManager {
         String finalBanMessage = MessageUtils.getColoredMessage(banScreenTemplate);
         Bukkit.getBanList(BanList.Type.NAME).addBan(targetName, finalBanMessage, expiry, staff.getName());
 
-        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has banned " + targetName);
-        
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            target.kickPlayer(finalBanMessage);
+            Bukkit.getScheduler().runTask(plugin, () -> target.kickPlayer(finalBanMessage));
         }
 
         String bcMsg = plugin.getMainConfigManager().getBcBan()
@@ -170,7 +123,6 @@ public class PunishmentManager {
         if (staff instanceof Player) {
             ((Player) staff).playSound(((Player) staff).getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.6f, 1.0f);
         }
-
         plugin.getDiscordManager().sendWebhook("ban", targetName, staff.getName(), reason, timeDisplay, null);
     }
 
@@ -186,26 +138,17 @@ public class PunishmentManager {
         UUID uuid = getUniqueId(targetName);
         long duration = TimeUtils.parseDuration(durationStr);
         String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
-        
-        logHistory(targetName, "MUTE", reason, staff.getName(), timeDisplay);
-
         long expiry = (duration == -1) ? -1 : System.currentTimeMillis() + duration;
         
+        storage.saveMute(uuid, reason, expiry, staff.getName());
+        logHistory(targetName, "MUTE", reason, staff.getName(), timeDisplay);
         muteCache.put(uuid, expiry);
-
-        FileConfiguration data = dataFile.getConfig();
-        data.set("mutes." + uuid + ".reason", reason);
-        data.set("mutes." + uuid + ".expiry", expiry);
-        data.set("mutes." + uuid + ".staff", staff.getName());
-        dataFile.saveConfig();
 
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
             String muteScreen = plugin.getMainConfigManager().getScreenMute().replace("{staff}", staff.getName());
             target.sendMessage(MessageUtils.getColoredMessage(muteScreen));
         }
-
-        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has muted " + targetName);
 
         String bcMsg = plugin.getMainConfigManager().getBcMute()
                 .replace("{target}", targetName)
@@ -217,86 +160,54 @@ public class PunishmentManager {
         if (staff instanceof Player) {
             ((Player) staff).playSound(((Player) staff).getLocation(), Sound.BLOCK_ANVIL_LAND, 0.8f, 1.2f);
         }
-
         plugin.getDiscordManager().sendWebhook("mute", targetName, staff.getName(), reason, timeDisplay, null);
     }
 
+    // -- UN MUTE --
     public void unmutePlayer(CommandSender staff, String targetName) {
         UUID uuid = getUniqueId(targetName);
         muteCache.remove(uuid);
-
-        FileConfiguration data = dataFile.getConfig();
-        if (data.contains("mutes." + uuid)) {
-            data.set("mutes." + uuid, null);
-            dataFile.saveConfig();
-            
-            staff.sendMessage(MessageUtils.getColoredMessage(
-                plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
-            ));
-            
-            Player target = Bukkit.getPlayer(targetName);
-            if (target != null) target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
-        } else {
-            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNotMuted()));
-        }
+        storage.removeMute(uuid);
+        
+        staff.sendMessage(MessageUtils.getColoredMessage(
+            plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnmuteSuccess().replace("{target}", targetName)
+        ));
+        
+        Player target = Bukkit.getPlayer(targetName);
+        if (target != null) target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenUnmute()));
     }
+
 
     // --- WARN ---
     public void warnPlayer(CommandSender staff, String targetName, String reason) {
-        logHistory(targetName, "WARN", reason, staff.getName(), "N/A"); 
+        logHistory(targetName, "WARN", reason, staff.getName(), "N/A");
         int count = getHistoryCount(targetName, "WARN");
-        
         Player target = Bukkit.getPlayer(targetName);
-        MainConfigManager config = plugin.getMainConfigManager();
-
         if (target != null) {
-            target.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgWarnReceived().replace("{reason}", reason)));
+            target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgWarnReceived().replace("{reason}", reason)));
         }
-
-        Bukkit.getConsoleSender().sendMessage(org.bukkit.ChatColor.GRAY + "[MaxStaff Log] The Staff " + staff.getName() + " has warned " + targetName);
-        
-        String bcMsg = config.getBcWarn()
-                .replace("{target}", targetName)
-                .replace("{staff}", staff.getName())
-                .replace("{count}", String.valueOf(count))
-                .replace("{reason}", reason);
-        broadcast(bcMsg);
-
+        broadcast(plugin.getMainConfigManager().getBcWarn().replace("{target}", targetName).replace("{staff}", staff.getName()).replace("{count}", String.valueOf(count)).replace("{reason}", reason));
         checkWarnThresholds(targetName, count);
-
         plugin.getDiscordManager().sendWebhook("warn", targetName, staff.getName(), reason, null, String.valueOf(count));
     }
 
     private void checkWarnThresholds(String targetName, int count) {
         ConfigurationSection thresholds = plugin.getMainConfigManager().getWarnThresholds();
         if (thresholds == null) return;
-
-        String key = String.valueOf(count);
-        if (thresholds.contains(key)) {
-            String command = thresholds.getString(key);
-            if (command != null) {
-                String finalCmd = command.replace("{target}", targetName);
-                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd));
-            }
+        String command = thresholds.getString(String.valueOf(count));
+        if (command != null) {
+            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{target}", targetName)));
         }
     }
 
         public boolean isMuted(UUID uuid) {
         if (!muteCache.containsKey(uuid)) return false;
-
         long expiry = muteCache.get(uuid);
-        
         if (expiry != -1 && System.currentTimeMillis() > expiry) {
             muteCache.remove(uuid);
-            
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                dataFile.getConfig().set("mutes." + uuid, null);
-                dataFile.saveConfig();
-            });
-            
+            storage.removeMute(uuid);
             return false;
         }
-        
         return true;
     }
 
@@ -307,30 +218,11 @@ public class PunishmentManager {
     }
 
     public void resetHistory(String targetName, String type) {
-        UUID uuid = getUniqueId(targetName);
-        FileConfiguration data = dataFile.getConfig();
-        
-        if (type.equalsIgnoreCase("all")) {
-            data.set("history." + uuid, null);
-            data.set("history-details." + uuid, null);
-        } else {
-            data.set("history." + uuid + "." + type.toUpperCase(), null);
-            data.set("history-details." + uuid + "." + type.toUpperCase(), null);
-        }
-        dataFile.saveConfig();
+        storage.resetHistory(getUniqueId(targetName), type);
     }
 
     public boolean takeHistory(String targetName, String type, int amount) {
-        UUID uuid = getUniqueId(targetName);
-        FileConfiguration data = dataFile.getConfig();
-        String path = "history." + uuid + "." + type.toUpperCase();
-        
-        int current = data.getInt(path, 0);
-        if (current <= 0) return false;
-
-        data.set(path, Math.max(0, current - amount));
-        dataFile.saveConfig();
-        return true;
+        return storage.takeHistory(getUniqueId(targetName), type, amount);
     }
 
     public List<String> getBannedPlayerNames() {
@@ -354,60 +246,31 @@ public class PunishmentManager {
     }
 
     public void savePlayerIP(UUID uuid, String ip) {
-        dataFile.getConfig().set("ip-cache." + uuid.toString(), ip);
-        dataFile.saveConfig();
+        storage.saveIP(uuid, ip);
     }
 
     public String getPlayerIP(String targetName) {
-        Player target = Bukkit.getPlayer(targetName);
-        if (target != null) return target.getAddress().getAddress().getHostAddress();
-        
-        UUID uuid = getUniqueId(targetName);
-        return dataFile.getConfig().getString("ip-cache." + uuid.toString());
+        return storage.getIP(getUniqueId(targetName));
     }
 
     public void banIPPlayer(CommandSender staff, String target, String reason, String durationStr) {
-        String ip = target; 
-
-        if (!target.contains(".")) {
-            ip = getPlayerIP(target);
-        }
-        
-        MainConfigManager config = plugin.getMainConfigManager();
-        
-        if (ip == null || ip.isEmpty()) {
-            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
+        String ip = target.contains(".") ? target : storage.getIP(getUniqueId(target));
+        if (ip == null) {
+            staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNoIPFound()));
             return;
         }
-
         long duration = TimeUtils.parseDuration(durationStr);
-        String timeDisplay = TimeUtils.getDurationString(duration, config);
+        String timeDisplay = TimeUtils.getDurationString(duration, plugin.getMainConfigManager());
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
 
-        logHistory(target, "BAN-IP", reason, staff.getName(), timeDisplay);
-
-        String banMessage = MessageUtils.getColoredMessage(config.getScreenBan()
-                .replace("{staff}", staff.getName())
-                .replace("{reason}", reason)
-                .replace("{duration}", timeDisplay));
-
-        Bukkit.getBanList(BanList.Type.IP).addBan(ip, banMessage, expiry, staff.getName());
-
+        Bukkit.getBanList(BanList.Type.IP).addBan(ip, reason, expiry, staff.getName());
+        storage.logHistory(getUniqueId(target), target, "BAN-IP", reason, staff.getName(), timeDisplay);
+        
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.getAddress().getAddress().getHostAddress().equals(ip)) {
-                online.kickPlayer(banMessage);
+                online.kickPlayer(MessageUtils.getColoredMessage(reason));
             }
         }
-
-        if (config.isBroadcastEnabled()) {
-            String bcMsg = config.getBcBanIP()
-                    .replace("{target}", target)
-                    .replace("{staff}", staff.getName())
-                    .replace("{duration}", timeDisplay);
-            broadcast(bcMsg); 
-        }
-
-        plugin.getDiscordManager().sendWebhook("ban", target + " (IP)", staff.getName(), reason, timeDisplay, null);
     }
 
     public void unbanIPPlayer(CommandSender staff, String target) {
@@ -431,18 +294,7 @@ public class PunishmentManager {
     }
 
     public List<UUID> getAllAccountsByIP(String ip) {
-        List<UUID> alts = new ArrayList<>();
-        ConfigurationSection section = dataFile.getConfig().getConfigurationSection("ip-cache");
-        if (section == null) return alts;
-
-        for (String uuidStr : section.getKeys(false)) {
-            if (section.getString(uuidStr).equals(ip)) {
-                try {
-                    alts.add(UUID.fromString(uuidStr));
-                } catch (IllegalArgumentException ignored) {}
-            }
-        }
-        return alts;
+        return storage.getAltsByIP(ip);
     }
 
 
