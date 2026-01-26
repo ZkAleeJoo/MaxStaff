@@ -122,12 +122,12 @@ public class MainConfigManager {
         guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
-        this.sqlEnabled = config.getBoolean("database.enabled", false);
-        this.sqlHost = config.getString("database.host", "localhost");
-        this.sqlPort = config.getString("database.port", "3306");
-        this.sqlDatabase = config.getString("database.name", "maxstaff");
-        this.sqlUsername = config.getString("database.user", "root");
-        this.sqlPassword = config.getString("database.password", "");
+        sqlEnabled = config.getBoolean("database.enabled", false);
+        sqlHost = config.getString("database.host", "localhost");
+        sqlPort = config.getString("database.port", "3306");
+        sqlDatabase = config.getString("database.name", "maxstaff");
+        sqlUsername = config.getString("database.user", "root");
+        sqlPassword = config.getString("database.password", "");
 
         noPermission = lang.getString("messages.no-permission");
         pluginReload = lang.getString("messages.plugin-reload");
