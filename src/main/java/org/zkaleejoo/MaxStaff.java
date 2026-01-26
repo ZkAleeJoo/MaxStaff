@@ -109,9 +109,16 @@ public class MaxStaff extends JavaPlugin {
     public void onDisable() {
 
         if (staffManager != null) {
-            staffManager.disableAllStaff();
+            staffManager.saveAllInventories();
         }
 
+        if (punishmentManager != null) {
+            punishmentManager.stop();
+            getLogger().info("Storage connection properly closed.");
+        }
+
+        plugin = null;
+        
         String prefix = (mainConfigManager != null) ? mainConfigManager.getPrefix() : "&4MaxStaff ";
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + "&4It was successfully deactivated"));
     }
