@@ -23,7 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class PunishmentManager {
+public class PunishmentManager implements IPunishmentManager {
 
     private final MaxStaff plugin;
     private CustomConfig dataFile;
