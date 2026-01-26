@@ -25,6 +25,19 @@ staff-mode:
     vanish:
       material: "NETHER_STAR"
 
+#Activate or deactivate the MySQL database
+database:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  name: "maxstaff"
+  user: "root"
+  password: ""
+  pool-settings:
+    maximum-pool-size: 10
+    minimum-idle: 10
+    max-lifetime: 1800000 # 30 min
+
 #Technical configuration of GUIs (Materials)
 gui:
   info:

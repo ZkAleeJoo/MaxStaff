@@ -22,6 +22,7 @@ import org.zkaleejoo.listeners.PlayerQuitListener;
 import org.zkaleejoo.managers.GuiManager; 
 import org.zkaleejoo.listeners.GuiListener;
 import org.zkaleejoo.managers.ChatManager;
+import org.zkaleejoo.managers.DatabaseManager;
 import org.zkaleejoo.managers.DiscordManager;
 import org.zkaleejoo.managers.FreezeManager;
 import org.zkaleejoo.listeners.FreezeListener;
@@ -45,12 +46,15 @@ public class MaxStaff extends JavaPlugin {
     private String latestVersion;
     private ChatManager chatManager;
     private DiscordManager discordManager;
+    private DatabaseManager databaseManager;
     
 
     //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
         
+        this.databaseManager = new DatabaseManager(this);
+
         int pluginId = 28604;
         Metrics metrics = new Metrics(this, pluginId);
         
@@ -107,6 +111,10 @@ public class MaxStaff extends JavaPlugin {
     // PLUGIN SE APAGA
     @Override
     public void onDisable() {
+
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
 
         if (staffManager != null) {
             staffManager.disableAllStaff();
