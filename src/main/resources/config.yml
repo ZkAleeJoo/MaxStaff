@@ -11,6 +11,18 @@ general:
   #The plugin will look for the file in: lang/messages_{language}.yml
   language: "en" 
 
+# ==========================================
+#        Database (MySQL)
+# ==========================================
+database:
+  enabled: false # If false, it will use the original file system (data.yml).
+  host: "localhost"
+  port: 3306
+  database: "maxstaff_db"
+  username: "root"
+  password: ""
+  use-ssl: false
+
 #Material Configuration for Staff Mode
 staff-mode:
   items:
