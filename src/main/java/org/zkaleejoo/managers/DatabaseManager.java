@@ -3,6 +3,7 @@ package org.zkaleejoo.managers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.config.MainConfigManager; 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,22 +21,26 @@ public class DatabaseManager {
     }
 
     private void setupPool() {
-        var config = plugin.getMainConfigManager();
+        MainConfigManager config = plugin.getMainConfigManager();
         HikariConfig hikariConfig = new HikariConfig();
         
-        String host = plugin.getConfig().getString("database.host");
-        String port = plugin.getConfig().getString("database.port");
-        String name = plugin.getConfig().getString("database.name");
+        String host = config.getSqlHost();
+        String port = config.getSqlPort();
+        String name = config.getSqlDatabase();
+        String user = config.getSqlUsername();
+        String pass = config.getSqlPassword();
 
         hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + name);
-        hikariConfig.setUsername(plugin.getConfig().getString("database.user"));
-        hikariConfig.setPassword(plugin.getConfig().getString("database.password"));
+        hikariConfig.setUsername(user);
+        hikariConfig.setPassword(pass);
         
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         
-        this.dataSource = new HikariDataSource(hikariConfig);
+        hikariConfig.setMaximumPoolSize(10);
+        
+        dataSource = new HikariDataSource(hikariConfig);
     }
 
     private void createTables() {
@@ -55,7 +60,7 @@ public class DatabaseManager {
                     "reason TEXT," +
                     "staff VARCHAR(16))");
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("No se pudieron crear las tablas en MySQL: " + e.getMessage());
         }
     }
 
