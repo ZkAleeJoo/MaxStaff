@@ -74,6 +74,9 @@ public class MainConfigManager {
     private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
     private String statusOnline, statusOffline;
     private String freezeStaff, freezeAlready, unfreezeAlready, altsUse, frezzeUse;
+    private boolean dbEnabled, dbUseSSL;
+    private String dbHost, dbDatabase, dbUser, dbPassword;
+    private int dbPort;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -120,6 +123,13 @@ public class MainConfigManager {
         guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
+        dbEnabled = config.getBoolean("database.enabled", false);
+        dbHost = config.getString("database.host", "localhost");
+        dbPort = config.getInt("database.port", 3306);
+        dbDatabase = config.getString("database.database", "maxstaff_db");
+        dbUser = config.getString("database.username", "root");
+        dbPassword = config.getString("database.password", "");
+        dbUseSSL = config.getBoolean("database.use-ssl", false);
 
         noPermission = lang.getString("messages.no-permission");
         pluginReload = lang.getString("messages.plugin-reload");
@@ -476,6 +486,13 @@ public class MainConfigManager {
     public String getUnfreezeAlready() { return unfreezeAlready; }
     public String getAltsUse() { return altsUse; }
     public String getFreezeUse() { return frezzeUse; }
+    public boolean isDbEnabled() { return dbEnabled; }
+    public String getDbHost() { return dbHost; }
+    public int getDbPort() { return dbPort; }
+    public String getDbDatabase() { return dbDatabase; }
+    public String getDbUser() { return dbUser; }
+    public String getDbPassword() { return dbPassword; }
+    public boolean isDbUseSSL() { return dbUseSSL; }
     
 
     public ConfigurationSection getReasons(String type) {
