@@ -180,8 +180,8 @@ public class MySQLStorage implements StorageProvider {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
-                for (int i = 0; i < params.size(); i++) {
-                    ps.setObject(i + 1, params.get(i));
+                for (int i = 0; i < params.length; i++) {
+                    ps.setObject(i + 1, params[i]);
                 }
                 ps.executeUpdate();
             } catch (SQLException e) {
