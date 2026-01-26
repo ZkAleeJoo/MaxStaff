@@ -37,7 +37,6 @@ import org.zkaleejoo.utils.MessageUtils;
 
 public class MaxStaff extends JavaPlugin {
 
-    private static MaxStaff instance;
     private MainConfigManager mainConfigManager;
     private StaffManager staffManager;
     private GuiManager guiManager;
@@ -47,9 +46,10 @@ public class MaxStaff extends JavaPlugin {
     private ChatManager chatManager;
     private DiscordManager discordManager;
     
+
+    //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
-        instance = this;
         
         int pluginId = 28604;
         Metrics metrics = new Metrics(this, pluginId);
@@ -87,7 +87,7 @@ public class MaxStaff extends JavaPlugin {
     }
 
     private void checkUpdates() {
-        if (!getMainConfigManager().isUpdateCheckEnabled()) return;
+    if (!getMainConfigManager().isUpdateCheckEnabled()) return;
 
         new UpdateChecker(this).getVersion(version -> { 
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
@@ -101,22 +101,17 @@ public class MaxStaff extends JavaPlugin {
     }
 
     public String getLatestVersion() {
-        return latestVersion;
+    return latestVersion;
     }
 
+    // PLUGIN SE APAGA
     @Override
     public void onDisable() {
+
         if (staffManager != null) {
-            staffManager.saveAllInventories();
+            staffManager.disableAllStaff();
         }
 
-        if (punishmentManager != null) {
-            punishmentManager.stop();
-            getLogger().info("Storage connection properly closed.");
-        }
-
-        instance = null;
-        
         String prefix = (mainConfigManager != null) ? mainConfigManager.getPrefix() : "&4MaxStaff ";
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getColoredMessage(prefix + "&4It was successfully deactivated"));
     }
@@ -158,10 +153,6 @@ public class MaxStaff extends JavaPlugin {
                 getCommand(cmd).setTabCompleter(punCmd);
             }
         }
-    }
-
-    public static MaxStaff getInstance() {
-        return instance;
     }
 
     public MainConfigManager getMainConfigManager() {

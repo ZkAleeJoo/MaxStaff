@@ -74,9 +74,6 @@ public class MainConfigManager {
     private List<String> guiInfoHeadLore, guiInfoAltsLore, guiInfoInvLore;
     private String statusOnline, statusOffline;
     private String freezeStaff, freezeAlready, unfreezeAlready, altsUse, frezzeUse;
-    private String storageType;
-    private String sqlHost, sqlDatabase, sqlUser, sqlPass, sqlProperties;
-    private int sqlPort;
 
     public MainConfigManager(MaxStaff plugin){
         this.plugin = plugin;
@@ -123,15 +120,6 @@ public class MainConfigManager {
         guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
-
-        //BASE DE DATOS
-        storageType = config.getString("storage.type", "YAML");
-        sqlHost = config.getString("storage.mysql.host", "localhost");
-        sqlPort = config.getInt("storage.mysql.port", 3306);
-        sqlDatabase = config.getString("storage.mysql.database", "minecraft");
-        sqlUser = config.getString("storage.mysql.username", "root");
-        sqlPass = config.getString("storage.mysql.password", "");
-        sqlProperties = config.getString("storage.mysql.properties", "useSSL=false&allowPublicKeyRetrieval=true");
 
         noPermission = lang.getString("messages.no-permission");
         pluginReload = lang.getString("messages.plugin-reload");
@@ -488,13 +476,6 @@ public class MainConfigManager {
     public String getUnfreezeAlready() { return unfreezeAlready; }
     public String getAltsUse() { return altsUse; }
     public String getFreezeUse() { return frezzeUse; }
-    public String getStorageType() { return storageType; }
-    public String getSqlHost() { return sqlHost; }
-    public int getSqlPort() { return sqlPort; }
-    public String getSqlDatabase() { return sqlDatabase; }
-    public String getSqlUser() { return sqlUser; }
-    public String getSqlPass() { return sqlPass; }
-    public String getSqlProperties() { return sqlProperties; }
     
 
     public ConfigurationSection getReasons(String type) {
