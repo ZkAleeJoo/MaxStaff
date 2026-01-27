@@ -1,6 +1,5 @@
 package org.zkaleejoo.managers;
 
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player; 
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +18,6 @@ public class FreezeManager {
 
     private final MaxStaff plugin;
     private final Set<UUID> frozenPlayers = new HashSet<>();
-    // Mapa para guardar el casco original del jugador
     private final Map<UUID, ItemStack> savedHelmets = new HashMap<>();
 
     public FreezeManager(MaxStaff plugin) {
@@ -47,12 +45,9 @@ public class FreezeManager {
             ItemStack currentHelmet = target.getInventory().getHelmet();
             savedHelmets.put(target.getUniqueId(), currentHelmet); 
             
-            String matName = plugin.getMainConfigManager
-            Material iceMat = Material.matchMaterial(matName);
-            if (iceMat == null) iceMat = Material.PACKED_ICE;
+            target.getInventory().setHelmet(new ItemStack(plugin.getMainConfigManager().getMatHealFreeze()));
             
-            target.getInventory().setHelmet(new ItemStack(iceMat));
-            target.updateInventory(); 
+            target.updateInventory();
 
             for (String line : plugin.getMainConfigManager().getMsgTargetFrozen()) {
                 target.sendMessage(MessageUtils.getColoredMessage(line));
