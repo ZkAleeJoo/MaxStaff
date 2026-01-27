@@ -1,36 +1,75 @@
-webhook-url: "URL"
-enabled: false
+# ==========================================
+#        MaxStaff - Discord Webhooks
+# ==========================================
+webhook-url: "PON_TU_URL_AQUI"
+enabled: true
+
+global-image: "https://i.imgur.com/TuBannerAqui.png" 
+server-name: "Survival 1.20"
 
 punishments:
   ban:
-    title: "⚡ Banned User"
-    color: "#ff0000" 
-    format: |
-      **User:** {target}
-      **Staff:** {staff}
-      **Duration:** {duration}
-      **Reason:** {reason}
-      **Date:** {date}
+    author: "Usuario Baneado"
+    color: "#ff0000"
+    thumbnail: "{face}"
+    fields:
+      - name: "👤 Usuario"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "⏳ Duración"
+        value: "**{duration}**"
+        inline: false
+      - name: "📝 Razón"
+        value: "{reason}"
+        inline: false
   mute:
-    title: "● Muted User"
-    color: "#ffaa00" 
-    format: |
-      **User:** {target}
-      **Staff:** {staff}
-      **Duration:** {duration}
-      **Reason:** {reason}
+    author: "Usuario Silenciado"
+    color: "#ffaa00"
+    thumbnail: "{face}"
+    fields:
+      - name: "👤 Usuario"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "⏳ Duración"
+        value: "**{duration}**"
+        inline: false
+      - name: "📝 Razón"
+        value: "{reason}"
+        inline: false
   kick:
-    title: "¡ User Kicked"
-    color: "#00aaff" 
-    format: |
-      **User:** {target}
-      **Staff:** {staff}
-      **Reason:** {reason}
+    author: "Usuario Expulsado"
+    color: "#00aaff"
+    thumbnail: "{face}"
+    fields:
+      - name: "👤 Usuario"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "🚀 Razón"
+        value: "{reason}"
+        inline: false
   warn:
-    title: "⚠ Warning Issued"
-    color: "#ffff00" 
-    format: |
-      **User:** {target}
-      **Staff:** {staff}
-      **Total warnings:** {count}
-      **Reason:** {reason}
+    author: "Advertencia Emitida"
+    color: "#ffff00"
+    thumbnail: "{face}"
+    fields:
+      - name: "👤 Usuario"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "⚠️ Acumuladas"
+        value: "**{count}**"
+        inline: true
+      - name: "📝 Razón"
+        value: "{reason}"
+        inline: false
