@@ -34,17 +34,24 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
 
         String sub = args[0].toLowerCase();
 
+        plugin.getChatManager().clearChat(sender);
+        plugin.getDiscordManager().sendWebhook("chat_clear", null, sender.getName(), null, null, null);
+
         if (sub.equals("clear")) {
             plugin.getChatManager().clearChat(sender);
         } 
         else if (sub.equals("mute")) {
             boolean currentStatus = plugin.getChatManager().isGlobalMute();
+
             plugin.getChatManager().setGlobalMute(!currentStatus);
             
             String msg = (!currentStatus ? plugin.getMainConfigManager().getMsgGlobalMuteEnabled() : plugin.getMainConfigManager().getMsgGlobalMuteDisabled())
                     .replace("{player}", sender.getName());
             
             MessageUtils.broadcastToPlayersOnly(plugin.getMainConfigManager().getPrefix() + msg);
+
+            String type = !currentStatus ? "chat_mute" : "chat_unmute";
+            plugin.getDiscordManager().sendWebhook(type, null, sender.getName(), null, null, null);
         }
 
         return true;
