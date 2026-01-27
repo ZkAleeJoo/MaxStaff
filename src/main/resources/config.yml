@@ -14,6 +14,8 @@ general:
 # ==========================================
 #        Database (MySQL)
 # ==========================================
+# IMPORTANT: For users who had plugin version 1.4.1, 
+# when migrating to MySQL all sanction data will be deleted; that is, the sanction history will be blank.
 database:
   enabled: false # If false, it will use the original file system (data.yml).
   host: "localhost"
