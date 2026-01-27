@@ -33,6 +33,9 @@ public class DiscordManager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 String path = "punishments." + type;
+                if (!discordConfig.getConfig().isConfigurationSection(path)) {
+                    path = "alerts." + type;
+                }
                 ConfigurationSection section = discordConfig.getConfig().getConfigurationSection(path);
                 
                 if (section == null) return;
