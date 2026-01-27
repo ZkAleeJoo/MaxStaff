@@ -9,67 +9,137 @@ server-name: "Survival 1.20"
 
 punishments:
   ban:
-    author: "Usuario Baneado"
+    author: "User Banned"
     color: "#ff0000"
     thumbnail: "{face}"
     fields:
-      - name: "👤 Usuario"
+      - name: "👤 User"
         value: "`{target}`"
         inline: true
       - name: "🛡️ Staff"
         value: "`{staff}`"
         inline: true
-      - name: "⏳ Duración"
+      - name: "⏳ Duration"
         value: "**{duration}**"
         inline: false
-      - name: "📝 Razón"
+      - name: "📝 Reason"
         value: "{reason}"
         inline: false
   mute:
-    author: "Usuario Silenciado"
+    author: "User Muted"
     color: "#ffaa00"
     thumbnail: "{face}"
     fields:
-      - name: "👤 Usuario"
+      - name: "👤 User"
         value: "`{target}`"
         inline: true
       - name: "🛡️ Staff"
         value: "`{staff}`"
         inline: true
-      - name: "⏳ Duración"
+      - name: "⏳ Duration"
         value: "**{duration}**"
         inline: false
-      - name: "📝 Razón"
+      - name: "📝 Reason"
         value: "{reason}"
         inline: false
   kick:
-    author: "Usuario Expulsado"
+    author: "User Kicked"
     color: "#00aaff"
     thumbnail: "{face}"
     fields:
-      - name: "👤 Usuario"
+      - name: "👤 User"
         value: "`{target}`"
         inline: true
       - name: "🛡️ Staff"
         value: "`{staff}`"
         inline: true
-      - name: "🚀 Razón"
+      - name: "🚀 Reason"
         value: "{reason}"
         inline: false
   warn:
-    author: "Advertencia Emitida"
+    author: "Warning Issued"
     color: "#ffff00"
     thumbnail: "{face}"
     fields:
-      - name: "👤 Usuario"
+      - name: "👤 User"
         value: "`{target}`"
         inline: true
       - name: "🛡️ Staff"
         value: "`{staff}`"
         inline: true
-      - name: "⚠️ Acumuladas"
+      - name: "⚠️ Accumulated"
         value: "**{count}**"
         inline: true
-      - name: "📝 Razón"
+      - name: "📝 Reason"
         value: "{reason}"
         inline: false
+alerts:
+  freeze:
+    author: "Player Frozen"
+    color: "#00d5ff" 
+    thumbnail: "{face}"
+    fields:
+      - name: "❄️ Player"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "📍 Action"
+        value: "Has been frozen for review."
+        inline: false
+  unfreeze:
+    author: "Player Unfrozen"
+    color: "#00ffaa" 
+    thumbnail: "{face}"
+    fields:
+      - name: "☀️ Player"
+        value: "`{target}`"
+        inline: true
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "📍 Action"
+        value: "Review completed."
+        inline: false
+  chat_clear:
+    author: "Chat Cleared"
+    color: "#ff55ff"
+    fields:
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "🧹 Action"
+        value: "**Global chat deleted**"
+        inline: true
+  chat_mute:
+    author: "Global Chat Locked"
+    color: "#ff5555" 
+    fields:
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "🔒 Status"
+        value: "Chat has been disabled."
+        inline: false
+  chat_unmute:
+    author: "Global Chat Enabled"
+    color: "#55ff55"
+    fields:
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "🔓 Status"
+        value: "Chat has been re-enabled."
+        inline: false
+  staff_mode:
+    author: "Staff Mode Change"
+    color: "#aaaaaa" 
+    thumbnail: "{face}"
+    fields:
+      - name: "🛡️ Staff"
+        value: "`{staff}`"
+        inline: true
+      - name: "🔧 Status"
+        value: "{reason}" 
+        inline: true
