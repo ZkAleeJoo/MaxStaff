@@ -65,9 +65,15 @@ staff-mode:
       message-freeze: "&fYou have frozen &b{player}"
       message-unfreeze: "&fYou have unfrozen &b{player}"
       target-frozen:
-        - "&c&lYOU HAVE BEEN FROZEN!"
-        - "&ePlease wait for a Staff member to assist you."
-        - "&7If you disconnect, you will be banned."
+        - "&8&m-----------------------------------------------------"
+        - " &4███████"
+        - " &4██&6███&4██ &f&lYOU HAVE BEEN FROZEN!"
+        - " &4██&6█&0!&6█&4██ &fPlease connect to our TS3/Discord"
+        - " &4██&6███&4██ &bdiscord.gg/tu-servidor"
+        - " &4███████ &7Time to Connect: 5 minutes"
+        - ""
+        - "       &c&lDO NOT LOG OUT OR YOU WILL BE BANNED"
+        - "&8&m-----------------------------------------------------"
       target-unfrozen: "&aYou have been unfrozen!"
     players:
       name: "&b&lOnline Players &7(Right Click)"
