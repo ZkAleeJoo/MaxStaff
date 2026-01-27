@@ -60,12 +60,16 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getFreezeAlready()));
             } else {
                 plugin.getFreezeManager().setFrozen(target, true);
+                plugin.getDiscordManager().sendWebhook("freeze", target.getName(), staff.getName(), null, null, null);
+                plugin.getFreezeManager().setFrozen(target, true);
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgFreezeStaff().replace("{player}", target.getName())));
             }
         } else if (action.equals("unfreeze") || action.equals("uss")) {
             if (!isFrozen) {
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getUnfreezeAlready()));
             } else {
+                plugin.getFreezeManager().setFrozen(target, false);
+                plugin.getDiscordManager().sendWebhook("unfreeze", target.getName(), staff.getName(), null, null, null);
                 plugin.getFreezeManager().setFrozen(target, false);
                 staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgUnfreezeStaff().replace("{player}", target.getName())));
             }
