@@ -64,10 +64,16 @@ staff-mode:
       name: "&b&lCongelar &7(Click al Jugador)"
       message-freeze: "&fHas congelado a &b{player}"
       message-unfreeze: "&fHas descongelado a &b{player}"
-      target-frozen: 
-        - "&c&l¡HAS SIDO CONGELADO!"
-        - "&ePor favor espera a que un miembro del Staff te atienda."
-        - "&7Si te desconectas, serás baneado."
+      target-frozen:
+        - "&8&m-----------------------------------------------------"
+        - " &4███████"
+        - " &4██&6███&4██ &f&l¡TE HAN CONGELADO!"
+        - " &4██&6█&0!&6█&4██ &fPor favor conéctate a nuestro TS3/Discord"
+        - " &4██&6███&4██ &bdiscord.gg/tu-servidor"
+        - " &4███████ &7Tiempo de conexión: 5 minutos"
+        - ""
+        - "       &c&lNO CIERRES LA SESIÓN O SERÁS BLOQUEADO"
+        - "&8&m-----------------------------------------------------"
       target-unfrozen: "&a¡Has sido descongelado!"
     players:
       name: "&b&lJugadores Online &7(Click Derecho)"
