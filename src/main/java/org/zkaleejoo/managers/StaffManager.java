@@ -95,6 +95,7 @@ public class StaffManager {
                 new net.md_5.bungee.api.chat.TextComponent(message));
         }
     }.runTaskTimer(plugin, 0L, 20L); 
+    plugin.getDiscordManager().sendWebhook("staff_mode", player.getName(), player.getName(), "**Activated** ✅", null, null);
     }
 
         public void disableStaffMode(Player player) {
@@ -144,6 +145,7 @@ public class StaffManager {
 
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventoryRestored()));
+        plugin.getDiscordManager().sendWebhook("staff_mode", player.getName(), player.getName(), "**Deactivated** ❌", null, null);
     }
 
     
