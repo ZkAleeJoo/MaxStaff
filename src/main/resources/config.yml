@@ -32,6 +32,7 @@ staff-mode:
       material: "NETHERITE_HOE"
     freeze:
       material: "PACKED_ICE"
+      helmet-material: "PACKED_ICE"
     players:
       material: "CLOCK"
     inspect:
