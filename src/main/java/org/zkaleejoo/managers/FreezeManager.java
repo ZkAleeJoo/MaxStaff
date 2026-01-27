@@ -1,13 +1,17 @@
 package org.zkaleejoo.managers;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player; 
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.utils.MessageUtils;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,6 +19,8 @@ public class FreezeManager {
 
     private final MaxStaff plugin;
     private final Set<UUID> frozenPlayers = new HashSet<>();
+    // Mapa para guardar el casco original del jugador
+    private final Map<UUID, ItemStack> savedHelmets = new HashMap<>();
 
     public FreezeManager(MaxStaff plugin) {
         this.plugin = plugin;
@@ -38,20 +44,49 @@ public class FreezeManager {
             
             target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1, false, false));
             
+            ItemStack currentHelmet = target.getInventory().getHelmet();
+            savedHelmets.put(target.getUniqueId(), currentHelmet); 
+            
+            String matName = plugin.getMainConfigManager
+            Material iceMat = Material.matchMaterial(matName);
+            if (iceMat == null) iceMat = Material.PACKED_ICE;
+            
+            target.getInventory().setHelmet(new ItemStack(iceMat));
+            target.updateInventory(); 
+
             for (String line : plugin.getMainConfigManager().getMsgTargetFrozen()) {
-                target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + line));
+                target.sendMessage(MessageUtils.getColoredMessage(line));
             }
+            
+            target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f, 0.5f);
             target.closeInventory();
+
         } else {
             frozenPlayers.remove(target.getUniqueId());
             
             target.removePotionEffect(PotionEffectType.BLINDNESS);
             
+            if (savedHelmets.containsKey(target.getUniqueId())) {
+                ItemStack original = savedHelmets.remove(target.getUniqueId());
+                target.getInventory().setHelmet(original);
+            } else {
+                target.getInventory().setHelmet(null); 
+            }
+            target.updateInventory();
+
             target.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgTargetUnfrozen()));
+            target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 2.0f);
         }
     }
 
     public boolean isFrozen(Player player) {
         return frozenPlayers.contains(player.getUniqueId());
+    }
+    
+    public void handleDisconnect(Player player) {
+        if (isFrozen(player)) {
+            savedHelmets.remove(player.getUniqueId());
+            frozenPlayers.remove(player.getUniqueId());
+        }
     }
 }
