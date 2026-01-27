@@ -60,19 +60,7 @@ public class MaxStaff extends JavaPlugin {
         freezeManager = new FreezeManager(this);
         staffManager = new StaffManager(this);
         guiManager = new GuiManager(this);
-        if (mainConfigManager.isDbEnabled()) {
-            try {
-                punishmentManager = new PunishmentManagerMysql(this);
-                getLogger().info("Sistema de sanciones cargado: MySQL");
-            } catch (Exception e) {
-                getLogger().severe("Error connecting to MySQL, switching to local system: " + e.getMessage());
-                punishmentManager = new PunishmentManager(this);
-            }
-        } else {
-            punishmentManager = new PunishmentManager(this);
-            getLogger().info("Sanctions system loaded: Local (YAML)");
-        }
-
+        
         chatManager = new ChatManager(this);
         this.discordManager = new DiscordManager(this);
 
@@ -96,6 +84,19 @@ public class MaxStaff extends JavaPlugin {
             getLogger().info("PlaceholderAPI Hook successfully registered!");
         } else {
             getLogger().warning("PlaceholderAPI not found, placeholders will not work.");
+        }
+
+        if (mainConfigManager.isDbEnabled()) {
+            try {
+                punishmentManager = new PunishmentManagerMysql(this);
+                getLogger().info("Sanctions system loaded: MySQL");
+            } catch (Exception e) {
+                getLogger().severe("Error connecting to MySQL, switching to local system: " + e.getMessage());
+                punishmentManager = new PunishmentManager(this);
+            }
+        } else {
+            punishmentManager = new PunishmentManager(this);
+            getLogger().info("Sanctions system loaded: Local (YAML)");
         }
         
     }
