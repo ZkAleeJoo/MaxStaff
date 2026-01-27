@@ -38,6 +38,9 @@ public class FreezeManager {
 
     public void setFrozen(Player target, boolean freeze) {
         if (freeze) {
+
+            plugin.getDiscordManager().sendWebhook("freeze", target.getName(), "Staff", null, null, null);
+            
             frozenPlayers.add(target.getUniqueId());
             
             target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1, false, false));
