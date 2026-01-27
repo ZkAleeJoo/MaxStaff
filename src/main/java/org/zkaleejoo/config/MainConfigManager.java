@@ -59,7 +59,7 @@ public class MainConfigManager {
     private String guiGmTitle, guiGmFeedback;
     private String guiGmSurvivalName, guiGmCreativeName, guiGmAdventureName, guiGmSpectatorName;
     private List<String> guiGmSurvivalLore, guiGmCreativeLore, guiGmAdventureLore, guiGmSpectatorLore;
-    private Material guiGmSurvivalMat, guiGmCreativeMat, guiGmAdventureMat, guiGmSpectatorMat;
+    private Material guiGmSurvivalMat, guiGmCreativeMat, guiGmAdventureMat, guiGmSpectatorMat, healmaterialfreeze;
     private boolean gmMenuEnabled;
     private String gmUse;
     private String gmModeInvalid;
@@ -121,6 +121,7 @@ public class MainConfigManager {
         gmMenuEnabled = config.getBoolean("gui-gamemode.enabled-menu", true);
         guiInfoAltsMat = loadMaterial(config.getString("gui.info.items.alts.material"), Material.COMPASS);
         guiInfoInvMat = loadMaterial(config.getString("gui.info.items.inventory.material"), Material.CHEST);
+        healmaterialfreeze = loadMaterial(config.getString("staff-mode.items.freeze.helmet-material"), Material.PACKED_ICE);
 
         warnThresholds = config.getConfigurationSection("punishments.broadcasts.warns.thresholds");
         dbEnabled = config.getBoolean("database.enabled", false);
@@ -493,6 +494,7 @@ public class MainConfigManager {
     public String getDbUser() { return dbUser; }
     public String getDbPassword() { return dbPassword; }
     public boolean isDbUseSSL() { return dbUseSSL; }
+    public Material getMatHealFreeze() { return healmaterialfreeze; }
     
 
     public ConfigurationSection getReasons(String type) {
