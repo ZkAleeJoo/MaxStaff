@@ -1,7 +1,7 @@
 # ==========================================
 #        MaxStaff - Discord Webhooks
 # ==========================================
-webhook-url: "PON_TU_URL_AQUI"
+webhook-url: "URL_AQUI"
 enabled: true
 
 global-image: "https://i.imgur.com/TuBannerAqui.png" 
