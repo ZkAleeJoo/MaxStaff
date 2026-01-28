@@ -46,8 +46,11 @@ public class DiscordManager {
                 String globalImage = discordConfig.getConfig().getString("global-image", "");
                 String thumbnail = section.getString("thumbnail", "");
                 
-                String finalTarget = (target != null) ? target : "N/A";
-                String faceUrl = "https://minotar.net/avatar/" + finalTarget + "/100.png";
+                String nameForImage = (target != null && !target.equalsIgnoreCase("N/A")) ? target : staff;
+                
+                if (nameForImage == null || nameForImage.isEmpty()) nameForImage = "MHF_Steve";
+
+                String faceUrl = "https://mc-heads.net/avatar/" + nameForImage + "/100";
                 
                 if (thumbnail.contains("{face}")) thumbnail = faceUrl;
 
