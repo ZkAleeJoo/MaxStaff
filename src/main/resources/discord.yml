@@ -102,7 +102,7 @@ alerts:
       - name: "📍 Action"
         value: "Review completed."
         inline: false
-    chat_clear:
+  chat_clear:
     author: "Chat Cleared"
     color: "#ff55ff"
     thumbnail: "{face}" 
@@ -135,7 +135,6 @@ alerts:
       - name: "🔓 Status"
         value: "Chat has been re-enabled."
         inline: false
-  
   staff_mode:
     author: "Staff Mode Change"
     color: "#aaaaaa" 
