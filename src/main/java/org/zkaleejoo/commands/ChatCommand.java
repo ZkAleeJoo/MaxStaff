@@ -1,12 +1,10 @@
 package org.zkaleejoo.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.zkaleejoo.MaxStaff;
-import org.zkaleejoo.managers.ChatManager; 
 import org.zkaleejoo.utils.MessageUtils;
 
 import java.util.Arrays;
@@ -34,11 +32,9 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
 
         String sub = args[0].toLowerCase();
 
-        plugin.getChatManager().clearChat(sender);
-        plugin.getDiscordManager().sendWebhook("chat_clear", null, sender.getName(), null, null, null);
-
         if (sub.equals("clear")) {
             plugin.getChatManager().clearChat(sender);
+            plugin.getDiscordManager().sendWebhook("chat_clear", null, sender.getName(), null, null, null);
         } 
         else if (sub.equals("mute")) {
             boolean currentStatus = plugin.getChatManager().isGlobalMute();

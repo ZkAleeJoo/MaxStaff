@@ -102,9 +102,10 @@ alerts:
       - name: "📍 Action"
         value: "Review completed."
         inline: false
-  chat_clear:
+    chat_clear:
     author: "Chat Cleared"
     color: "#ff55ff"
+    thumbnail: "{face}" 
     fields:
       - name: "🛡️ Staff"
         value: "`{staff}`"
@@ -114,7 +115,8 @@ alerts:
         inline: true
   chat_mute:
     author: "Global Chat Locked"
-    color: "#ff5555" 
+    color: "#ff5555"
+    thumbnail: "{face}" 
     fields:
       - name: "🛡️ Staff"
         value: "`{staff}`"
@@ -125,6 +127,7 @@ alerts:
   chat_unmute:
     author: "Global Chat Enabled"
     color: "#55ff55"
+    thumbnail: "{face}" 
     fields:
       - name: "🛡️ Staff"
         value: "`{staff}`"
@@ -132,6 +135,7 @@ alerts:
       - name: "🔓 Status"
         value: "Chat has been re-enabled."
         inline: false
+  
   staff_mode:
     author: "Staff Mode Change"
     color: "#aaaaaa" 

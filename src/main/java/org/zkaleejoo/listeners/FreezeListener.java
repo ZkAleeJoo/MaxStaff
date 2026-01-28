@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent; 
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -21,6 +22,7 @@ public class FreezeListener implements Listener {
         this.plugin = plugin;
     }
 
+
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (plugin.getFreezeManager().isFrozen(event.getPlayer())) {
@@ -32,6 +34,16 @@ public class FreezeListener implements Listener {
                 newLoc.setYaw(to.getYaw());
                 newLoc.setPitch(to.getPitch());
                 event.setTo(newLoc);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getWhoClicked() instanceof Player) {
+            Player player = (Player) event.getWhoClicked();
+            if (plugin.getFreezeManager().isFrozen(player)) {
+                event.setCancelled(true);
             }
         }
     }
@@ -66,7 +78,6 @@ public class FreezeListener implements Listener {
     
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        // Limpiamos datos para evitar fugas de memoria si se desconectan
         plugin.getFreezeManager().handleDisconnect(event.getPlayer());
     }
 }
