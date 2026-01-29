@@ -2,8 +2,8 @@ package org.zkaleejoo.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Statistic;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Statistic;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -27,13 +27,15 @@ import java.util.stream.Collectors;
 public class GuiManager {
 
     private final MaxStaff plugin;
+    private final NamespacedKey actionKey;
 
     public GuiManager(MaxStaff plugin) { 
         this.plugin = plugin; 
+        this.actionKey = new NamespacedKey(plugin, "gui_action");
     }
 
     private void setupBorder(Inventory inv) {
-        ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null);
+        ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null, "border");
         int size = inv.getSize();
         
         for (int i = 0; i < 9; i++) inv.setItem(i, border);
@@ -45,7 +47,6 @@ public class GuiManager {
     }
 
     public void openUserInfoMenu(Player staff, Player target) {
-
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
             int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
@@ -88,6 +89,7 @@ public class GuiManager {
                             .collect(Collectors.toList());
                     
                     headMeta.setLore(headLore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+                    headMeta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, "info_head");
                     head.setItemMeta(headMeta);
                 }
                 gui.setItem(13, head);
@@ -98,7 +100,7 @@ public class GuiManager {
                                         .replace("{playtime}", playtime)
                                         .replace("{total_punishments}", String.valueOf(total)))
                         .collect(Collectors.toList());
-                gui.setItem(20, createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore));
+                gui.setItem(20, createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore, "info_stats"));
 
                 List<String> historyLore = config.getGuiInfoHistoryLore().stream()
                         .map(line -> line.replace("{bans}", String.valueOf(bans))
@@ -106,11 +108,11 @@ public class GuiManager {
                                         .replace("{kicks}", String.valueOf(kicks))
                                         .replace("{warns}", String.valueOf(warns)))
                         .collect(Collectors.toList());
-                gui.setItem(21, createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore));
+                gui.setItem(21, createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore, "open_history"));
 
-                gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore()));
-                gui.setItem(23, createItem(config.getGuiInfoAltsMat(), config.getGuiInfoAltsName(), config.getGuiInfoAltsLore()));
-                gui.setItem(24, createItem(config.getGuiInfoInvMat(), config.getGuiInfoInvName(), config.getGuiInfoInvLore()));
+                gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore(), "open_sanction"));
+                gui.setItem(23, createItem(config.getGuiInfoAltsMat(), config.getGuiInfoAltsName(), config.getGuiInfoAltsLore(), "open_alts"));
+                gui.setItem(24, createItem(config.getGuiInfoInvMat(), config.getGuiInfoInvName(), config.getGuiInfoInvLore(), "open_inv"));
 
                 staff.openInventory(gui);
             });
@@ -140,11 +142,11 @@ public class GuiManager {
         
         setupBorder(gui);
         
-        gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
-        gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore()));
-        gui.setItem(15, createItem(Material.FEATHER, config.getGuiItemKickName(), config.getGuiItemKickLore()));
+        gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore(), "punish_ban"));
+        gui.setItem(13, createItem(Material.PAPER, config.getGuiItemMuteName(), config.getGuiItemMuteLore(), "punish_mute"));
+        gui.setItem(15, createItem(Material.FEATHER, config.getGuiItemKickName(), config.getGuiItemKickLore(), "punish_kick"));
         
-        gui.setItem(22, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver a Información")));
+        gui.setItem(22, createItem(config.getNavBackMat(), config.getNavBackName(), Arrays.asList("&7Volver a Información"), "back_info"));
         
         player.openInventory(gui);
     }
@@ -195,6 +197,7 @@ public class GuiManager {
             }
             rMeta.setLore(rLore);
             rMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            rMeta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, "reason_display");
             rItem.setItemMeta(rMeta);
             gui.setItem(baseSlot, rItem);
 
@@ -210,6 +213,8 @@ public class GuiManager {
                 NamespacedKey durationKey = new NamespacedKey(plugin, "duration");
                 dMeta.getPersistentDataContainer().set(reasonKey, PersistentDataType.STRING, key);
                 dMeta.getPersistentDataContainer().set(durationKey, PersistentDataType.STRING, dur);
+                
+                dMeta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, "apply_punish");
 
                 String dName = plugin.getMainConfigManager().getGuiReasonsDyeName().replace("{duration}", dur);
                 dMeta.setDisplayName(MessageUtils.getColoredMessage(dName));
@@ -228,9 +233,9 @@ public class GuiManager {
             }
         }
 
-        gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar"))));
-        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page))));
-        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2)))));
+        gui.setItem(49, createItem(plugin.getMainConfigManager().getNavBackMat(), plugin.getMainConfigManager().getNavBackName(), Arrays.asList(MessageUtils.getColoredMessage("&7Regresar")), "back_sanction"));
+        if (page > 0) gui.setItem(45, createItem(plugin.getMainConfigManager().getNavPrevMat(), plugin.getMainConfigManager().getNavPrevName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + page)), "prev_page"));
+        if (end < keys.size()) gui.setItem(53, createItem(plugin.getMainConfigManager().getNavNextMat(), plugin.getMainConfigManager().getNavNextName(), Arrays.asList(MessageUtils.getColoredMessage("&7Ir a Página " + (page + 2))), "next_page"));
         
         player.openInventory(gui);
     }
@@ -255,16 +260,16 @@ public class GuiManager {
                 setupBorder(gui);
 
                 gui.setItem(10, createItem(Material.RED_WOOL, config.getGuiHistoryBansName(), 
-                    config.getGuiHistoryBansLore().stream().map(s -> s.replace("{count}", String.valueOf(bans))).toList()));
+                    config.getGuiHistoryBansLore().stream().map(s -> s.replace("{count}", String.valueOf(bans))).toList(), "history_bans"));
 
                 gui.setItem(12, createItem(Material.ORANGE_WOOL, config.getGuiHistoryMutesName(), 
-                    config.getGuiHistoryMutesLore().stream().map(s -> s.replace("{count}", String.valueOf(mutes))).toList()));
+                    config.getGuiHistoryMutesLore().stream().map(s -> s.replace("{count}", String.valueOf(mutes))).toList(), "history_mutes"));
 
                 gui.setItem(14, createItem(Material.YELLOW_WOOL, config.getGuiHistoryWarnsName(), 
-                    config.getGuiHistoryWarnsLore().stream().map(s -> s.replace("{count}", String.valueOf(warns))).toList()));
+                    config.getGuiHistoryWarnsLore().stream().map(s -> s.replace("{count}", String.valueOf(warns))).toList(), "history_warns"));
 
                 gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, config.getGuiHistoryKicksName(), 
-                    config.getGuiHistoryKicksLore().stream().map(s -> s.replace("{count}", String.valueOf(kicks))).toList()));
+                    config.getGuiHistoryKicksLore().stream().map(s -> s.replace("{count}", String.valueOf(kicks))).toList(), "history_kicks"));
 
                 staff.openInventory(gui);
             });
@@ -272,7 +277,6 @@ public class GuiManager {
     }
 
     public void openDetailedHistoryMenu(Player staff, String targetName, String type) {
-
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<String> records = plugin.getPunishmentManager().getHistoryDetails(targetName, type);
 
@@ -306,11 +310,11 @@ public class GuiManager {
                         config.getGuiDetailedDuration().replace("{duration}", parts[3])
                     );
 
-                    gui.setItem(slot, createItem(Material.PAPER, config.getGuiDetailedItemName().replace("{number}", String.valueOf(i + 1)), lore));
+                    gui.setItem(slot, createItem(Material.PAPER, config.getGuiDetailedItemName().replace("{number}", String.valueOf(i + 1)), lore, "history_record"));
                     slot++;
                 }
 
-                gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore()));
+                gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore(), "back_history"));
                 staff.openInventory(gui);
             });
         });
@@ -325,10 +329,10 @@ public class GuiManager {
         
         setupBorder(gui);
 
-        gui.setItem(10, createItem(config.getGuiGmSurvivalMat(), config.getGuiGmSurvivalName(), config.getGuiGmSurvivalLore()));
-        gui.setItem(12, createItem(config.getGuiGmCreativeMat(), config.getGuiGmCreativeName(), config.getGuiGmCreativeLore()));
-        gui.setItem(14, createItem(config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore()));
-        gui.setItem(16, createItem(config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore()));
+        gui.setItem(10, createItem(config.getGuiGmSurvivalMat(), config.getGuiGmSurvivalName(), config.getGuiGmSurvivalLore(), "gm_survival"));
+        gui.setItem(12, createItem(config.getGuiGmCreativeMat(), config.getGuiGmCreativeName(), config.getGuiGmCreativeLore(), "gm_creative"));
+        gui.setItem(14, createItem(config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore(), "gm_adventure"));
+        gui.setItem(16, createItem(config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore(), "gm_spectator"));
 
         player.openInventory(gui);
     }
@@ -387,6 +391,7 @@ public class GuiManager {
                     meta.setOwningPlayer(altPlayer);
                     meta.setDisplayName(MessageUtils.getColoredMessage(color + name));
                     meta.setLore(lore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+                    meta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, "alt_head");
                     head.setItemMeta(meta);
 
                     gui.addItem(head);
@@ -396,7 +401,7 @@ public class GuiManager {
         });
     }
 
-    private ItemStack createItem(Material mat, String name, List<String> lore) {
+    private ItemStack createItem(Material mat, String name, List<String> lore, String action) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
@@ -407,6 +412,11 @@ public class GuiManager {
                 meta.setLore(colored);
             }
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            
+            if (action != null && !action.isEmpty()) {
+                meta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, action);
+            }
+
             item.setItemMeta(meta);
         }
         return item;
@@ -419,6 +429,7 @@ public class GuiManager {
             meta.setDisplayName(MessageUtils.getColoredMessage("&a" + p.getName()));
             meta.setOwningPlayer(p);
             meta.setLore(Arrays.asList(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiHeadLore())));
+            meta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, "tp_player");
             item.setItemMeta(meta);
         }
         return item;
