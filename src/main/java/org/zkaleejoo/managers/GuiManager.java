@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.utils.MessageUtils;
+import org.zkaleejoo.utils.MaxStaffHolder; 
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,82 +34,95 @@ public class GuiManager {
 
     private void setupBorder(Inventory inv) {
         ItemStack border = createItem(plugin.getMainConfigManager().getBorderMaterial(), " ", null);
-        for (int i = 0; i < 9; i++) {
-            inv.setItem(i, border);
-            inv.setItem(inv.getSize() - 9 + i, border);
-        }
-        for (int i = 0; i < inv.getSize(); i += 9) {
+        int size = inv.getSize();
+        
+        for (int i = 0; i < 9; i++) inv.setItem(i, border);
+        for (int i = size - 9; i < size; i++) inv.setItem(i, border);
+        for (int i = 9; i < size - 9; i += 9) {
             inv.setItem(i, border);
             inv.setItem(i + 8, border);
         }
     }
 
     public void openUserInfoMenu(Player staff, Player target) {
-        MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
-        Inventory gui = Bukkit.createInventory(null, 45, title); 
-        setupBorder(gui); 
 
-        long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        long hours = ticks / 72000;
-        long minutes = (ticks % 72000) / 1200;
-        String playtime = hours + "h " + minutes + "m";
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
+            int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
+            int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
+            int warns = plugin.getPunishmentManager().getHistoryCount(target.getName(), "WARN");
+            int total = bans + mutes + kicks;
 
-        int bans = plugin.getPunishmentManager().getHistoryCount(target.getName(), "BAN");
-        int mutes = plugin.getPunishmentManager().getHistoryCount(target.getName(), "MUTE");
-        int kicks = plugin.getPunishmentManager().getHistoryCount(target.getName(), "KICK");
-        int warns = plugin.getPunishmentManager().getHistoryCount(target.getName(), "WARN");
-        int total = bans + mutes + kicks;
+            long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            long hours = ticks / 72000;
+            long minutes = (ticks % 72000) / 1200;
+            String playtime = hours + "h " + minutes + "m";
 
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        if (headMeta != null) {
-            headMeta.setOwningPlayer(target);
-            headMeta.setDisplayName(MessageUtils.getColoredMessage(config.getGuiInfoHeadName().replace("{target}", target.getName())));
-            
-            String statusText = target.isOnline() ? config.getStatusOnline() : config.getStatusOffline();
-            String ip = target.getAddress() != null ? target.getAddress().getAddress().getHostAddress() : "Offline";
-            
-            List<String> headLore = config.getGuiInfoHeadLore().stream()
-                    .map(line -> line.replace("{status}", statusText)
-                                    .replace("{health}", String.valueOf((int)target.getHealth()))
-                                    .replace("{food}", String.valueOf(target.getFoodLevel()))
-                                    .replace("{gm}", target.getGameMode().name())
-                                    .replace("{ip}", ip))
-                    .collect(Collectors.toList());
-            
-            headMeta.setLore(headLore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
-            head.setItemMeta(headMeta);
-        }
-        gui.setItem(13, head);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!staff.isOnline()) return;
 
-        List<String> statsLore = config.getGuiInfoStatsLore().stream()
-                .map(line -> line.replace("{target}", target.getName())
-                                .replace("{uuid}", target.getUniqueId().toString())
-                                .replace("{playtime}", playtime)
-                                .replace("{total_punishments}", String.valueOf(total)))
-                .collect(Collectors.toList());
-        gui.setItem(20, createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore));
+                MainConfigManager config = plugin.getMainConfigManager();
+                String title = MessageUtils.getColoredMessage(config.getGuiInfoTitle().replace("{target}", target.getName()));
+                
+                MaxStaffHolder holder = new MaxStaffHolder("INFO", target.getName());
+                Inventory gui = Bukkit.createInventory(holder, 45, title);
+                holder.setInventory(gui);
+                
+                setupBorder(gui);
 
-        List<String> historyLore = config.getGuiInfoHistoryLore().stream()
-                .map(line -> line.replace("{bans}", String.valueOf(bans))
-                                .replace("{mutes}", String.valueOf(mutes))
-                                .replace("{kicks}", String.valueOf(kicks))
-                                .replace("{warns}", String.valueOf(warns)))
-                .collect(Collectors.toList());
-        gui.setItem(21, createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore));
+                ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+                SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+                if (headMeta != null) {
+                    headMeta.setOwningPlayer(target);
+                    headMeta.setDisplayName(MessageUtils.getColoredMessage(config.getGuiInfoHeadName().replace("{target}", target.getName())));
+                    
+                    String statusText = target.isOnline() ? config.getStatusOnline() : config.getStatusOffline();
+                    String ip = target.getAddress() != null ? target.getAddress().getAddress().getHostAddress() : "Offline";
+                    
+                    List<String> headLore = config.getGuiInfoHeadLore().stream()
+                            .map(line -> line.replace("{status}", statusText)
+                                            .replace("{health}", String.valueOf((int)target.getHealth()))
+                                            .replace("{food}", String.valueOf(target.getFoodLevel()))
+                                            .replace("{gm}", target.getGameMode().name())
+                                            .replace("{ip}", ip))
+                            .collect(Collectors.toList());
+                    
+                    headMeta.setLore(headLore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+                    head.setItemMeta(headMeta);
+                }
+                gui.setItem(13, head);
 
-        gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore()));
+                List<String> statsLore = config.getGuiInfoStatsLore().stream()
+                        .map(line -> line.replace("{target}", target.getName())
+                                        .replace("{uuid}", target.getUniqueId().toString())
+                                        .replace("{playtime}", playtime)
+                                        .replace("{total_punishments}", String.valueOf(total)))
+                        .collect(Collectors.toList());
+                gui.setItem(20, createItem(config.getGuiInfoStatsMat(), config.getGuiInfoStatsName(), statsLore));
 
-        gui.setItem(23, createItem(config.getGuiInfoAltsMat(), config.getGuiInfoAltsName(), config.getGuiInfoAltsLore()));
+                List<String> historyLore = config.getGuiInfoHistoryLore().stream()
+                        .map(line -> line.replace("{bans}", String.valueOf(bans))
+                                        .replace("{mutes}", String.valueOf(mutes))
+                                        .replace("{kicks}", String.valueOf(kicks))
+                                        .replace("{warns}", String.valueOf(warns)))
+                        .collect(Collectors.toList());
+                gui.setItem(21, createItem(config.getGuiInfoHistoryMat(), config.getGuiInfoHistoryName(), historyLore));
 
-        gui.setItem(24, createItem(config.getGuiInfoInvMat(), config.getGuiInfoInvName(), config.getGuiInfoInvLore()));
+                gui.setItem(22, createItem(config.getGuiInfoActionMat(), config.getGuiInfoActionName(), config.getGuiInfoActionLore()));
+                gui.setItem(23, createItem(config.getGuiInfoAltsMat(), config.getGuiInfoAltsName(), config.getGuiInfoAltsLore()));
+                gui.setItem(24, createItem(config.getGuiInfoInvMat(), config.getGuiInfoInvName(), config.getGuiInfoInvLore()));
 
-        staff.openInventory(gui);
+                staff.openInventory(gui);
+            });
+        });
     }
 
     public void openPlayersMenu(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
+        MaxStaffHolder holder = new MaxStaffHolder("PLAYERS", null);
+        
+        Inventory gui = Bukkit.createInventory(holder, 54, MessageUtils.getColoredMessage(plugin.getMainConfigManager().getGuiPlayersTitle()));
+        holder.setInventory(gui);
+        
         setupBorder(gui);
         for (Player target : Bukkit.getOnlinePlayers()) {
             gui.addItem(createPlayerHead(target));
@@ -120,7 +134,10 @@ public class GuiManager {
         MainConfigManager config = plugin.getMainConfigManager();
         String title = MessageUtils.getColoredMessage(config.getGuiSanctionsTitle().replace("{target}", targetName));
         
-        Inventory gui = Bukkit.createInventory(null, 27, title);
+        MaxStaffHolder holder = new MaxStaffHolder("SANCTIONS", targetName);
+        Inventory gui = Bukkit.createInventory(holder, 27, title);
+        holder.setInventory(gui);
+        
         setupBorder(gui);
         
         gui.setItem(11, createItem(Material.IRON_SWORD, config.getGuiItemBanName(), config.getGuiItemBanLore()));
@@ -146,7 +163,13 @@ public class GuiManager {
             .replace("{page}", String.valueOf(page + 1))
             .replace("{total}", String.valueOf(totalPages == 0 ? 1 : totalPages)));
         
-        Inventory gui = Bukkit.createInventory(null, 54, title);
+        MaxStaffHolder holder = new MaxStaffHolder("REASONS", targetName);
+        holder.setData("type", type);
+        holder.setData("page", page);
+
+        Inventory gui = Bukkit.createInventory(holder, 54, title);
+        holder.setInventory(gui);
+        
         setupBorder(gui);
         
         int start = page * 4;
@@ -212,6 +235,167 @@ public class GuiManager {
         player.openInventory(gui);
     }
 
+    public void openHistoryMenu(Player staff, String targetName) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            int bans = plugin.getPunishmentManager().getHistoryCount(targetName, "BAN");
+            int mutes = plugin.getPunishmentManager().getHistoryCount(targetName, "MUTE");
+            int kicks = plugin.getPunishmentManager().getHistoryCount(targetName, "KICK");
+            int warns = plugin.getPunishmentManager().getHistoryCount(targetName, "WARN");
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!staff.isOnline()) return;
+
+                MainConfigManager config = plugin.getMainConfigManager();
+                String title = MessageUtils.getColoredMessage(config.getGuiHistoryTitle().replace("{target}", targetName));
+                
+                MaxStaffHolder holder = new MaxStaffHolder("HISTORY", targetName);
+                Inventory gui = Bukkit.createInventory(holder, 27, title);
+                holder.setInventory(gui);
+                
+                setupBorder(gui);
+
+                gui.setItem(10, createItem(Material.RED_WOOL, config.getGuiHistoryBansName(), 
+                    config.getGuiHistoryBansLore().stream().map(s -> s.replace("{count}", String.valueOf(bans))).toList()));
+
+                gui.setItem(12, createItem(Material.ORANGE_WOOL, config.getGuiHistoryMutesName(), 
+                    config.getGuiHistoryMutesLore().stream().map(s -> s.replace("{count}", String.valueOf(mutes))).toList()));
+
+                gui.setItem(14, createItem(Material.YELLOW_WOOL, config.getGuiHistoryWarnsName(), 
+                    config.getGuiHistoryWarnsLore().stream().map(s -> s.replace("{count}", String.valueOf(warns))).toList()));
+
+                gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, config.getGuiHistoryKicksName(), 
+                    config.getGuiHistoryKicksLore().stream().map(s -> s.replace("{count}", String.valueOf(kicks))).toList()));
+
+                staff.openInventory(gui);
+            });
+        });
+    }
+
+    public void openDetailedHistoryMenu(Player staff, String targetName, String type) {
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            List<String> records = plugin.getPunishmentManager().getHistoryDetails(targetName, type);
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!staff.isOnline()) return;
+
+                MainConfigManager config = plugin.getMainConfigManager();
+                String title = MessageUtils.getColoredMessage(config.getGuiDetailedTitle()
+                        .replace("{type}", type).replace("{target}", targetName));
+                
+                MaxStaffHolder holder = new MaxStaffHolder("DETAILED_HISTORY", targetName);
+                holder.setData("type", type);
+
+                Inventory gui = Bukkit.createInventory(holder, 45, title);
+                holder.setInventory(gui);
+                
+                setupBorder(gui);
+                
+                int slot = 10;
+                for (int i = 0; i < records.size(); i++) {
+                    if (slot > 34) break; 
+                    if ((slot + 1) % 9 == 0) slot += 2; 
+
+                    String record = records.get(i);
+                    String[] parts = record.split("\\|");
+                    
+                    List<String> lore = Arrays.asList(
+                        config.getGuiDetailedDate().replace("{date}", parts[0]),
+                        config.getGuiDetailedStaff().replace("{staff}", parts[1]),
+                        config.getGuiDetailedReason().replace("{reason}", parts[2]),
+                        config.getGuiDetailedDuration().replace("{duration}", parts[3])
+                    );
+
+                    gui.setItem(slot, createItem(Material.PAPER, config.getGuiDetailedItemName().replace("{number}", String.valueOf(i + 1)), lore));
+                    slot++;
+                }
+
+                gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore()));
+                staff.openInventory(gui);
+            });
+        });
+    }
+
+    public void openGameModeMenu(Player player) {
+        MainConfigManager config = plugin.getMainConfigManager();
+        
+        MaxStaffHolder holder = new MaxStaffHolder("GAMEMODE", null);
+        Inventory gui = Bukkit.createInventory(holder, 27, MessageUtils.getColoredMessage(config.getGuiGmTitle()));
+        holder.setInventory(gui);
+        
+        setupBorder(gui);
+
+        gui.setItem(10, createItem(config.getGuiGmSurvivalMat(), config.getGuiGmSurvivalName(), config.getGuiGmSurvivalLore()));
+        gui.setItem(12, createItem(config.getGuiGmCreativeMat(), config.getGuiGmCreativeName(), config.getGuiGmCreativeLore()));
+        gui.setItem(14, createItem(config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore()));
+        gui.setItem(16, createItem(config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore()));
+
+        player.openInventory(gui);
+    }
+
+    public void openAltsMenu(Player staff, String targetName) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String ip = plugin.getPunishmentManager().getPlayerIP(targetName);
+            
+            if (ip == null) {
+                Bukkit.getScheduler().runTask(plugin, () -> 
+                    staff.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getMsgNoIPFound())));
+                return;
+            }
+
+            List<UUID> altsUUIDs = plugin.getPunishmentManager().getAllAccountsByIP(ip);
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!staff.isOnline()) return;
+
+                MainConfigManager config = plugin.getMainConfigManager();
+                
+                MaxStaffHolder holder = new MaxStaffHolder("ALTS", targetName);
+                Inventory gui = Bukkit.createInventory(holder, 45, MessageUtils.getColoredMessage(config.getGuiAltsTitle().replace("{target}", targetName)));
+                holder.setInventory(gui);
+                
+                setupBorder(gui);
+
+                for (UUID uuid : altsUUIDs) {
+                    OfflinePlayer altPlayer = Bukkit.getOfflinePlayer(uuid);
+                    String name = altPlayer.getName();
+                    if (name == null) continue;
+
+                    String status;
+                    String color;
+
+                    if (Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(name)) {
+                        status = config.getGuiAltsStatusBanned();
+                        color = "&4";
+                    } else if (altPlayer.isOnline()) {
+                        status = config.getGuiAltsStatusOnline();
+                        color = "&a";
+                    } else {
+                        status = config.getGuiAltsStatusOffline();
+                        color = "&c";
+                    }
+
+                    String finalStatus = status;
+                    List<String> lore = config.getGuiAltsLore().stream()
+                            .map(line -> line.replace("{dynamic}", config.getGuiAltsDynamic())
+                                            .replace("{status}", finalStatus)
+                                            .replace("{ip}", ip))
+                            .collect(Collectors.toList());
+
+                    ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+                    SkullMeta meta = (SkullMeta) head.getItemMeta();
+                    meta.setOwningPlayer(altPlayer);
+                    meta.setDisplayName(MessageUtils.getColoredMessage(color + name));
+                    meta.setLore(lore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
+                    head.setItemMeta(meta);
+
+                    gui.addItem(head);
+                }
+                staff.openInventory(gui);
+            });
+        });
+    }
+
     private ItemStack createItem(Material mat, String name, List<String> lore) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
@@ -239,132 +423,4 @@ public class GuiManager {
         }
         return item;
     }
- 
-    public void openHistoryMenu(Player staff, String targetName) {
-        MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage(config.getGuiHistoryTitle().replace("{target}", targetName));
-        Inventory gui = Bukkit.createInventory(null, 27, title);
-        setupBorder(gui);
-
-        int bans = plugin.getPunishmentManager().getHistoryCount(targetName, "BAN");
-        int mutes = plugin.getPunishmentManager().getHistoryCount(targetName, "MUTE");
-        int kicks = plugin.getPunishmentManager().getHistoryCount(targetName, "KICK");
-        int warns = plugin.getPunishmentManager().getHistoryCount(targetName, "WARN");
-
-        gui.setItem(10, createItem(Material.RED_WOOL, config.getGuiHistoryBansName(), 
-            config.getGuiHistoryBansLore().stream().map(s -> s.replace("{count}", String.valueOf(bans))).toList()));
-
-        gui.setItem(12, createItem(Material.ORANGE_WOOL, config.getGuiHistoryMutesName(), 
-            config.getGuiHistoryMutesLore().stream().map(s -> s.replace("{count}", String.valueOf(mutes))).toList()));
-
-        gui.setItem(14, createItem(Material.YELLOW_WOOL, config.getGuiHistoryWarnsName(), 
-            config.getGuiHistoryWarnsLore().stream().map(s -> s.replace("{count}", String.valueOf(warns))).toList()));
-
-        gui.setItem(16, createItem(Material.LIGHT_GRAY_WOOL, config.getGuiHistoryKicksName(), 
-            config.getGuiHistoryKicksLore().stream().map(s -> s.replace("{count}", String.valueOf(kicks))).toList()));
-
-        staff.openInventory(gui);
-    }
-
-
-    public void openDetailedHistoryMenu(Player staff, String targetName, String type) {
-        MainConfigManager config = plugin.getMainConfigManager();
-        String title = MessageUtils.getColoredMessage(config.getGuiDetailedTitle()
-                .replace("{type}", type).replace("{target}", targetName));
-        Inventory gui = Bukkit.createInventory(null, 45, title);
-        setupBorder(gui);
-
-        List<String> records = plugin.getPunishmentManager().getHistoryDetails(targetName, type);
-        
-        int slot = 10;
-        for (int i = 0; i < records.size(); i++) {
-            if (slot > 34) break; 
-            if ((slot + 1) % 9 == 0) slot += 2; 
-
-            String record = records.get(i);
-            String[] parts = record.split("\\|");
-            
-            List<String> lore = Arrays.asList(
-                config.getGuiDetailedDate().replace("{date}", parts[0]),
-                config.getGuiDetailedStaff().replace("{staff}", parts[1]),
-                config.getGuiDetailedReason().replace("{reason}", parts[2]),
-                config.getGuiDetailedDuration().replace("{duration}", parts[3])
-            );
-
-            gui.setItem(slot, createItem(Material.PAPER, config.getGuiDetailedItemName().replace("{number}", String.valueOf(i + 1)), lore));
-            slot++;
-        }
-
-        gui.setItem(40, createItem(config.getNavBackMat(), config.getNavBackName(), config.getGuiDetailedBackLore()));
-        staff.openInventory(gui);
-    }
-
- 
-    public void openGameModeMenu(Player player) {
-        MainConfigManager config = plugin.getMainConfigManager();
-        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.getColoredMessage(config.getGuiGmTitle()));
-        setupBorder(gui);
-
-        gui.setItem(10, createItem(config.getGuiGmSurvivalMat(), config.getGuiGmSurvivalName(), config.getGuiGmSurvivalLore()));
-        gui.setItem(12, createItem(config.getGuiGmCreativeMat(), config.getGuiGmCreativeName(), config.getGuiGmCreativeLore()));
-        gui.setItem(14, createItem(config.getGuiGmAdventureMat(), config.getGuiGmAdventureName(), config.getGuiGmAdventureLore()));
-        gui.setItem(16, createItem(config.getGuiGmSpectatorMat(), config.getGuiGmSpectatorName(), config.getGuiGmSpectatorLore()));
-
-        player.openInventory(gui);
-    }
-
-    public void openAltsMenu(Player staff, String targetName) {
-        String ip = plugin.getPunishmentManager().getPlayerIP(targetName);
-        MainConfigManager config = plugin.getMainConfigManager();
-        
-        if (ip == null) {
-            staff.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getMsgNoIPFound()));
-            return;
-        }
-
-        List<UUID> altsUUIDs = plugin.getPunishmentManager().getAllAccountsByIP(ip);
-        Inventory gui = Bukkit.createInventory(null, 45, MessageUtils.getColoredMessage(config.getGuiAltsTitle().replace("{target}", targetName)));
-        setupBorder(gui);
-
-        for (UUID uuid : altsUUIDs) {
-            OfflinePlayer altPlayer = Bukkit.getOfflinePlayer(uuid);
-            String name = altPlayer.getName();
-            if (name == null) continue;
-
-            String status;
-            String color;
-
-            if (Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(name)) {
-                status = config.getGuiAltsStatusBanned();
-                color = "&4";
-            } else if (altPlayer.isOnline()) {
-                status = config.getGuiAltsStatusOnline();
-                color = "&a";
-            } else {
-                status = config.getGuiAltsStatusOffline();
-                color = "&c";
-            }
-
-            String finalStatus = status;
-            List<String> lore = config.getGuiAltsLore().stream()
-                    .map(line -> line.replace("{dynamic}", config.getGuiAltsDynamic())
-                                    .replace("{status}", finalStatus)
-                                    .replace("{ip}", ip))
-                    .collect(Collectors.toList());
-
-            ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta = (SkullMeta) head.getItemMeta();
-            meta.setOwningPlayer(altPlayer);
-            meta.setDisplayName(MessageUtils.getColoredMessage(color + name));
-            meta.setLore(lore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
-            head.setItemMeta(meta);
-
-            gui.addItem(head);
-        }
-        staff.openInventory(gui);
-    }
-
-
-
-
 }
