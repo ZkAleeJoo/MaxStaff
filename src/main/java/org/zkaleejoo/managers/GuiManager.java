@@ -401,22 +401,21 @@ public class GuiManager {
         });
     }
 
-    private ItemStack createItem(Material mat, String name, List<String> lore, String action) {
-        ItemStack item = new ItemStack(mat);
+    public ItemStack createItem(Material material, String name, List<String> lore, String action) {
+        ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(MessageUtils.getColoredMessage(name));
             if (lore != null) {
-                List<String> colored = new ArrayList<>();
-                for (String l : lore) colored.add(MessageUtils.getColoredMessage(l));
-                meta.setLore(colored);
+                meta.setLore(lore.stream().map(MessageUtils::getColoredMessage).collect(Collectors.toList()));
             }
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
             
-            if (action != null && !action.isEmpty()) {
-                meta.getPersistentDataContainer().set(actionKey, PersistentDataType.STRING, action);
+            if (action != null) {
+                NamespacedKey key = new NamespacedKey(plugin, "gui_action");
+                meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, action);
             }
-
+            
             item.setItemMeta(meta);
         }
         return item;
