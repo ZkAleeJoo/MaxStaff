@@ -37,7 +37,6 @@ public class DatabaseManager {
 
     private void setupTables() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Tabla de Historial
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS maxstaff_history (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY, " +
                     "uuid VARCHAR(36), " +
@@ -48,14 +47,12 @@ public class DatabaseManager {
                     "duration VARCHAR(50), " +
                     "date VARCHAR(50))");
 
-            // Tabla de Mutes Activos
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS maxstaff_mutes (" +
                     "uuid VARCHAR(36) PRIMARY KEY, " +
                     "reason TEXT, " +
                     "staff VARCHAR(16), " +
                     "expiry BIGINT)");
 
-            // Tabla de IPs (Cache)
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS maxstaff_ip_cache (" +
                     "uuid VARCHAR(36) PRIMARY KEY, " +
                     "ip VARCHAR(45))");
