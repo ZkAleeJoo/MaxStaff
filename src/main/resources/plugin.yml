@@ -6,54 +6,77 @@ api-version: 1.19
 
 commands:
   maxstaff:
-    description: Main MaxStaff command
+    description: Comando principal de MaxStaff
     aliases: [staff, ms]
+    permission: maxstaff.admin
   ban:
-    description: Ban a player (Permanent or Temporary)
+    description: Banear a un jugador
+    permission: maxstaff.punish.ban
+    usage: /ban <jugador> [tiempo] [razón]
   tempban:
-    description: Temporarily ban a player
+    description: Banear temporalmente
+    permission: maxstaff.punish.ban
   mute:
-    description: Mute a player (Permanent or Temporary)
+    description: Silenciar a un jugador
+    permission: maxstaff.punish.mute
   tempmute:
-    description: Temporarily mute a player
+    description: Silenciar temporalmente
+    permission: maxstaff.punish.mute
   kick:
-    description: Kick a player from the server
+    description: Expulsar a un jugador
+    permission: maxstaff.punish.kick
   unban:
-    description: Unban a player
+    description: Desbanear a un jugador
+    permission: maxstaff.punish.unban
   unmute:
-    description: Unmute a player
+    description: Quitar silencio
+    permission: maxstaff.punish.unmute
   warn:
-    description: Send a warning to a player
+    description: Advertir a un jugador
+    permission: maxstaff.punish.warn
   history:
-    description: View a player's sanction history
+    description: Ver historial de sanciones
+    permission: maxstaff.history
   vanish:
-    description: Toggle your invisibility to other players
+    description: Alternar invisibilidad
+    permission: maxstaff.vanish
   ban-ip:
-    description: Permanently ban a player's IP
+    description: Banear IP
+    permission: maxstaff.punish.banip
   tempban-ip:
-    description: Temporarily ban a player's IP
+    description: Banear IP temporalmente
+    permission: maxstaff.punish.banip
   unban-ip:
-    description: Unban an IP
+    description: Desbanear IP
+    permission: maxstaff.punish.unbanip
   sc:
-    description: Private chat for Staff members
+    description: Chat de Staff
+    permission: maxstaff.staffchat
   cmdspy:
-    description: Spy on player commands in real time
+    description: Espiar comandos
+    permission: maxstaff.cmdspy
   chat:
-    description: Manage global chat (mute/clear)
+    description: Gestionar chat global
+    permission: maxstaff.chat.admin
   gamemode:
-    description: Open the gamemode selector
+    description: Selector de modo de juego
     aliases: [gm]
+    permission: maxstaff.gamemode
   alts:
-    description: View a player's alternate accounts
+    description: Ver cuentas secundarias
     aliases: [alt, accs]
+    permission: maxstaff.alts
   sanction:
-    description: Opens the advanced sanction menu for a player
+    description: Menú avanzado de sanciones
+    permission: maxstaff.punish
   freeze:
-    description: Freeze a player for review
+    description: Congelar jugador
     aliases: [ss]
+    permission: maxstaff.freeze
   unfreeze:
-    description: Unfreeze a player
+    description: Descongelar jugador
     aliases: [uss]
+    permission: maxstaff.freeze
     
 permissions:
   maxstaff.admin:
