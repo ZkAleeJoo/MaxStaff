@@ -49,7 +49,6 @@ public class MaxStaff extends JavaPlugin {
     private DiscordManager discordManager;
     
 
-    //PLUGIN SE PRENDE
     @Override
     public void onEnable() {
         
@@ -119,7 +118,6 @@ public class MaxStaff extends JavaPlugin {
     return latestVersion;
     }
 
-    // PLUGIN SE APAGA
     @Override
     public void onDisable() {
 
