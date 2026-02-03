@@ -7,7 +7,7 @@ api-version: 1.19
 commands:
   maxstaff:
     description: Main MaxStaff command
-    aliases: [staff, ms]
+    aliases: [ms]
     permission: maxstaff.admin
   staff:
     description: Eneable or disable staff mode
