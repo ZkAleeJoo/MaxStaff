@@ -26,7 +26,7 @@ public class AltsCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + "&cUso: /alts <jugador>"));
+            player.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + plugin.getMainConfigManager().getAltsUse()));
             return true;
         }
 
