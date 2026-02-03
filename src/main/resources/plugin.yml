@@ -9,6 +9,10 @@ commands:
     description: Main MaxStaff command
     aliases: [staff, ms]
     permission: maxstaff.admin
+  staff:
+    description: Eneable or disable staff mode
+    aliases: [s, staffmode] 
+    permission: maxstaff.command.staff
   ban:
     description: Ban a player
     permission: maxstaff.punish.ban
