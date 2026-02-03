@@ -106,6 +106,7 @@ permissions:
       maxstaff.alts: true
       maxstaff.punish: true
       maxstaff.freeze: true
+      maxstaff.command.staff: true
   maxstaff.punish.ban:
     description: Allows using /ban and /tempban.
     default: op
@@ -162,4 +163,7 @@ permissions:
     default: op
   maxstaff.freeze:
     description: Allows using /freeze and /unfreeze.
+    default: op
+  maxstaff.command.staff:
+    description: Allows using the /staff command.
     default: op
