@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MainCommand implements CommandExecutor, TabCompleter {
 
-    private MaxStaff plugin;
+    private final MaxStaff plugin;
 
     public MainCommand(MaxStaff plugin){
         this.plugin = plugin;
@@ -44,7 +44,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            if (!player.hasPermission("maxstaff.admin") && !player.hasPermission("maxstaff.mode")) {
+            if (!player.hasPermission("maxstaff.admin")) {
                 sendNoPermission(player);
                 return true;
             }
@@ -54,16 +54,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
         String sub = args[0].toLowerCase();
 
-        if (sub.equals("mode") || sub.equals("staff")) {
-            if (!player.hasPermission("maxstaff.mode")) {
-                sendNoPermission(player);
-                return true;
-            }
-            plugin.getStaffManager().toggleStaffMode(player);
-            return true;
-        } 
-        
-        else if (sub.equals("reset")) {
+
+        if (sub.equals("reset")) {
             if (!player.hasPermission("maxstaff.admin")) {
                 sendNoPermission(player);
                 return true;
@@ -132,16 +124,11 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtils.getColoredMessage(plugin.getMainConfigManager().getPrefix() + titleTemplate.replace("{version}", plugin.getDescription().getVersion())));
         
         List<String> helpLines = plugin.getMainConfigManager().getHelpLines();
+        
         if (helpLines == null || helpLines.isEmpty()) {
             if (sender.hasPermission("maxstaff.admin")) {
                 sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reload &7- Reload settings"));
-            }
-            if (sender.hasPermission("maxstaff.mode")) {
-                sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff mode &7- Toggle staff mode"));
-            }
-            sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
-            
-            if (sender.hasPermission("maxstaff.admin")) {
+                sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff help &7- View list of commands"));
                 sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff reset"));
                 sender.sendMessage(MessageUtils.getColoredMessage("&9> &a/maxstaff take"));
             }
@@ -158,10 +145,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             if (sender.hasPermission("maxstaff.admin")) {
-                completions.addAll(Arrays.asList("reload", "help", "mode", "reset", "take"));
-            } else if (sender.hasPermission("maxstaff.mode")) {
-                completions.addAll(Arrays.asList("help", "mode"));
-            }
+                completions.addAll(Arrays.asList("reload", "help", "reset", "take"));
+            } 
             return filterCompletions(completions, args[0]);
         }
 
