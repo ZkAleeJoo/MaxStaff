@@ -32,6 +32,7 @@ import org.zkaleejoo.managers.PunishmentManagerMysql;
 import org.zkaleejoo.commands.PunishmentCommand;
 import org.zkaleejoo.commands.SanctionCommand;
 import org.zkaleejoo.commands.StaffChatCommand;
+import org.zkaleejoo.commands.StaffCommand;
 import org.zkaleejoo.commands.VanishCommand;
 import org.zkaleejoo.listeners.ChatListener;
 import org.zkaleejoo.listeners.CommandSpyListener;
@@ -137,6 +138,7 @@ public class MaxStaff extends JavaPlugin {
         MainCommand mainCommand = new MainCommand(this);
         this.getCommand("maxstaff").setExecutor(mainCommand);
         this.getCommand("maxstaff").setTabCompleter(mainCommand);
+        getCommand("staff").setExecutor(new StaffCommand(this));
         this.getCommand("vanish").setExecutor(new VanishCommand(this));
         this.getCommand("sc").setExecutor(new StaffChatCommand(this));
         this.getCommand("cmdspy").setExecutor(new CommandSpyCommand(this));
