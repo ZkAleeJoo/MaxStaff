@@ -1,6 +1,6 @@
 .vscode/
 target/
-dependency-reduced-pom.xml
 pom.xml
 src/test/
 .github/
+src/main/resources/plugin.yml
