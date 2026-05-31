@@ -1,7 +1,5 @@
 # MaxStaff
 
-![MaxStaff](./MaxStaff%20Modrinth.png)
-
 MaxStaff is a staff-management plugin for modern Minecraft servers. It provides staff mode, vanish, staff chat, command spy, punishments, punishment GUIs, reports, freeze tools, invsee, death-inventory restore, client detection, Anti Xray alerts, Discord webhooks, PlaceholderAPI support, and local or MySQL-backed punishment storage.
 
 ## Requirements
