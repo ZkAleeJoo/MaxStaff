@@ -1,0 +1,254 @@
+main: org.zkaleejoo.MaxStaff
+version: ${project.version}
+name: MaxStaff
+author: ZkAleeJoo
+api-version: '1.21'
+
+commands:
+  maxstaff:
+    description: Main MaxStaff command
+    aliases: [ms]
+    permission: maxstaff.admin
+  staff:
+    description: Eneable or disable staff mode
+    aliases: [s, staffmode] 
+    permission: maxstaff.command.staff
+  ban:
+    description: Ban a player
+    permission: maxstaff.punish.ban
+    usage: /ban <player> [time] [reason]
+  tempban:
+    description: Temporarily ban a player
+    permission: maxstaff.punish.ban
+  mute:
+    description: Mute a player
+    permission: maxstaff.punish.mute
+  tempmute:
+    description: Temporarily mute a player
+    permission: maxstaff.punish.mute
+  kick:
+    description: Kick a player
+    permission: maxstaff.punish.kick
+  unban:
+    description: Unban a player
+    permission: maxstaff.punish.unban
+  unmute:
+    description: Unmute a player
+    permission: maxstaff.punish.unmute
+  warn:
+    description: Warn a player
+    permission: maxstaff.punish.warn
+  history:
+    description: View sanction history
+    permission: maxstaff.history
+  vanish:
+    description: Toggle invisibility
+    permission: maxstaff.vanish
+  ban-ip:
+    description: Ban IP address
+    permission: maxstaff.punish.banip
+  tempban-ip:
+    description: Temporarily ban IP address
+    permission: maxstaff.punish.banip
+  unban-ip:
+    description: Unban IP address
+    permission: maxstaff.punish.unbanip
+  sc:
+    description: Staff chat
+    aliases: [staffchat]
+    permission: maxstaff.staffchat
+  cmdspy:
+    description: Spy on commands
+    permission: maxstaff.cmdspy
+  chat:
+    description: Manage global chat
+    permission: maxstaff.chat.admin
+  gamemode:
+    description: Gamemode selector
+    aliases: [gm]
+    permission: maxstaff.gamemode
+  alts:
+    description: View alt accounts
+    aliases: [alt, accs]
+    permission: maxstaff.alts
+  sanction:
+    description: Advanced sanction menu
+  freeze:
+    description: Freeze a player
+    aliases: [ss]
+    permission: maxstaff.freeze
+  unfreeze:
+    description: Unfreeze a player
+    aliases: [uss]
+    permission: maxstaff.freeze
+  report:
+    description: Report a player
+    aliases: [reportar]
+    permission: maxstaff.report
+  invsee:
+    description: View a player inventory in real time
+  revive:
+    description: Restore inventories from recent player deaths
+    permission: maxstaff.revive
+  fly:
+    description: Enable or configure staff flight
+    permission: maxstaff.fly
+  silent:
+    description: Execute punishment commands silently (without broadcast/chat messages)
+    permission: maxstaff.punish.silent
+  xray:
+    description: Open the AntiXray suspects menu
+    permission: maxstaff.antixray.alert
+    
+permissions:
+  maxstaff.admin:
+    description: Full access to MaxStaff and administrative commands.
+    default: op
+    children:
+      maxstaff.mode: true
+      maxstaff.punish.ban: true
+      maxstaff.punish.mute: true 
+      maxstaff.punish.kick: true
+      maxstaff.punish.warn: true
+      maxstaff.punish.unban: true
+      maxstaff.punish.unmute: true
+      maxstaff.see.vanish: true
+      maxstaff.history: true
+      maxstaff.vanish: true
+      maxstaff.punish.banip: true
+      maxstaff.punish.unbanip: true
+      maxstaff.staffchat: true
+      maxstaff.cmdspy: true
+      maxstaff.cmdspy.raw: true
+      maxstaff.cmdspy.raw.owners: true
+      maxstaff.chat.admin: true
+      maxstaff.gamemode: true
+      maxstaff.alts: true
+      maxstaff.punish: true
+      maxstaff.freeze: true
+      maxstaff.command.staff: true
+      maxstaff.report: true
+      maxstaff.report.notify: true
+      maxstaff.report.bypass: true
+      maxstaff.invsee: true
+      maxstaff.revive: true
+      maxstaff.fly: true
+      maxstaff.punish.override: true
+      maxstaff.client.notify: true
+      maxstaff.antixray.alert: true
+      maxstaff.antixray.bypass: true
+      maxstaff.punish.silent: true
+      maxstaff.sanctions.list: true
+  maxstaff.punish.ban:
+    description: Allows using /ban and /tempban.
+    default: op
+  maxstaff.punish.mute:
+    description: Allows using /mute and /tempmute.
+    default: op
+  maxstaff.punish.kick:
+    description: Allows using /kick.
+    default: op
+  maxstaff.punish.warn:
+    description: Allows using /warn.
+    default: op
+  maxstaff.punish.unban:
+    description: Allows using /unban.
+    default: op
+  maxstaff.punish.unmute:
+    description: Allows using /unmute.
+    default: op
+  maxstaff.mode:
+    description: Legacy alias for staff mode permission.
+    default: op
+    children:
+      maxstaff.command.staff: true
+  maxstaff.see.vanish:
+    description: Allows seeing other staff members in vanish.
+    default: op
+  maxstaff.history:
+    description: Allows using /history.
+    default: op
+  maxstaff.vanish:
+    description: Allows using the /vanish command.
+    default: op
+  maxstaff.vanish.join:
+    description: Automatically enables vanish when joining a server.
+    default: false
+  maxstaff.punish.banip:
+    description: Allows using /ban-ip and /tempban-ip.
+    default: op
+  maxstaff.punish.unbanip:
+    description: Allows using /unban-ip.
+    default: op
+  maxstaff.staffchat:
+    description: Allows using and viewing staff chat.
+    default: op
+  maxstaff.cmdspy:
+    description: Allows using /cmdspy to spy on commands.
+    default: op
+  maxstaff.cmdspy.raw:
+    description: Allows viewing raw sensitive arguments in /cmdspy logs.
+    default: false
+  maxstaff.cmdspy.raw.owners:
+    description: Group node for highly restricted staff (e.g. owners) that includes raw cmdspy access.
+    default: op
+    children:
+      maxstaff.cmdspy.raw: true
+  maxstaff.chat.admin:
+    description: Allows muting and clearing global chat.
+    default: op
+  maxstaff.gamemode:
+    description: Allows using /gm to open the GUI.
+    default: op
+  maxstaff.alts:
+    description: Allows using the alt tracking system.
+    default: op
+  maxstaff.punish:
+    description: Allows using /sanction to open the advanced sanction menu.
+    default: op
+  maxstaff.sanctions.list:
+    description: Allows using /sanction list to view active bans and mutes.
+    default: op
+  maxstaff.freeze:
+    description: Allows using /freeze and /unfreeze.
+    default: op
+  maxstaff.command.staff:
+    description: Allows using the /staff command.
+    default: op
+  maxstaff.report:
+    description: Allows players to use /report.
+    default: true
+  maxstaff.report.notify:
+    description: Allows staff to receive report notifications.
+    default: op
+  maxstaff.report.bypass:
+    description: Allows bypassing report cooldowns.
+    default: op
+  maxstaff.invsee:
+    description: Allows using /invsee.
+    default: op
+  maxstaff.revive:
+    description: Allows using /revive to restore death inventories.
+    default: op
+  maxstaff.punish.override:
+    description: Allows bypassing protected staff sanction checks.
+    default: op
+  maxstaff.punish.protected:
+    description: Protects a player from sanctions by lower staff.
+    default: false
+  maxstaff.client.notify:
+    description: Allows staff to receive player client detection notifications.
+    default: op
+  maxstaff.antixray.alert:
+    description: Allows staff to receive AntiXray mining alerts.
+    default: op
+  maxstaff.antixray.bypass:
+    description: Prevents AntiXray alerts from being generated by this player.
+    default: false
+  maxstaff.fly:
+    description: Allows using /fly with speed levels.
+    default: op
+
+  maxstaff.punish.silent:
+    description: Allows using /silent for hidden punishment command execution.
+    default: op

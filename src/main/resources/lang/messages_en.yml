@@ -1,0 +1,493 @@
+#==========================================
+#       MaxStaff - English Messages
+#==========================================
+
+messages:
+  no-permission: "&#FF3333&l✖ &#FF5555You do not have permission to use this command."
+  plugin-reload: "&#00E676&l✔ &#E0E0E0Configuration successfully reloaded."
+  subcommand-invalid: "&#FF3333&l✖ &#FF5555Invalid subcommand. Use &#FFD700/maxstaff help&#FF5555."
+  subcommand-specified: "&#FF3333&l✖ &#FF5555Please specify a subcommand."
+  player-click-pls: "&#FF3333&l✖ &#FF5555Please right-click on a player to sanction them."
+  invalid-material: "&#FF3333&l[Error] &#E0E0E0Material '&#FFD700{path}&#E0E0E0' doesn't exist. Using: &#FFFFFF{default}"
+  teleport-success: "&#00E676&l✔ &#E0E0E0You have been teleported to &#FFD700{player}"
+  message-console: "&#FF3333&l✖ &#FF5555This command can only be executed by players."
+  no-reason: "No reason provided"
+  player-muted: "&#FF3333&lYou are muted! &#E0E0E0You cannot speak."
+  use-staffreset: "&#FF5555Usage: &#FFD700/staff reset <player> <BAN|MUTE|KICK|WARN|ALL>"
+  use-stafftake: "&#FF5555Usage: &#FFD700/staff take <player> <type> [quantity]"
+  staff-reset-success: "&#00E676&l✔ &#E0E0E0History &#FFD700{type} &#E0E0E0of &#FFD700{target} &#E0E0E0successfully restarted."
+  staff-take-success: "&#00E676&l✔ &#E0E0E0They have been removed &#FFFFFF{amount} &#E0E0E0sanctions of the type &#FFD700{type} &#E0E0E0to &#FFD700{target}."
+  take-number-invalid: "&#FF3333&l✖ &#FF5555The quantity must be a valid number."
+  player-no-history: "&#FF5555That player has no punishment history."
+  command-help-title: "&#FF3333&lMaxStaff &#E0E0E0Commands List: &#FFFFFF{version}"
+  command-help-list: 
+    - '&#555555> &#FFFFFFhttps://docs.maxking.lat/en/maxstaff/'
+  update-available: "&f&lNEW VERSION: &7{version}"
+  update-current: "&7Your current version: &c{version}"
+  update-download: "&eDownload it to get improvements and fixes."
+  staff-chat-format: "&#555555[&#FF3333&lSTAFF&#555555] &#FFD700{player}&#555555: &#E0E0E0{message}"
+  command-spy-enabled: "&#00E676&l✔ &#E0E0E0Command Spy Mode &#00E676&lENABLED&#E0E0E0."
+  command-spy-disabled: "&#FF3333&l✖ &#FF5555Command Spy Mode &#FF3333&lDISABLED&#FF5555."
+  command-spy-format: "&#555555[&#FF3333&lSPY&#555555] &#FFD700{player}&#555555: &#E0E0E0{command}"
+  gamemode-use: "&#FF5555Usage: &#FFD700/gm <0|1|2|3>"
+  gamemode-modeinvalid: "&#FF3333&l✖ &#FF5555Invalid game mode"
+  fly-use: "&#FF5555Usage: &#FFD700/fly <1|2|3>"
+  fly-disabled: "&#FF3333&l✖ &#FF5555Fly disabled."
+  fly-enabled-default: "&#00E676&l✔ &#E0E0E0Fly enabled &#AAAAAA(level 1). Use &#FFD700/fly <1|2|3> &#AAAAAAto change speed."
+  fly-enabled-level: "&#00E676&l✔ &#E0E0E0Fly enabled at level &#FFD700{level}&#E0E0E0. Speed: &#FFD700{speed}"
+  chatstaff-use: "&#FF3333&l(!) &#FF5555Write a message for the staff. Usage: &#FFD700/sc <message>"
+  chatstaff-toggle-on: "&#00E676&l✔ &#E0E0E0Staff chat mode &#00E676&lENABLED&#E0E0E0. Everything you write will be sent to staff chat."
+  chatstaff-toggle-off: "&#FF3333&l✖ &#FF5555Staff chat mode &#FF3333&lDISABLED&#FF5555."
+  restore-inventory: "&#00E676&l[!] &#E0E0E0Your inventory has been automatically restored after the restart."
+  command-sanction-use: "&#FF5555Usage: &#FFD700/sanction <player|list>"
+  command-sanction-self: "&#FF3333&l✖ &#FF5555You cannot sanction yourself."
+  freeze-staff: "&#FF3333&l✖ &#FF5555You cannot freeze another staff member."
+  freeze-already: "&#FF5555This player is already frozen."
+  unfreeze-already: "&#FF5555This player is not frozen."
+  alts-use: "&#FF5555Usage: &#FFD700/alts <player>"
+  freeze-use: "&#FF5555Usage: &#FFD700/ss <player>"
+  report-use: "&#FF5555Usage: &#FFD700/report <player> <reason>"
+  report-disabled: "&#FF3333&l✖ &#FF5555The report system is currently disabled."
+  report-self: "&#FF3333&l✖ &#FF5555You cannot report yourself."
+  report-offline: "&#FF5555That player is not online."
+  report-reason-short: "&#FF5555The reason must be at least &#FFD700{min} &#FF5555characters."
+  report-reason-long: "&#FF5555The reason cannot exceed &#FFD700{max} &#FF5555characters."
+  report-cooldown: "&#FF5555You must wait &#FFD700{seconds}s &#FF5555before reporting again."
+  report-sent: "&#00E676&l✔ &#E0E0E0Report sent successfully &#555555(&#FFD700#{sequence}&#555555)&#E0E0E0. Thanks for helping the staff!"
+  report-staff-notify: "&#555555[&#FF3333&lREPORT&#555555] &#FFFFFF#{sequence} &#FFD700{reporter} &#555555» &#FF3333{target} &#555555| &#E0E0E0{reason}"
+  report-staff-notify-hover:
+    - "&#555555&m----------------------------------------"
+    - "&#FF3333&lREPORT RECEIVED"
+    - ""
+    - "&#AAAAAAReport ID: &#FFFFFF#{sequence}"
+    - "&#AAAAAAReporter: &#FFD700{reporter}"
+    - "&#AAAAAAReported player: &#FF3333{target}"
+    - ""
+    - "&#AAAAAAReason:"
+    - "&#E0E0E0{reason}"
+    - ""
+    - "&#AAAAAALocation:"
+    - "&#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+    - ""
+    - "&#00E676&l» &#00E676Click to prepare the attend command"
+    - "&#555555&m----------------------------------------"
+  invsee-use: "&#FF5555Usage: &#FFD700/invsee <player>"
+  invsee-self: "&#FF3333&l✖ &#FF5555You cannot view your own inventory."
+  invsee-check: "&#FFD700Opening the player's inventory..."
+  invsee-offline-loaded: "&#00E676Opening last saved inventory of &#FFD700{player}&#00E676 (saved: &#AAAAAA{date}&#00E676)."
+  invsee-offline-unavailable: "&#FF3333&l✖ &#FF5555No saved inventory was found for that offline player."
+  invsee-inspection-online-title: "&#222222Inspecting &#FFD700{player}"
+  invsee-inspection-offline-title: "&#222222Invsee Offline: &#FFD700{player}"
+  invsee-legacy-mainhand-warning: "&#FFD700Note: this is a legacy snapshot and it did not save main-hand data. The slot may show &#AAAAAA'No item'&#FFD700 even if the player had one."
+  inspect-labels:
+    armor-boots: "&#FFFFFFBoots"
+    armor-leggings: "&#FFFFFFLeggings"
+    armor-chestplate: "&#FFFFFFChestplate"
+    armor-helmet: "&#FFFFFFHelmet"
+    offhand: "&#FFFFFFOff hand"
+    mainhand: "&#FFFFFFMain hand"
+    no-item-suffix: "&#555555(No item)"
+  inspect-status:
+    title: "&#FFFFFFPlayer info: {player}"
+    lore:
+      - "&#AAAAAAHealth: &#FF5555{health}"
+      - "&#AAAAAAFood: &#FFD700{food}"
+      - "&#AAAAAALevel: &#00E676{level}"
+      - "&#AAAAAAGamemode: &#E0E0E0{gamemode}"
+      - "&#AAAAAAWorld: &#E0E0E0{world}"
+      - "&#AAAAAACoordinates: &#E0E0E0{x}, {y}, {z}"
+  revive-use: "&#FF5555Usage: &#FFD700/revive"
+  revive-no-deaths: "&#FF3333&l✖ &#FF5555There are no recent deaths to restore."
+  revive-target-offline: "&#FF5555{player} is offline. They must be online to restore their inventory."
+  revive-restored: "&#00E676&l✔ &#E0E0E0Restored inventory to &#FFD700{player}&#E0E0E0. Death cause: &#E0E0E0{cause}"
+  client-detected: "&#555555[&#FF3333&lClient&#555555] &#E0E0E0{player} &#AAAAAAis using &#FFD700{client} &#555555(&#AAAAAAraw: {raw_client}&#555555)"
+  anti-xray-alert: "{prefix}&#FF3333&lXRAY ALERT &#555555» &#E0E0E0Player &#FFD700{player} &#E0E0E0was identified as &#FF5555possible Xray &#555555(&#AAAAAArate: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s&#555555, &#AAAAAAtotal: &#FFD700{window_total}&#555555)"
+  anti-xray-alert-hover:
+    - "&#555555&m----------------------------------------"
+    - "&#FF3333&lANTIXRAY ALERT"
+    - ""
+    - "&#AAAAAAPlayer: &#FFD700{player}"
+    - "&#AAAAAAMineral: &#FF3333{mineral}"
+    - "&#AAAAAAMineral rate: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s"
+    - "&#AAAAAATotal ores in window: &#FFD700{window_total}"
+    - "&#AAAAAASession total for this ore: &#FFD700{rate}"
+    - "&#AAAAAALocation: &#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+    - ""
+    - "&#00E676&l>> &#00E676Click to prepare teleport"
+    - "&#555555&m----------------------------------------"
+  anti-xray-disabled: "&#FF3333&l✖ &#FF5555The Anti Xray module is disabled."
+  silent-punishment-use: "&#FF5555Usage: &#FFD700/silent <ban|tempban|mute|tempmute|kick|warn|ban-ip|tempban-ip> <player/ip> [time] [reason]"
+  silent-invalid: "&#FF3333&l✖ &#FF5555Invalid action. Use: &#FFD700ban, tempban, mute, tempmute, kick, warn, ban-ip, tempban-ip"
+  silent-format-invalid: "&#FF3333&l✖ &#FF5555Invalid duration format. Use: &#FFD700<number><s|m|h|d|w> &#FF5555or &#FFD700perm/permanent/permanently"
+
+staff-mode:
+  enabled: "&#00E676&l✔ &#E0E0E0Staff Mode &#00E676&lACTIVATED&#E0E0E0!"
+  disabled: "&#FF3333&l✖ &#FF5555Staff Mode &#FF3333&lDISABLED&#FF5555."
+  inventory-saved: "&#00E676Your inventory has been saved."
+  inventory-restored: "&#00E676Your inventory has been restored."
+  cannot-drop: "&#FF3333&l✖ &#FF5555You cannot drop items while in staff mode."
+  cannot-place: "&#FF3333&l✖ &#FF5555You cannot place blocks while in staff mode."
+  action-bar: "&#FF3333&lSTAFF MODE &#555555| &#E0E0E0Vanish: {status}"
+  status-enabled: "&#00E676&lENABLED"
+  status-disabled: "&#FF3333&lDISABLED"
+  items:
+    punish:
+      name: "&#FF3333&lPunish &#AAAAAA(Right Click)"
+      message: "&#FFD700Opening punishment menu..."
+    freeze:
+      name: "&#FFFFFF&lFreeze &#AAAAAA(Click Player)"
+      message-freeze: "&#E0E0E0You have frozen &#FFD700{player}"
+      message-unfreeze: "&#E0E0E0You have unfrozen &#FFD700{player}"
+      target-frozen:
+        - "&#FF3333&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        - " &#FFD700&lMODERATION ALERT"
+        - ""
+        - " &#FF3333&lYOU HAVE BEEN FROZEN!"
+        - " &#E0E0E0Please connect to our &#FFFFFFDiscord"
+        - " &#FFFFFFdiscord.gg/your-server"
+        - ""
+        - " &#AAAAAAAvailable time: &#FFD7005 minutes"
+        - ""
+        - " &#FF3333&lᴅᴏ ɴᴏᴛ ʟᴏɢ ᴏᴜᴛ ᴏʀ ʏᴏᴜ ᴡɪʟʟ ʙᴇ ʙᴀɴɴᴇᴅ"
+        - "&#FF3333&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      target-unfrozen: "&#00E676You have been unfrozen!"
+    players:
+      name: "&#FFFFFF&lOnline Players &#AAAAAA(Right Click)"
+      message: "&#FFD700Opening player list..."
+    random-tp:
+      name: "&#FFD700&lRandom TP &#AAAAAA(Right Click)"
+      message: "&#00E676&l✔ &#E0E0E0Teleported randomly to &#FFD700{player}"
+      no-targets: "&#FF3333&l✖ &#FF5555No available players to random teleport."
+    inspect:
+      name: "&#E0E0E0&lInspect &#AAAAAA(Click Player)"
+      message: "&#FFD700Inspecting: &#E0E0E0{player}"
+    wall-compass:
+      name: "&#FFFFFF&lWall Compass &#AAAAAA(Right Click)"
+    vanish:
+      name: "&#00E676&lVanish &#AAAAAA(Click to toggle)"
+      message-on: "&#00E676&l✔ &#E0E0E0Vanish: &#00E676&lENABLED &#AAAAAA(You are invisible)"
+      message-off: "&#FF3333&l✖ &#FF5555Vanish: &#FF3333&lDISABLED &#AAAAAA(You are visible)"
+
+gui:
+  player-offline: "&#FF3333&l✖ &#FF5555That player is not online."
+  players:
+    title: "&#222222Online Players"
+    head-lore: "&#AAAAAAClick to teleport"
+    random-tp:
+      name: "&#FFD700&lRandom TP"
+      lore:
+        - "&#AAAAAAClick to teleport to"
+        - "&#AAAAAAa random online player"
+  xray:
+    title: "&#222222Possible Xray"
+    head:
+      name: "&#FF3333&l{player} &#555555| &#FFD700{mineral}"
+      lore:
+        - "&#AAAAAALast ore: &#FF3333{mineral}"
+        - "&#AAAAAAMineral rate: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s"
+        - "&#AAAAAAWindow total: &#FFD700{window_total}"
+        - "&#AAAAAASession total: &#FFD700{rate}"
+        - "&#AAAAAALocation: &#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+        - ""
+        - "&#00E676Click to teleport"
+    empty:
+      material: "BARRIER"
+      name: "&#00E676&lNo Xray alerts"
+      lore:
+        - "&#AAAAAANo players have been"
+        - "&#AAAAAAidentified as possible Xray."
+    teleport-success: "&#00E676&l✔ &#E0E0E0Teleported to possible Xray &#FFD700{player}"
+    target-offline: "&#FF3333&l✖ &#FF5555This possible Xray player is offline."
+  sanctions:
+    title: "&#222222Punish: &#FF3333{target}"
+    items:
+      ban: { name: "&#FF3333&lBAN", lore: ["&#AAAAAAClick to select reason and duration"] }
+      mute: { name: "&#FFD700&lMUTE", lore: ["&#AAAAAAClick to select reason and duration"] }
+      kick: { name: "&#FFFFFF&lKICK", lore: ["&#AAAAAAClick to kick now"] }
+  info:
+    title: "&#222222Information: &#FFD700{target}"
+    status:
+      online: "&#00E676Online"
+      offline: "&#FF5555Offline"
+    items:
+      head:
+        name: "&#FFFFFF&lViewing: &#FFD700{target}"
+        lore:
+          - "&#AAAAAAStatus: {status}"
+          - "&#AAAAAAHealth: &#FF5555{health}&#AAAAAA/&#FF555520 ❤"
+          - "&#AAAAAAHunger: &#FFD700{food}&#AAAAAA/&#FFD70020 🍖"
+          - "&#AAAAAAGamemode: &#E0E0E0{gm}"
+          - "&#AAAAAACurrent IP: &#FFFFFF{ip}"
+      stats:
+        name: "&#FFFFFF&lStatistics"
+        lore:
+          - "&#AAAAAAPlayer: &#E0E0E0{target}"
+          - "&#AAAAAAUUID: &#555555{uuid}"
+          - "&#AAAAAAPlaytime: &#FFFFFF{playtime}"
+          - "&#AAAAAATotal punishments: &#FF5555{total_punishments}"
+      history:
+        name: "&#FFD700&lPunishment History"
+        lore:
+          - "&#AAAAAABans: &#FF3333{bans}"
+          - "&#AAAAAAMutes: &#FFD700{mutes}"
+          - "&#AAAAAAKicks: &#FFFFFF{kicks}"
+          - "&#AAAAAAWarns: &#FFD700{warns}"
+          - ""
+          - "&#FFD700Click to view details"
+      action_punish:
+        name: "&#FF3333&lPunish"
+        lore:
+          - "&#AAAAAAOpen the sanction menu"
+          - "&#AAAAAAfor this player."
+          - ""
+          - "&#FF3333Click to continue"
+      alts:
+        name: "&#FFFFFF&lRelated Accounts"
+        lore:
+          - "&#AAAAAAClick to track possible"
+          - "&#AAAAAAaccounts linked to their IP."
+          - ""
+          - "&#FFFFFFClick to view Alts"
+      inventory:
+        name: "&#E0E0E0&lView Real Inventory"
+        lore:
+          - "&#AAAAAAInspect their inventory"
+          - "&#AAAAAAin real-time."
+          - ""
+          - "&#E0E0E0Click to open"
+      permissions:
+        name: "&#FFFFFF&lPermissions"
+        lore:
+          - "&#AAAAAASee all active permissions"
+          - "&#AAAAAAfor this player."
+          - ""
+          - "&#FFFFFFClick to view permissions"
+  permissions:
+    title: "&#222222Permissions: &#FFD700{target} &#555555({page}/{total})"
+    permission-item-name: "&#E0E0E0{permission}"
+    permission-item-lore: "&#555555Active permission"
+    empty-name: "&#FF3333No active permissions"
+    empty-lore:
+      - "&#AAAAAAThis player has no"
+      - "&#AAAAAAactive permissions detected."
+  reasons:
+    title: "&#222222Sanction [{type}] - {target} ({page}/{total})"
+    item-name: "&#FF3333&lSanction #{number}"
+    item-lore: ["&#AAAAAAReason: &#E0E0E0{reason}", "&#555555ID: {id}"]
+    dye-name: "&#FFD700Duration: &#E0E0E0{duration}"
+    dye-lore:
+      - "&#AAAAAAType: &#FFFFFF{type}"
+      - "&#AAAAAAReason: &#E0E0E0{reason}"
+      - "&#555555ID: {id}"
+      - "&#555555TimeValue: {duration}"
+      - ""
+      - "&#00E676Click to apply sanction"
+    navigation:
+      lore-back: "&#AAAAAAReturn to previous menu"
+      lore-page: "&#AAAAAAGo to page {page}"
+  confirm:
+    title: "&#222222Confirm {type} - {target}"
+    items:
+      yes:
+        name: "&#00E676&lCONFIRM"
+        lore:
+          - "&#AAAAAATarget: &#E0E0E0{target}"
+          - "&#AAAAAAReason: &#FFD700{reason}"
+          - "&#AAAAAADuration: &#FFFFFF{duration}"
+          - ""
+          - "&#00E676Click to confirm"
+      no:
+        name: "&#FF3333&lCANCEL"
+        lore:
+          - "&#AAAAAATarget: &#E0E0E0{target}"
+          - "&#AAAAAAReason: &#FFD700{reason}"
+          - "&#AAAAAADuration: &#FFFFFF{duration}"
+          - ""
+          - "&#AAAAAAReturn to reasons menu"
+          - ""
+          - "&#FF3333Click to cancel"
+  history:
+    title: "&#222222History: &#FFD700{target}"
+    back-lore:
+      - "&#AAAAAAReturn to player info"
+    items:
+      bans:
+        name: "&#FF3333&lBans"
+        lore: ["&#AAAAAATotal in records: &#E0E0E0{count}", "", "&#FFFFFFPermanent or temporary sanctions."]
+      mutes:
+        name: "&#FFD700&lMutes"
+        lore: ["&#AAAAAATotal in records: &#E0E0E0{count}", "", "&#FFFFFFChat infractions."]
+      warns:
+        name: "&#FFD700&lWarnings"
+        lore: ["&#AAAAAATotal in records: &#E0E0E0{count}", "", "&#FFFFFFAccumulated notices."]
+      kicks:
+        name: "&#E0E0E0&lKicks"
+        lore: ["&#AAAAAATotal in records: &#E0E0E0{count}", "", "&#FFFFFFDirect server kicks."]
+  history-detailed:
+    title: "&#222222Details [{type}] - {target}"
+    item-name: "&#FFFFFF&lRecord #{number}"
+    item-lore:
+      date: "&#AAAAAADate: &#E0E0E0{date}"
+      staff: "&#AAAAAAStaff: &#FF5555{staff}"
+      reason: "&#AAAAAAReason: &#FFD700{reason}"
+      duration: "&#AAAAAADuration: &#FFFFFF{duration}"
+    back-lore: 
+      - "&#AAAAAABack to summary"
+  active-sanctions:
+    title: "&#222222Active Sanctions &#555555({page}/{total})"
+    item-name: "&#FF5555&l{type} &#555555- &#FFFFFF{target}"
+    item-lore:
+      - "&#AAAAAAStaff: &#E0E0E0{staff}"
+      - "&#AAAAAAReason: &#FFD700{reason}"
+      - "&#AAAAAARemaining: &#FFFFFF{remaining}"
+      - ""
+      - "&#555555Active punishment"
+    empty:
+      name: "&#00E676&lNo active sanctions"
+      lore:
+        - "&#AAAAAAThere are no active"
+        - "&#AAAAAAbans or mutes right now."
+    page-info:
+      name: "&#FFD700Page &#FFFFFF{page}&#555555/&#FFFFFF{total}"
+      lore:
+        - "&#AAAAAAActive sanctions: &#FFFFFF{total-records}"
+  gamemode:
+    title: "&#222222Game Mode Selector"
+    survival:
+      name: "&#00E676&lSURVIVAL MODE"
+      lore: ["&#AAAAAAClick to switch to survival mode.", "&#555555Command /gm"]
+      material: "GRASS_BLOCK"
+    creative:
+      name: "&#FFD700&lCREATIVE MODE"
+      lore: ["&#AAAAAAClick to switch to creative mode.", "&#555555Command /gm"]
+      material: "BEACON"
+    adventure:
+      name: "&#FF3333&lADVENTURE MODE"
+      lore: ["&#AAAAAAClick to switch to adventure mode.", "&#555555Command /gm"]
+      material: "MAP"
+    spectator:
+      name: "&#AAAAAA&lSPECTATOR MODE"
+      lore: ["&#AAAAAAClick to switch to spectator mode.", "&#555555Command /gm"]
+      material: "ENDER_EYE"
+  feedback:
+    gamemode-changed: "&#00E676&l✔ &#E0E0E0Your game mode has been changed to &#FFD700{mode}&#E0E0E0."
+  alts:
+    title: "&#222222Accounts of: &#FFD700{target}"
+    dynamic: "Dynamic"
+    status-online: "&#00E676Online"
+    status-offline: "&#AAAAAAOffline"
+    status-banned: "&#FF3333&lBANNED"
+    head-lore:
+      - "&#E0E0E0{dynamic}"
+      - "&#AAAAAAStatus: {status}"
+      - "&#555555IP: {ip}"
+  revive:
+    title: "&#222222Revive Menu &#555555({page}/{total})"
+    item-name: "&#00E676{player}"
+    item-lore:
+      - "&#AAAAAACause: &#E0E0E0{death-cause}"
+      - "&#AAAAAADate: &#E0E0E0{date}"
+      - "&#AAAAAAItems: &#E0E0E0{items-amount}"
+      - ""
+      - "&#00E676Click to restore inventory"
+    page-info-name: "&#FFD700Page &#E0E0E0{page}&#AAAAAA/&#E0E0E0{total}"
+    page-info-lore:
+      - "&#AAAAAASnapshots on this page: &#E0E0E0{snapshots-on-page}"
+
+gui-style:
+  navigation:
+    back-name: "&#FF3333« Back"
+    next-name: "&#FFFFFFNext Page »"
+    prev-name: "&#FFFFFF« Previous Page"
+
+time-units:
+  permanent: "Permanent"
+  days: "days"
+  hours: "hours"
+  minutes: "minutes"
+  seconds: "seconds"
+
+punishments:
+  broadcasts:
+    ban: |- #NO DELETE
+      &r
+      &#555555(&#FF3333&l⚡&#555555) &#FF3333&lSANCTIONED USER
+      &#555555 ▸ &#E0E0E0The user &#FF3333{target} &#E0E0E0has been banned.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuration: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAReason: &#E0E0E0{reason}
+      &r
+    ban-ip: |- #NO DELETE
+      &r
+      &#555555(&#FF3333&l⚡&#555555) &#FF3333&lIP-BAN ISSUED
+      &#555555 ▸ &#E0E0E0The user &#FF3333{target} &#AAAAAAwas IP banned.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuration: &#FFD700{duration}
+      &r
+    mute: |- #NO DELETE
+      &r
+      &#555555(&#FFD700&l●&#555555) &#FFD700&lUSER MUTED
+      &#555555 ▸ &#E0E0E0The user &#FFD700{target} &#E0E0E0has been muted.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuration: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAReason: &#E0E0E0{reason}
+      &r
+    kick: |- #NO DELETE
+      &r
+      &#555555(&#FFFFFF&l!&#555555) &#FFFFFF&lUSER KICKED
+      &#555555 ▸ &#E0E0E0The user &#FFFFFF{target} &#E0E0E0has been kicked.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAAReason: &#E0E0E0{reason}
+      &r
+    warns:
+      broadcast: |- #NO DELETE
+        &r
+        &#555555(&#FFD700&l⚠&#555555) &#FFD700&lWARNING ISSUED
+        &#555555 ▸ &#E0E0E0Player: &#FFD700{target} &#555555(&#FF3333{count} warns&#555555)
+        &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAAReason: &#E0E0E0{reason}
+        &r
+      received: "&#FF3333&l¡WARNING! &#E0E0E0You have been warned by: &#FFD700{reason}"
+  screens:
+    ban: |- #NO DELETE
+      &f
+      &#FF3333&lACCESS DENIED! &#555555(&#FF3333&l⚡&#555555)
+      &#AAAAAAYou have been sanctioned for violating the rules.
+      
+      &#555555&m-----------------------------------
+      &#555555 ▸ &#AAAAAAAdministrator: &#FFFFFF{staff}
+      &#555555 ▸ &#AAAAAADuration: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAReason: &#E0E0E0{reason}
+      &#555555&m-----------------------------------
+      
+      &#E0E0E0Think this is a mistake? Appeal at:
+      &#FFFFFFdiscord.yourserver.com
+    kick: |- #NO DELETE
+      &f
+      &#FFFFFF&lKICKED FROM SERVER &#555555(&#FFFFFF&l!&#555555)
+      
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff}
+      &#555555 ▸ &#AAAAAAReason: &#E0E0E0{reason}
+      
+      &#E0E0E0Please maintain appropriate behavior.
+    mute: "&#555555(&#FFD700&l●&#555555) &#FF5555You have been muted by &#FFD700{staff}&#FF5555!"
+    unmute: "&#555555(&#00E676&l✔&#555555) &#00E676Your mute has been removed! You may now speak."
+    muted-chat: "&#FF3333&lMUTE! &#AAAAAAYou cannot speak at this time."
+  feedback:
+    player-offline: "&#FF3333&l✖ &#FF5555That player is not online."
+    not-muted: "&#FF3333&l✖ &#FF5555That player is not muted."
+    target-protected: "&#FF3333&l✖ &#FF5555You cannot sanction &#FFD700{target}&#FF5555 because they are protected."
+    unban-success: "&#00E676&l✔ &#E0E0E0You have unbanned &#FFD700{target}"
+    unmute-success: "&#00E676&l✔ &#E0E0E0You have unmuted &#FFD700{target}"
+    usage: "&#FF5555Usage: &#FFD700/{command} <player> [time] [reason]"
+    limit-exceeded: "&#FF3333&l✖ &#FF5555You cannot apply &#FFFFFF{type}&#FF5555 for &#FFD700{duration}&#FF5555. Your maximum allowed is &#FFD700{max}&#FF5555."
+    no-ip-found: "&#FF3333&l✖ &#FF5555No registered IP was found for this player."
+    unban-ip-success: "&#00E676&l✔ &#E0E0E0The IP &#FFFFFF{ip} &#E0E0E0has been successfully unbanned."
+    invalid-ip: "&#FF3333&l✖ &#FF5555Could not find a valid IP for: &#FFD700{target}"
+
+chat:
+  global-mute-enabled: "&#FF5555The global chat has been &#FF3333&lMUTED &#FF5555by &#FFD700{player}&#FF5555."
+  global-mute-disabled: "&#00E676The global chat has been &#00E676&lUNMUTED &#00E676 by &#FFD700{player}&#00E676."
+  chat-is-muted: "&#FF3333&l✖ &#FF5555The global chat is currently muted."
+  cleared: "&#FFFFFF&lCHAT CLEARED &#AAAAAAby &#FFD700{player}&#AAAAAA."
+  usage: "&#FF5555Usage: &#FFD700/chat <mute|clear>"
+
+placeholders:
+  status-true: "&#00E676Yes"
+  status-false: "&#FF3333No"
+  playtime-format: "{hours}h {minutes}m"
