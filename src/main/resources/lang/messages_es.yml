@@ -1,0 +1,493 @@
+#==========================================
+#      MaxStaff - Mensajes en Español
+#==========================================
+
+messages:
+  no-permission: "&#FF3333&l✖ &#FF5555No tienes permiso para usar este comando."
+  plugin-reload: "&#00E676&l✔ &#E0E0E0Configuración recargada exitosamente."
+  subcommand-invalid: "&#FF3333&l✖ &#FF5555Subcomando inválido. Usa &#FFD700/maxstaff help&#FF5555."
+  subcommand-specified: "&#FF3333&l✖ &#FF5555Por favor especifica un subcomando."
+  player-click-pls: "&#FF3333&l✖ &#FF5555Por favor haz click derecho en un jugador para sancionarlo."
+  invalid-material: "&#FF3333&l[Error] &#E0E0E0El material '&#FFD700{path}&#E0E0E0' no existe. Usando: &#FFFFFF{default}"
+  teleport-success: "&#00E676&l✔ &#E0E0E0Has sido teletransportado a &#FFD700{player}"
+  message-console: "&#FF3333&l✖ &#FF5555Este comando solo puede ser ejecutado por jugadores."
+  no-reason: "Sin motivo proporcionado"
+  player-muted: "&#FF3333&l¡Estás silenciado! &#E0E0E0No puedes hablar."
+  use-staffreset: "&#FF5555Uso: &#FFD700/staff reset <jugador> <BAN|MUTE|KICK|WARN|ALL>"
+  use-stafftake: "&#FF5555Uso: &#FFD700/staff take <jugador> <tipo> [cantidad]"
+  staff-reset-success: "&#00E676&l✔ &#E0E0E0El historial de &#FFD700{type} &#E0E0E0de &#FFD700{target} &#E0E0E0ha sido reiniciado."
+  staff-take-success: "&#00E676&l✔ &#E0E0E0Se han eliminado &#FFFFFF{amount} &#E0E0E0sanciones de tipo &#FFD700{type} &#E0E0E0a &#FFD700{target}."
+  take-number-invalid: "&#FF3333&l✖ &#FF5555La cantidad debe ser un número válido."
+  player-no-history: "&#FF5555Ese jugador no tiene historial de sanciones."
+  command-help-title: "&#FF3333&lMaxStaff &#E0E0E0Lista de Comandos: &#FFFFFF{version}"
+  command-help-list:
+    - 'https://docs.maxking.lat/maxstaff/' 
+  update-available: "&f&lNUEVA VERSION: &7{version}"
+  update-current: "&7Tu version actual: &c{version}"
+  update-download: "&eDescargala para recibir mejoras y correcciones."
+  staff-chat-format: "&#555555[&#FF3333&lSTAFF&#555555] &#FFD700{player}&#555555: &#E0E0E0{message}"
+  command-spy-enabled: "&#00E676&l✔ &#E0E0E0Modo Espía de Comandos &#00E676&lACTIVADO&#E0E0E0."
+  command-spy-disabled: "&#FF3333&l✖ &#FF5555Modo Espía de Comandos &#FF3333&lDESACTIVADO&#FF5555."
+  command-spy-format: "&#555555[&#FF3333&lSPY&#555555] &#FFD700{player}&#555555: &#E0E0E0{command}"
+  gamemode-use: "&#FF5555Uso: &#FFD700/gm <0|1|2|3>"
+  gamemode-modeinvalid: "&#FF3333&l✖ &#FF5555Modo de juego inválido"
+  fly-use: "&#FF5555Uso: &#FFD700/fly <1|2|3>"
+  fly-disabled: "&#FF3333&l✖ &#FF5555Vuelo desactivado."
+  fly-enabled-default: "&#00E676&l✔ &#E0E0E0Vuelo activado &#AAAAAA(nivel 1). Usa &#FFD700/fly <1|2|3> &#AAAAAApara cambiar velocidad."
+  fly-enabled-level: "&#00E676&l✔ &#E0E0E0Vuelo activado en nivel &#FFD700{level}&#E0E0E0. Velocidad: &#FFD700{speed}"
+  chatstaff-use: "&#FF3333&l(!) &#FF5555Escribe un mensaje para el staff. Uso: &#FFD700/sc <mensaje>"
+  chatstaff-toggle-on: "&#00E676&l✔ &#E0E0E0Modo staff chat &#00E676&lACTIVADO&#E0E0E0. Todo lo que escribas irá al staff chat."
+  chatstaff-toggle-off: "&#FF3333&l✖ &#FF5555Modo staff chat &#FF3333&lDESACTIVADO&#FF5555."
+  restore-inventory: "&#00E676&l[!] &#E0E0E0Tu inventario ha sido restaurado automáticamente tras el reinicio."
+  command-sanction-use: "&#FF5555Uso: &#FFD700/sanction <jugador|list>"
+  command-sanction-self: "&#FF3333&l✖ &#FF5555No puedes sancionarte a ti mismo."
+  freeze-staff: "&#FF3333&l✖ &#FF5555No puedes congelar a otro miembro del Staff"
+  freeze-already: "&#FF5555Este jugador ya está congelado."
+  unfreeze-already: "&#FF5555Este jugador no está congelado."
+  alts-use: "&#FF5555Uso: &#FFD700/alts <jugador>"
+  freeze-use: "&#FF5555Uso: &#FFD700/ss <jugador>"
+  report-use: "&#FF5555Uso: &#FFD700/report <jugador> <motivo>"
+  report-disabled: "&#FF3333&l✖ &#FF5555El sistema de reportes está deshabilitado."
+  report-self: "&#FF3333&l✖ &#FF5555No puedes reportarte a ti mismo."
+  report-offline: "&#FF5555Ese jugador no está en línea."
+  report-reason-short: "&#FF5555El motivo debe tener al menos &#FFD700{min} &#FF5555caracteres."
+  report-reason-long: "&#FF5555El motivo no puede superar &#FFD700{max} &#FF5555caracteres."
+  report-cooldown: "&#FF5555Debes esperar &#FFD700{seconds}s &#FF5555para reportar nuevamente."
+  report-sent: "&#00E676&l✔ &#E0E0E0Reporte enviado correctamente &#555555(&#FFD700#{sequence}&#555555)&#E0E0E0. ¡Gracias por ayudar al staff!"
+  report-staff-notify: "&#555555[&#FF3333&lREPORTE&#555555] &#FFFFFF#{sequence} &#FFD700{reporter} &#555555» &#FF3333{target} &#555555| &#E0E0E0{reason}"
+  report-staff-notify-hover:
+    - "&#555555&m----------------------------------------"
+    - "&#FF3333&lREPORTE RECIBIDO"
+    - ""
+    - "&#AAAAAAID del reporte: &#FFFFFF#{sequence}"
+    - "&#AAAAAAReportante: &#FFD700{reporter}"
+    - "&#AAAAAAJugador reportado: &#FF3333{target}"
+    - ""
+    - "&#AAAAAAMotivo:"
+    - "&#E0E0E0{reason}"
+    - ""
+    - "&#AAAAAAUbicación:"
+    - "&#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+    - ""
+    - "&#00E676&l» &#00E676Click para preparar el comando de atención"
+    - "&#555555&m----------------------------------------"
+  invsee-use: "&#FF5555Uso: &#FFD700/invsee <jugador>"
+  invsee-self: "&#FF3333&l✖ &#FF5555No puedes ver tu propio inventario."
+  invsee-check: "&#FFD700Abriendo el inventario del jugador..."
+  invsee-offline-loaded: "&#00E676Abriendo el último inventario guardado de &#FFD700{player}&#00E676 (guardado: &#AAAAAA{date}&#00E676)."
+  invsee-offline-unavailable: "&#FF3333&l✖ &#FF5555No se encontró un inventario guardado para ese jugador desconectado."
+  invsee-inspection-online-title: "&#222222Inspección de &#FFD700{player}"
+  invsee-inspection-offline-title: "&#222222Invsee Offline: &#FFD700{player}"
+  invsee-legacy-mainhand-warning: "&#FFD700Nota: este snapshot es antiguo y no guardaba la mano principal. Por eso puede aparecer como &#AAAAAA'Sin objeto'&#FFD700 aunque el jugador sí la tuviera."
+  inspect-labels:
+    armor-boots: "&#FFFFFFBotas"
+    armor-leggings: "&#FFFFFFPantalones"
+    armor-chestplate: "&#FFFFFFPechera"
+    armor-helmet: "&#FFFFFFCasco"
+    offhand: "&#FFFFFFMano secundaria"
+    mainhand: "&#FFFFFFMano principal"
+    no-item-suffix: "&#555555(Sin objeto)"
+  inspect-status:
+    title: "&#FFFFFFInformación de {player}"
+    lore:
+      - "&#AAAAAASalud: &#FF5555{health}"
+      - "&#AAAAAAComida: &#FFD700{food}"
+      - "&#AAAAAANivel: &#00E676{level}"
+      - "&#AAAAAAGamemode: &#E0E0E0{gamemode}"
+      - "&#AAAAAAMundo: &#E0E0E0{world}"
+      - "&#AAAAAACoordenadas: &#E0E0E0{x}, {y}, {z}"
+  revive-use: "&#FF5555Uso: &#FFD700/revive"
+  revive-no-deaths: "&#FF3333&l✖ &#FF5555No hay muertes recientes para restaurar."
+  revive-target-offline: "&#FF5555{player} está desconectado. Debe estar en línea para restaurar su inventario."
+  revive-restored: "&#00E676&l✔ &#E0E0E0Inventario restaurado a &#FFD700{player}&#E0E0E0. Causa de muerte: &#E0E0E0{cause}"
+  client-detected: "&#555555[&#FF3333&lClient&#555555] &#E0E0E0{player} &#AAAAAAusa &#FFD700{client} &#555555(&#AAAAAAraw: {raw_client}&#555555)"
+  anti-xray-alert: "{prefix}&#FF3333&lALERTA XRAY &#555555» &#E0E0E0El jugador &#FFD700{player} &#E0E0E0se identificó como &#FF5555posible Xray &#555555(&#AAAAAArate: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s&#555555, &#AAAAAAtotal: &#FFD700{window_total}&#555555)"
+  anti-xray-alert-hover:
+    - "&#555555&m----------------------------------------"
+    - "&#FF3333&lALERTA ANTIXRAY"
+    - ""
+    - "&#AAAAAAJugador: &#FFD700{player}"
+    - "&#AAAAAAMineral: &#FF3333{mineral}"
+    - "&#AAAAAARate del mineral: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s"
+    - "&#AAAAAATotal de minerales en ventana: &#FFD700{window_total}"
+    - "&#AAAAAATotal de este mineral en sesión: &#FFD700{rate}"
+    - "&#AAAAAAUbicación: &#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+    - ""
+    - "&#00E676&l>> &#00E676Click para preparar teleport"
+    - "&#555555&m----------------------------------------"
+  anti-xray-disabled: "&#FF3333&l✖ &#FF5555El módulo Anti Xray está desactivado."
+  silent-punishment-use: "&#FF5555Uso: &#FFD700/silent <ban|tempban|mute|tempmute|kick|warn|ban-ip|tempban-ip> <jugador/ip> [tiempo] [razón]"
+  silent-invalid: "&#FF3333&l✖ &#FF5555Acción inválida. Usa: &#FFD700ban, tempban, mute, tempmute, kick, warn, ban-ip, tempban-ip"
+  silent-format-invalid: "&#FF3333&l✖ &#FF5555Formato de duración inválido. Usa: &#FFD700<numero><s|m|h|d|w> &#FF5555o &#FFD700perm/permanent/permanentemente"
+
+staff-mode:
+  enabled: "&#00E676&l✔ &#E0E0E0Modo Staff &#00E676&lACTIVADO&#E0E0E0!"
+  disabled: "&#FF3333&l✖ &#FF5555Modo Staff &#FF3333&lDESACTIVADO&#FF5555."
+  inventory-saved: "&#00E676Tu inventario ha sido guardado."
+  inventory-restored: "&#00E676Tu inventario ha sido restaurado."
+  cannot-drop: "&#FF3333&l✖ &#FF5555No puedes tirar objetos en modo staff."
+  cannot-place: "&#FF3333&l✖ &#FF5555No puedes poner bloques en modo staff."
+  action-bar: "&#FF3333&lMODO STAFF &#555555| &#E0E0E0Vanish: {status}"
+  status-enabled: "&#00E676&lACTIVADO"
+  status-disabled: "&#FF3333&lDESACTIVADO"
+  items:
+    punish:
+      name: "&#FF3333&lSancionar &#AAAAAA(Click Derecho)"
+      message: "&#FFD700Abriendo menú de sanciones..."
+    freeze:
+      name: "&#FFFFFF&lCongelar &#AAAAAA(Click al Jugador)"
+      message-freeze: "&#E0E0E0Has congelado a &#FFD700{player}"
+      message-unfreeze: "&#E0E0E0Has descongelado a &#FFD700{player}"
+      target-frozen:
+        - "&#FF3333&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        - " &#FFD700&lALERTA DE MODERACIÓN"
+        - ""
+        - " &#FF3333&l¡TE HAN CONGELADO!"
+        - " &#E0E0E0Por favor conéctate a nuestro &#FFFFFFDiscord"
+        - " &#FFFFFFdiscord.gg/tu-servidor"
+        - ""
+        - " &#AAAAAATiempo disponible: &#FFD7005 minutos"
+        - ""
+        - " &#FF3333&lɴᴏ ᴄɪᴇʀʀᴇꜱ ʟᴀ ꜱᴇꜱɪóɴ ᴏ ꜱᴇʀáꜱ ʙᴀɴᴇᴀᴅᴏ"
+        - "&#FF3333&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      target-unfrozen: "&#00E676¡Has sido descongelado!"
+    players:
+      name: "&#FFFFFF&lJugadores Online &#AAAAAA(Click Derecho)"
+      message: "&#FFD700Abriendo lista de jugadores..."
+    random-tp:
+      name: "&#FFD700&lRandom TP &#AAAAAA(Click Derecho)"
+      message: "&#00E676&l✔ &#E0E0E0Teletransportado aleatoriamente a &#FFD700{player}"
+      no-targets: "&#FF3333&l✖ &#FF5555No hay jugadores disponibles para hacer random tp."
+    inspect:
+      name: "&#E0E0E0&lInspeccionar &#AAAAAA(Click al Jugador)"
+      message: "&#FFD700Inspeccionando a: &#E0E0E0{player}"
+    wall-compass:
+      name: "&#FFFFFF&lBrújula de Paredes &#AAAAAA(Click Derecho)"
+    vanish:
+      name: "&#00E676&lVanish &#AAAAAA(Click para alternar)"
+      message-on: "&#00E676&l✔ &#E0E0E0Vanish: &#00E676&lACTIVADO &#AAAAAA(Eres invisible)"
+      message-off: "&#FF3333&l✖ &#FF5555Vanish: &#FF3333&lDESACTIVADO &#AAAAAA(Eres visible)"
+
+gui:
+  player-offline: "&#FF3333&l✖ &#FF5555Ese jugador no está conectado."
+  players:
+    title: "&#222222Jugadores Online"
+    head-lore: "&#AAAAAAClick para teletransportarte"
+    random-tp:
+      name: "&#FFD700&lRandom TP"
+      lore:
+        - "&#AAAAAAClick para teletransportarte"
+        - "&#AAAAAAa un jugador aleatorio online"
+  xray:
+    title: "&#222222Posibles Xray"
+    head:
+      name: "&#FF3333&l{player} &#555555| &#FFD700{mineral}"
+      lore:
+        - "&#AAAAAAÚltimo mineral: &#FF3333{mineral}"
+        - "&#AAAAAARate mineral: &#FFD700{window_rate}&#555555/&#FFD700{window_seconds}s"
+        - "&#AAAAAATotal ventana: &#FFD700{window_total}"
+        - "&#AAAAAATotal sesión: &#FFD700{rate}"
+        - "&#AAAAAAUbicación: &#E0E0E0{world} &#555555(&#AAAAAA{x}&#555555, &#AAAAAA{y}&#555555, &#AAAAAA{z}&#555555)"
+        - ""
+        - "&#00E676Click para teletransportarte"
+    empty:
+      material: "BARRIER"
+      name: "&#00E676&lSin alertas Xray"
+      lore:
+        - "&#AAAAAANingún jugador ha sido"
+        - "&#AAAAAAidentificado como posible Xray."
+    teleport-success: "&#00E676&l✔ &#E0E0E0Teletransportado al posible Xray &#FFD700{player}"
+    target-offline: "&#FF3333&l✖ &#FF5555Este posible Xray está desconectado."
+  sanctions:
+    title: "&#222222Sancionar: &#FF3333{target}"
+    items:
+      ban: { name: "&#FF3333&lBANEAR", lore: ["&#AAAAAAClick para seleccionar motivo y duración"] }
+      mute: { name: "&#FFD700&lMUTEAR", lore: ["&#AAAAAAClick para seleccionar motivo y duración"] }
+      kick: { name: "&#FFFFFF&lEXPULSAR", lore: ["&#AAAAAAClick para expulsar ahora"] }
+  info:
+    title: "&#222222Información: &#FFD700{target}"
+    status:
+      online: "&#00E676En línea"
+      offline: "&#FF5555Desconectado"
+    items:
+      head:
+        name: "&#FFFFFF&lVisualizando a: &#FFD700{target}"
+        lore:
+          - "&#AAAAAAEstado: {status}"
+          - "&#AAAAAAVida: &#FF5555{health}&#AAAAAA/&#FF555520 ❤"
+          - "&#AAAAAAHambre: &#FFD700{food}&#AAAAAA/&#FFD70020 🍖"
+          - "&#AAAAAAGamemode: &#E0E0E0{gm}"
+          - "&#AAAAAAIP Actual: &#FFFFFF{ip}"
+      stats:
+        name: "&#FFFFFF&lEstadísticas"
+        lore:
+          - "&#AAAAAAJugador: &#E0E0E0{target}"
+          - "&#AAAAAAUUID: &#555555{uuid}"
+          - "&#AAAAAATiempo jugado: &#FFFFFF{playtime}"
+          - "&#AAAAAASanciones totales: &#FF5555{total_punishments}"
+      history:
+        name: "&#FFD700&lHistorial de Sanciones"
+        lore:
+          - "&#AAAAAABans: &#FF3333{bans}"
+          - "&#AAAAAAMutes: &#FFD700{mutes}"
+          - "&#AAAAAAKicks: &#FFFFFF{kicks}"
+          - "&#AAAAAAWarns: &#FFD700{warns}"
+          - ""
+          - "&#FFD700Click para ver detalles"
+      action_punish:
+        name: "&#FF3333&lSancionar"
+        lore:
+          - "&#AAAAAAAbrir menú de sanciones"
+          - "&#AAAAAApara este jugador."
+          - ""
+          - "&#FF3333Click para continuar"
+      alts:
+        name: "&#FFFFFF&lCuentas Relacionadas"
+        lore:
+          - "&#AAAAAAHaz click para rastrear posibles"
+          - "&#AAAAAAcuentas vinculadas a su IP."
+          - ""
+          - "&#FFFFFFClick para ver Alts"
+      inventory:
+        name: "&#E0E0E0&lVer Inventario Real"
+        lore:
+          - "&#AAAAAAInspecciona su inventario"
+          - "&#AAAAAAen tiempo real."
+          - ""
+          - "&#E0E0E0Click para abrir"
+      permissions:
+        name: "&#FFFFFF&lPermisos"
+        lore:
+          - "&#AAAAAAConsulta todos los permisos"
+          - "&#AAAAAAactivos de este jugador."
+          - ""
+          - "&#FFFFFFClick para ver permisos"
+  permissions:
+    title: "&#222222Permisos: &#FFD700{target} &#555555({page}/{total})"
+    permission-item-name: "&#E0E0E0{permission}"
+    permission-item-lore: "&#555555Permiso activo"
+    empty-name: "&#FF3333Sin permisos activos"
+    empty-lore:
+      - "&#AAAAAAEste jugador no tiene"
+      - "&#AAAAAApermisos activos detectados."
+  reasons:
+    title: "&#222222Sanción [{type}] - {target} ({page}/{total})"
+    item-name: "&#FF3333&lSanción #{number}"
+    item-lore: ["&#AAAAAAMotivo: &#E0E0E0{reason}", "&#555555ID: {id}"]
+    dye-name: "&#FFD700Duración: &#E0E0E0{duration}"
+    dye-lore:
+      - "&#AAAAAATipo: &#FFFFFF{type}"
+      - "&#AAAAAAMotivo: &#E0E0E0{reason}"
+      - "&#555555ID: {id}"
+      - "&#555555Tiempo: {duration}"
+      - ""
+      - "&#00E676Click para aplicar sanción"
+    navigation:
+      lore-back: "&#AAAAAAVolver al menú anterior"
+      lore-page: "&#AAAAAAIr a la página {page}"
+  confirm:
+    title: "&#222222Confirmar {type} - {target}"
+    items:
+      yes:
+        name: "&#00E676&lCONFIRMAR"
+        lore:
+          - "&#AAAAAAJugador: &#E0E0E0{target}"
+          - "&#AAAAAARazón: &#FFD700{reason}"
+          - "&#AAAAAADuración: &#FFFFFF{duration}"
+          - ""
+          - "&#00E676Click para confirmar"
+      no:
+        name: "&#FF3333&lCANCELAR"
+        lore:
+          - "&#AAAAAAJugador: &#E0E0E0{target}"
+          - "&#AAAAAARazón: &#FFD700{reason}"
+          - "&#AAAAAADuración: &#FFFFFF{duration}"
+          - ""
+          - "&#AAAAAAVolver al menú de razones"
+          - ""
+          - "&#FF3333Click para cancelar"
+  history:
+    title: "&#222222Historial: &#FFD700{target}"
+    back-lore:
+      - "&#AAAAAAVolver a la información del jugador"
+    items:
+      bans:
+        name: "&#FF3333&lBaneos"
+        lore: ["&#AAAAAATotal en el registro: &#E0E0E0{count}", "", "&#FFFFFFSanciones permanentes o temporales."]
+      mutes:
+        name: "&#FFD700&lSilencios"
+        lore: ["&#AAAAAATotal en el registro: &#E0E0E0{count}", "", "&#FFFFFFInfracciones de chat."]
+      warns:
+        name: "&#FFD700&lAdvertencias"
+        lore: ["&#AAAAAATotal en el registro: &#E0E0E0{count}", "", "&#FFFFFFAcumulación de avisos."]
+      kicks:
+        name: "&#E0E0E0&lExpulsiones"
+        lore: ["&#AAAAAATotal en el registro: &#E0E0E0{count}", "", "&#FFFFFFExpulsiones directas del servidor."]
+  history-detailed:
+    title: "&#222222Detalles [{type}] - {target}"
+    item-name: "&#FFFFFF&lRegistro #{number}"
+    item-lore:
+      date: "&#AAAAAAFecha: &#E0E0E0{date}"
+      staff: "&#AAAAAAStaff: &#FF5555{staff}"
+      reason: "&#AAAAAAMotivo: &#FFD700{reason}"
+      duration: "&#AAAAAADuración: &#FFFFFF{duration}"
+    back-lore: 
+      - "&#AAAAAAVolver al resumen"
+  active-sanctions:
+    title: "&#222222Sanciones Activas &#555555({page}/{total})"
+    item-name: "&#FF5555&l{type} &#555555- &#FFFFFF{target}"
+    item-lore:
+      - "&#AAAAAAStaff: &#E0E0E0{staff}"
+      - "&#AAAAAAMotivo: &#FFD700{reason}"
+      - "&#AAAAAARestante: &#FFFFFF{remaining}"
+      - ""
+      - "&#555555Sancion activa"
+    empty:
+      name: "&#00E676&lSin sanciones activas"
+      lore:
+        - "&#AAAAAANo hay baneos ni"
+        - "&#AAAAAAmuteos activos ahora mismo."
+    page-info:
+      name: "&#FFD700Pagina &#FFFFFF{page}&#555555/&#FFFFFF{total}"
+      lore:
+        - "&#AAAAAASanciones activas: &#FFFFFF{total-records}"
+  gamemode:
+    title: "&#222222Selector de Modo de Juego"
+    survival:
+      name: "&#00E676&lMODO SUPERVIVENCIA"
+      lore: ["&#AAAAAAHaz click para cambiar a modo supervivencia.", "&#555555Command /gm"]
+      material: "GRASS_BLOCK"
+    creative:
+      name: "&#FFD700&lMODO CREATIVO"
+      lore: ["&#AAAAAAHaz click para cambiar a modo creativo.", "&#555555Command /gm"]
+      material: "BEACON"
+    adventure:
+      name: "&#FF3333&lMODO AVENTURA"
+      lore: ["&#AAAAAAHaz click para cambiar a modo aventura.", "&#555555Command /gm"]
+      material: "MAP"
+    spectator:
+      name: "&#AAAAAA&lMODO ESPECTADOR"
+      lore: ["&#AAAAAAHaz click para cambiar a modo espectador.", "&#555555Command /gm"]
+      material: "ENDER_EYE"
+  feedback:
+    gamemode-changed: "&#00E676&l✔ &#E0E0E0Tu modo de juego ha sido cambiado a &#FFD700{mode}&#E0E0E0."
+  alts:
+    title: "&#222222Cuentas de: &#FFD700{target}"
+    dynamic: "Dinámico"
+    status-online: "&#00E676En línea"
+    status-offline: "&#AAAAAADesconectado"
+    status-banned: "&#FF3333&lBANEADO"
+    head-lore:
+      - "&#E0E0E0{dynamic}"
+      - "&#AAAAAAEstado: {status}"
+      - "&#555555IP: {ip}"
+  revive:
+    title: "&#222222Menú de Revive &#555555({page}/{total})"
+    item-name: "&#00E676{player}"
+    item-lore:
+      - "&#AAAAAACausa: &#E0E0E0{death-cause}"
+      - "&#AAAAAAFecha: &#E0E0E0{date}"
+      - "&#AAAAAAItems: &#E0E0E0{items-amount}"
+      - ""
+      - "&#00E676Click para restaurar inventario"
+    page-info-name: "&#FFD700Página &#E0E0E0{page}&#AAAAAA/&#E0E0E0{total}"
+    page-info-lore:
+      - "&#AAAAAASnapshots en esta página: &#E0E0E0{snapshots-on-page}"
+
+gui-style:
+  navigation:
+    back-name: "&#FF3333« Volver"
+    next-name: "&#FFFFFFSiguiente Página »"
+    prev-name: "&#FFFFFF« Página Anterior"
+
+time-units:
+  permanent: "Permanente"
+  days: "días"
+  hours: "horas"
+  minutes: "minutos"
+  seconds: "segundos"
+
+punishments:
+  broadcasts:
+    ban: |- #NO BORRAR
+      &r
+      &#555555(&#FF3333&l⚡&#555555) &#FF3333&lUSUARIO SANCIONADO
+      &#555555 ▸ &#E0E0E0El usuario &#FF3333{target} &#E0E0E0ha sido baneado.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuración: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAMotivo: &#E0E0E0{reason}
+      &r
+    ban-ip: |- #NO BORRAR
+      &r
+      &#555555(&#FF3333&l⚡&#555555) &#FF3333&lIP-BAN EMITIDO
+      &#555555 ▸ &#E0E0E0El usuario &#FF3333{target} &#AAAAAAfue baneado por IP.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuración: &#FFD700{duration}
+      &r
+    mute: |- #NO BORRAR
+      &r
+      &#555555(&#FFD700&l●&#555555) &#FFD700&lUSUARIO SILENCIADO
+      &#555555 ▸ &#E0E0E0El usuario &#FFD700{target} &#E0E0E0ha sido muteado.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAADuración: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAMotivo: &#E0E0E0{reason}
+      &r
+    kick: |- #NO BORRAR
+      &r
+      &#555555(&#FFFFFF&l!&#555555) &#FFFFFF&lUSUARIO EXPULSADO
+      &#555555 ▸ &#E0E0E0El usuario &#FFFFFF{target} &#E0E0E0ha sido expulsado.
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAAMotivo: &#E0E0E0{reason}
+      &r
+    warns:
+      broadcast: |- #NO BORRAR
+        &r
+        &#555555(&#FFD700&l⚠&#555555) &#FFD700&lADVERTENCIA EMITIDA
+        &#555555 ▸ &#E0E0E0Jugador: &#FFD700{target} &#555555(&#FF3333{count} warns&#555555)
+        &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff} &#555555| &#AAAAAAMotivo: &#E0E0E0{reason}
+        &r
+      received: "&#FF3333&l¡ADVERTENCIA! &#E0E0E0Has sido advertido por: &#FFD700{reason}"
+  screens:
+    ban: |- #NO BORRAR
+      &f
+      &#FF3333&l¡ACCESO DENEGADO! &#555555(&#FF3333&l⚡&#555555)
+      &#AAAAAAHas sido sancionado por incumplir las reglas.
+      
+      &#555555&m-----------------------------------
+      &#555555 ▸ &#AAAAAAAdministrador: &#FFFFFF{staff}
+      &#555555 ▸ &#AAAAAADuración: &#FFD700{duration}
+      &#555555 ▸ &#AAAAAAMotivo: &#E0E0E0{reason}
+      &#555555&m-----------------------------------
+      
+      &#E0E0E0¿Crees que es un error? Apela en:
+      &#FFFFFFdiscord.tuservidor.com
+    kick: |- #NO BORRAR  
+      &f
+      &#FFFFFF&lEXPULSIÓN DEL SERVIDOR &#555555(&#FFFFFF&l!&#555555)
+      
+      &#555555 ▸ &#AAAAAAStaff: &#FFFFFF{staff}
+      &#555555 ▸ &#AAAAAAMotivo: &#E0E0E0{reason}
+      
+      &#E0E0E0Por favor, mantén un comportamiento adecuado.
+    mute: "&#555555(&#FFD700&l●&#555555) &#FF5555¡Has sido silenciado por &#FFD700{staff}&#FF5555!"
+    unmute: "&#555555(&#00E676&l✔&#555555) &#00E676¡Tu silencio ha sido retirado! Ya puedes hablar."
+    muted-chat: "&#FF3333&l¡MUTE! &#AAAAAANo puedes hablar en este momento."
+  feedback:
+    player-offline: "&#FF3333&l✖ &#FF5555Ese jugador no está conectado."
+    not-muted: "&#FF3333&l✖ &#FF5555Ese jugador no está silenciado."
+    target-protected: "&#FF3333&l✖ &#FF5555No puedes sancionar a &#FFD700{target}&#FF5555 porque está protegido."
+    unban-success: "&#00E676&l✔ &#E0E0E0Has desbaneado a &#FFD700{target}"
+    unmute-success: "&#00E676&l✔ &#E0E0E0Has desilenciado a &#FFD700{target}"
+    usage: "&#FF5555Uso: &#FFD700/{command} <jugador> [tiempo] [motivo]"
+    limit-exceeded: "&#FF3333&l✖ &#FF5555No puedes aplicar &#FFFFFF{type}&#FF5555 por &#FFD700{duration}&#FF5555. Tu máximo permitido es &#FFD700{max}&#FF5555."
+    no-ip-found: "&#FF3333&l✖ &#FF5555No se encontró una IP registrada para este jugador."
+    unban-ip-success: "&#00E676&l✔ &#E0E0E0La IP &#FFFFFF{ip} &#E0E0E0ha sido desbaneada correctamente."
+    invalid-ip: "&#FF3333&l✖ &#FF5555No se pudo encontrar una IP válida para: &#FFD700{target}"
+
+chat:
+  global-mute-enabled: "&#FF5555El chat global ha sido &#FF3333&lSILENCIADO &#FF5555por &#FFD700{player}&#FF5555."
+  global-mute-disabled: "&#00E676El chat global ha sido &#00E676&lACTIVADO &#00E676por &#FFD700{player}&#00E676."
+  chat-is-muted: "&#FF3333&l✖ &#FF5555El chat está silenciado globalmente en este momento."
+  cleared: "&#FFFFFF&lCHAT LIMPIADO &#AAAAAApor &#FFD700{player}&#AAAAAA."
+  usage: "&#FF5555Uso: &#FFD700/chat <mute|clear>"
+
+placeholders:
+  status-true: "&#00E676Sí"
+  status-false: "&#FF3333No"
+  playtime-format: "{hours}h {minutes}m"

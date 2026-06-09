@@ -1,0 +1,536 @@
+#==========================================
+#       MaxStaff - Technical Configuration
+#==========================================
+
+general:
+  #The plugin's global prefix
+  prefix: "&4&lMaxStaff &8» "
+  #Check for updates on startup and every hour?
+  update-check: true
+  #Send anonymous usage metrics to bStats?
+  bstats: true
+  #Plugin language (Options: en, es)
+  #The plugin will look for the file in: lang/messages_{language}.yml
+  language: "en" 
+
+#==========================================
+#       Modules (Global enable/disable)
+#==========================================
+# If a module is disabled, it will not register commands/listeners and will not send
+# messages, alerts, or actions from that module.
+modules:
+  staff-mode: true
+  command-spy: true
+  chat: true
+  gamemode-gui: true
+  alts: true 
+  sanctions-gui: true
+  freeze: true
+  reports: true
+  invsee: true
+  revive: true
+  punishments: true
+  client-tracker: true
+  anti-xray: false
+  # Commands or aliases from MaxStaff that should be fully released by this plugin.
+  # Supports entries like: fly, gamemode, gm, invsee
+  disable-commands:
+    - fly
+    - gamemode
+    - gm
+    - invsee
+
+#==========================================
+#       Fly Command (Customizable)
+#==========================================
+# Valid range per level: 0.1 to 1.0 (Minecraft limit)
+fly:
+  level-1-speed: 0.1
+  level-2-speed: 0.2
+  level-3-speed: 0.3
+
+#==========================================
+#       Reports
+#==========================================
+reports:
+  enabled: true
+  cooldown-seconds: 60 #Waiting time between reports per player (in seconds)
+  cooldown-bypass-permission: "maxstaff.report.bypass" #Permission that ignores the cooldown
+  require-online-target: true #Define whether the reported player must be online
+  allow-self-report: false #Controls whether a player can report themselves
+  min-reason-length: 5 #Minimum length of the reason for the report
+  max-reason-length: 120 #Maximum motif length
+  store-reports: true #Save the reports in reports.yml or not
+  notify:
+    enabled: true #Activate live notification to staff when someone reports
+    permission: "maxstaff.report.notify" #Permission required to receive those report notifications
+    click-action:
+      enabled: true #Allow click interaction in report notifications for staff
+      type: "SUGGEST_COMMAND" #SUGGEST_COMMAND (suggest in chat) or RUN_COMMAND (execute directly on click)
+      command-template: "/tp {target}" #Supported placeholders: {staff}, {reporter}, {target}, {world}, {x}, {y}, {z}, {reason}, {id}, {sequence}
+
+#==========================================
+#       Command Spy
+#==========================================
+command-spy:
+  #Commands whose arguments should be hidden in cmdspy (without /)
+  sensitive-commands: ["login", "register", "l", "reg", "token"]
+  #Policy:
+  # - Grant maxstaff.cmdspy to regular staff who should use /cmdspy with masking.
+  # - Grant maxstaff.cmdspy.raw only to a highly restricted group (e.g. owners).
+  # - Do NOT include maxstaff.cmdspy.raw in broad admin groups.
+  #Staff with this permission will see raw command arguments
+  sensitive-bypass-permission: "maxstaff.cmdspy.raw"
+  #Replacement shown instead of sensitive arguments
+  masked-argument: "******"
+
+#==========================================
+#       Client Tracker
+#==========================================
+client-tracker:
+  enabled: true
+  #Time waiting for client brand packet before fallback to unknown (20 ticks = 1s)
+  detection-timeout-ticks: 80
+  unknown-client-name: "Unknown"
+  notify-staff:
+    enabled: true
+    permission: "maxstaff.client.notify"
+  #Custom signatures (substring match, case-insensitive)
+  #key = visible client name, values = possible brand fragments
+  client-signatures:
+    "LabyMod": ["labymod"]
+    "PvPLounge": ["pvplounge"]
+
+#==========================================
+#       Anti Xray
+#==========================================
+anti-xray:
+  ignore-creative: true
+  bypass-permission: "maxstaff.antixray.bypass"
+  alert-blocks:
+    - DIAMOND_ORE
+    - DEEPSLATE_DIAMOND_ORE
+    - REDSTONE_ORE
+    - DEEPSLATE_REDSTONE_ORE
+    - ANCIENT_DEBRIS
+    - EMERALD_ORE
+    - DEEPSLATE_EMERALD_ORE
+    - LAPIS_ORE
+    - DEEPSLATE_LAPIS_ORE
+    - GOLD_ORE
+    - DEEPSLATE_GOLD_ORE
+    - NETHER_GOLD_ORE
+    - IRON_ORE
+    - DEEPSLATE_IRON_ORE
+    - COPPER_ORE
+    - DEEPSLATE_COPPER_ORE
+    - COAL_ORE
+    - DEEPSLATE_COAL_ORE
+  # Alerts are sent only when one of these thresholds is reached.
+  # This avoids one chat message per mined ore and focuses staff on possible Xray patterns.
+  rate:
+    # With 120, the plugin looks at what the player mined during the last 120 seconds, or the last 2 minutes
+    window-seconds: 120 
+    # It is the limit per specific mineral within the window, if a player mines 6 blocks of the same ore within 120 seconds, an alert is triggered.
+    material-threshold: 6 
+    # It is the total limit of monitored minerals within the window, regardless of type.
+    total-threshold: 12 
+    # If the player mines 16 blocks of the same ore since entering the server, an alert is triggered even if they haven't mined them all within the last 120 seconds.
+    # It is the limit of the same mineral during the player's current session.
+    session-threshold: 16 
+  display-names:
+    DIAMOND_ORE: "Diamond Ore"
+    DEEPSLATE_DIAMOND_ORE: "Deepslate Diamond Ore"
+    REDSTONE_ORE: "Redstone Ore"
+    DEEPSLATE_REDSTONE_ORE: "Deepslate Redstone Ore"
+    ANCIENT_DEBRIS: "Ancient Debris"
+  notify:
+    enabled: true
+    permission: "maxstaff.antixray.alert"
+    cooldown-seconds: 60
+    click-action:
+      enabled: true
+      type: "RUN_COMMAND" #SUGGEST_COMMAND (suggest in chat) or RUN_COMMAND (execute directly on click)
+      command-template: "/tp {player}"
+
+#==========================================
+#       InvSee / Inspection Layout
+#==========================================
+invsee-inspection:
+  layout:
+    # InvSee uses 45 slots: 0-35 are the player's inventory, 36-44 are the compact equipment row.
+    # Armor uses 4 consecutive slots starting here (boots, leggings, chestplate, helmet)
+    armor-start-slot: 36
+    offhand-slot: 40
+    mainhand-slot: 41
+    status-slot: 44
+  status-item:
+    material: "KNOWLEDGE_BOOK"
+
+#==========================================
+#       Database (MySQL)
+#==========================================
+#IMPORTANT: For users who had plugin version 1.4.1, 
+#when migrating to MySQL all sanction data will be deleted; that is, the sanction history will be blank.
+database:
+  enabled: false #If false, it will use the original file system (data.yml).
+  #IMPORTANT: YAML mode is single-server only (no cross-server sync).
+  #For a real network with synchronized sanctions, set enabled: true (MySQL).
+  host: "localhost"
+  port: 3306
+  database: "maxstaff_db"
+  username: "root"
+  password: ""
+  use-ssl: true
+  #Unique stable ID for this server instance in the network sync system
+  server-id: "server-1"
+#Optional list only for startup diagnostics in console.
+#It does NOT create extra connections, it only prints what servers should be connected.
+  status-servers:
+    survival:
+      name: "Survival"
+      host: "127.0.0.1"
+      port: 3306
+    lobby:
+      name: "Lobby"
+      host: "127.0.0.1"
+      port: 3306
+
+# --------------------------------------------------
+#  Staff Mode Configuration
+# --------------------------------------------------
+staff-mode:
+  vanish:
+    #Keep /vanish state when staff moves between network servers.
+    #With MySQL enabled this is shared across all servers; with YAML it only persists on this backend.
+    persist-across-servers: true
+  items:
+    punish:
+      material: "NETHERITE_HOE"
+      slot: 0
+    freeze:
+      material: "PACKED_ICE"
+      helmet-material: "PACKED_ICE"
+      slot: 1
+      ban-on-disconnect:
+        enabled: true
+        days: 7
+        reason: "Disconnected while frozen"
+      display:
+        enabled: true
+        # Distance in front of frozen player's view direction
+        distance: 0.1
+        # Horizontal offset to move display to the player's right side
+        side-offset: 0.2
+        # Vertical offset from eye level (negative = lower)
+        height-offset: 0.75
+        # Refresh interval in ticks (20 ticks = 1 second)
+        update-ticks: 10
+        text-shadow:
+          # Turn dark text on or off
+          enabled: true
+        background:
+          enabled: true
+          # Hex color (RRGGBB or #RRGGBB)
+          color: "#0F172A"
+          # 0-255 transparency (255 = fully opaque)
+          opacity: 0
+        risk:
+          # Score formula used by the plugin: (bans * 3) + (mutes * 2) + kicks
+          thresholds:
+            # If score >= medium-min-score => MEDIUM
+            medium-min-score: 5
+            # If score >= high-min-score => HIGH
+            high-min-score: 12
+          levels:
+            low:
+              label: "LOW"
+              color: "&a"
+            medium:
+              label: "MEDIUM"
+              color: "&6"
+            high:
+              label: "HIGH"
+              color: "&c"
+          bar:
+            # Total segments shown in {risk_bar}
+            total-bars: 5
+            # Active segments by risk level (0..total-bars)
+            low-bars: 1
+            medium-bars: 3
+            high-bars: 5
+        # Placeholders: {name}, {bans}, {mutes}, {kicks}, {total}, {risk_label}, {risk_color}, {risk_bar}
+        lines:
+          - "&#2731F5&l❖ SANCTION PROFILE"
+          - "&8&m---------------------------"
+          - "&fPlayer: &b{name}"
+          - "&fHistory: {risk_bar} &8(&7{total}&8)"
+          - "&fRisk: {risk_color}&l{risk_label}"
+          - "&cBans: &f{bans}  &6Mutes: &f{mutes}  &eKicks: &f{kicks}"
+          - "&8&m---------------------------"
+    players:
+      material: "CLOCK"
+      slot: 4
+    random-tp:
+      material: "ENDER_PEARL"
+      slot: 5
+    inspect:
+      material: "CHEST"
+      slot: 7
+    vanish:
+      material: "NETHER_STAR"
+      slot: 8
+    wall-compass:
+      material: "COMPASS"
+      slot: 6
+      range: 64
+  combat:
+    allow-hit: false #If false, staff using /staff cannot hit players/mobs
+  containers:
+    # If false, staff can inspect containers in /staff but cannot move, add, or remove items.
+    allow-item-move: false
+
+# --------------------------------------------------
+#  GUI Configuration
+# --------------------------------------------------
+gui:
+  players:
+    random-tp:
+      material: "ENDER_PEARL"
+  sanctions:
+    items:
+      ban:
+        material: "IRON_SWORD"
+      mute:
+        material: "PAPER"
+      kick:
+        material: "FEATHER"
+  info:
+    items:
+      stats:
+        material: "BOOK"
+      history:
+        material: "PAPER"
+      action_punish:
+        material: "NETHERITE_SWORD"
+      alts:
+        material: "COMPASS"
+      inventory:
+        material: "CHEST"
+      permissions:
+        material: "WRITABLE_BOOK"
+  history:
+    back-slot: 22
+    items:
+      bans:
+        material: "RED_WOOL"
+      mutes:
+        material: "ORANGE_WOOL"
+      warns:
+        material: "YELLOW_WOOL"
+      kicks:
+        material: "LIGHT_GRAY_WOOL"
+  history-detailed:
+    record-material: "PAPER"
+  active-sanctions:
+    #Inventory size for /sanction list (must be multiple of 9, max 54)
+    size: 54
+    items:
+      ban:
+        material: "RED_WOOL"
+      ip-ban:
+        material: "REDSTONE_BLOCK"
+      mute:
+        material: "ORANGE_WOOL"
+    empty:
+      material: "BARRIER"
+    page-info:
+      material: "PAPER"
+
+# --------------------------------------------------
+#  GUI Style Configuration
+# --------------------------------------------------
+gui-style:
+  border-material: "BLACK_STAINED_GLASS_PANE"
+  navigation:
+    back-material: "BOOK"
+    next-material: "ARROW" 
+    prev-material: "ARROW"
+  confirmation:
+    yes-material: "LIME_WOOL"
+    no-material: "RED_WOOL"
+  unified-menu:
+    #Materials for long-lasting dyes in the reasons menu
+    duration-1-material: "LIME_DYE"    #Short time
+    duration-2-material: "YELLOW_DYE"  #Medium time
+    duration-3-material: "ORANGE_DYE"  #Long time
+    duration-4-material: "RED_DYE"     #Permanent
+
+# --------------------------------------------------
+#  Game Mode GUI Configuration
+# --------------------------------------------------
+gui-gamemode: #Game Mode Menu Configuration
+  enabled-menu: true #Enable/Disable the GUI menu
+  survival-material: "GRASS_BLOCK"
+  creative-material: "BEACON"
+  adventure-material: "MAP"
+  spectator-material: "ENDER_EYE"
+
+# --------------------------------------------------
+#  Revive Menu Configuration
+# --------------------------------------------------
+revive:
+  # Inventory size for the revive GUI (must be multiple of 9, max 54)
+  menu-size: 54
+  # Max snapshots shown per page (auto-limited by menu size)
+  page-size: 45
+
+# --------------------------------------------------
+#  Inventory Snapshot Cache Configuration
+# --------------------------------------------------
+inventory-snapshots:
+  death:
+    # Maximum age of death snapshots before cleanup (in minutes)
+    max-age-minutes: 60
+    # Automatic cleanup interval (in minutes)
+    cleanup-interval-minutes: 5
+  
+# --------------------------------------------------
+#  Sanctions System (Logic)
+# --------------------------------------------------
+punishments:
+  #Announce sanctions globally?
+  broadcast: true
+  # Enable per-group sanction limits (permission-based, compatible with LuckPerms and any permission plugin).
+  section-limits:
+    enabled: false
+    groups:
+      helper:
+        permission: "maxstaff.groups.helper"
+        limits:
+          tempban: "7d"
+          tempmute: "7d"
+          ban: "7d"
+          mute: "7d"
+          ban-ip: "7d"
+      mod:
+        permission: "maxstaff.groups.mod"
+        limits:
+          tempban: "14d"
+          tempmute: "14d"
+          ban: "14d"
+          mute: "14d"
+          ban-ip: "14d"
+  broadcasts:
+    warns:
+      #Commands executed automatically upon reaching X warnings
+      thresholds:
+        3: "mute {target} 1h Accumulation of 3 warnings"
+        5: "kick {target} You have exceeded the warning limit (5)"
+
+#Definition of Sanction Reasons
+#Here you define the ID, the Material, and the available Durations.
+#The names ('name') can be translated directly here as they follow the logic.
+# --------------------------------------------------
+#  Punishment Reasons Configuration
+# --------------------------------------------------
+punishment-reasons:
+  BAN:
+    xray:  
+      name: "&6X-Ray"
+      material: "DIAMOND_ORE"
+      durations: ["7d", "14d", "30d", "perm"]
+    combat: 
+      name: "&cCombat Hacks"
+      material: "NETHERITE_SWORD"
+      durations: ["30d", "60d", "90d", "perm"] 
+    movement: 
+      name: "&bMovement Hacks"
+      material: "FEATHER"
+      durations: ["14d", "30d", "60d", "perm"] 
+    scripts: 
+      name: "&eScripts"
+      material: "NETHERITE_PICKAXE"
+      durations: ["7d", "14d", "30d", "perm"] 
+    griefing: 
+      name: "&aGriefing"
+      material: "TNT"
+      durations: ["14d", "30d", "perm", "perm"] 
+    theft: 
+      name: "&7Theft"
+      material: "CHEST"
+      durations: ["7d", "14d", "30d", "perm"] 
+    toxicity: 
+      name: "&4Toxicity"
+      material: "WITHER_SKELETON_SKULL"
+      durations: ["14d", "30d", "perm", "perm"] 
+    bugs: 
+      name: "&dBugs"
+      material: "BEDROCK"
+      durations: ["7d", "30d", "perm", "perm"] 
+    advertising: 
+      name: "&9Advertising"
+      material: "PAPER"
+      durations: ["perm", "perm", "perm", "perm"] 
+    evasion: 
+      name: "&fEvasion"
+      material: "IRON_BARS"
+      durations: ["perm", "perm", "perm", "perm"] 
+  MUTE:
+    insults: 
+      name: "&eInsults"
+      material: "WRITABLE_BOOK"
+      durations: ["1h", "12h", "1d", "7d"] 
+    spam: 
+      name: "&bSpam"
+      material: "RECOVERY_COMPASS"
+      durations: ["30m", "1h", "6h", "1d"] 
+    flood: 
+      name: "&3Flood"
+      material: "WATER_BUCKET"
+      durations: ["15m", "30m", "1h", "12h"] 
+    toxic_chat: 
+      name: "&cChat Toxicity"
+      material: "POISONOUS_POTATO"
+      durations: ["1h", "6h", "1d", "7d"] 
+    language: 
+      name: "&7Language"
+      material: "SPORE_BLOSSOM"
+      durations: ["1h", "2h", "6h", "12h"] 
+    ads: 
+      name: "&9Ads"
+      material: "MAP"
+      durations: ["12h", "1d", "7d", "30d"] 
+    provocation: 
+      name: "&6Provocation"
+      material: "CAMPFIRE"
+      durations: ["2h", "6h", "1d", "7d"] 
+    discussions: 
+      name: "&8Discussions"
+      material: "SCULK_SENSOR"
+      durations: ["1h", "3h", "12h", "1d"] 
+    caps: 
+      name: "&fCaps"
+      material: "WHITE_WOOL"
+      durations: ["15m", "30m", "1h", "3h"] 
+    annoyance: 
+      name: "&dAnnoyance"
+      material: "GOAT_HORN"
+      durations: ["1h", "12h", "1d", "7d"] 
+  KICK:
+    spam_ads: 
+      name: "&eSpam/Publicidad"
+      material: "PAPER"
+      durations: ["inst"] 
+    inappropriate_skin: 
+      name: "&6Skin Inapropiada"
+      material: "LEATHER_CHESTPLATE"
+      durations: ["inst"] 
+    bad_behavior: 
+      name: "&cMal Comportamiento"
+      material: "BONE"
+      durations: ["inst"] 
+    trolling: 
+      name: "&dUser Trolling"
+      material: "SLIME_BALL"
+      durations: ["inst"] 
