@@ -187,10 +187,13 @@ public class MainConfigManager {
     private Map<Material, String> antiXrayDisplayNames = Map.of();
     private Map<String, Boolean> modules = Collections.emptyMap();
     private Set<String> disabledPluginCommands = Set.of();
+    private Set<String> staffModeBlacklistedCommands = Set.of();
+    private boolean freezeBlockAllCommands;
     private boolean punishmentSectionLimitsEnabled;
     private List<PunishmentLimitGroup> punishmentLimitGroups = List.of();
     private String msgPunishmentLimitExceeded;
     private String silentPunishmentUse, silentInvalid, silentFormatInvalid;
+    private String staffModeCommandBlocked, freezeCommandBlocked;
 
     @SuppressWarnings("unused")
     private static final class PunishmentLimitGroup {
@@ -227,6 +230,8 @@ public class MainConfigManager {
         bStatsEnabled = config.getBoolean("general.bstats", true);
         modules = loadModules(config);
         disabledPluginCommands = loadDisabledCommands(config);
+        staffModeBlacklistedCommands = loadCommandSet(config, "staff-mode.blacklist-commands");
+        freezeBlockAllCommands = config.getBoolean("freeze.block-all-commands", true);
         isBroadcastEnabled = config.getBoolean("punishments.broadcast", true);
         matPunish = loadMaterial(config.getString("staff-mode.items.punish.material"), Material.NETHERITE_HOE);
         matFreeze = loadMaterial(config.getString("staff-mode.items.freeze.material"), Material.PACKED_ICE);
@@ -432,6 +437,10 @@ public class MainConfigManager {
         inventoryRestored = lang.getString("staff-mode.inventory-restored");
         cannotDrop = lang.getString("staff-mode.cannot-drop");
         cannotPlace = lang.getString("staff-mode.cannot-place");
+        staffModeCommandBlocked = lang.getString("staff-mode.command-blocked",
+                "&#FF3333&l✖ &#FF5555You cannot use that command while in staff mode.");
+        freezeCommandBlocked = lang.getString("messages.frozen-command-blocked",
+                "&#FF3333&l✖ &#FF5555You cannot use commands while frozen.");
         msgInspect = lang.getString("staff-mode.items.inspect.message");
         msgVanishOn = lang.getString("staff-mode.items.vanish.message-on");
         msgVanishOff = lang.getString("staff-mode.items.vanish.message-off");
@@ -919,6 +928,14 @@ public class MainConfigManager {
 
     public String getCannotPlace() {
         return cannotPlace;
+    }
+
+    public String getStaffModeCommandBlocked() {
+        return staffModeCommandBlocked;
+    }
+
+    public String getFreezeCommandBlocked() {
+        return freezeCommandBlocked;
     }
 
     public String getMsgInspect() {
@@ -2439,6 +2456,14 @@ public class MainConfigManager {
         return disabledPluginCommands;
     }
 
+    public Set<String> getStaffModeBlacklistedCommands() {
+        return staffModeBlacklistedCommands;
+    }
+
+    public boolean isFreezeBlockAllCommands() {
+        return freezeBlockAllCommands;
+    }
+
     public boolean isPluginCommandDisabled(String commandLabel) {
         if (commandLabel == null || commandLabel.isBlank()) {
             return false;
@@ -2636,6 +2661,11 @@ public class MainConfigManager {
         }
 
         return Collections.unmodifiableSet(disabledCommands);
+    }
+
+    private Set<String> loadCommandSet(FileConfiguration config, String path) {
+        LinkedHashSet<String> commands = new LinkedHashSet<>(normalizeCommandEntries(config.getStringList(path)));
+        return commands.isEmpty() ? Set.of() : Collections.unmodifiableSet(commands);
     }
 
     private List<DatabaseEndpoint> loadDbStatusEndpoints(FileConfiguration config) {

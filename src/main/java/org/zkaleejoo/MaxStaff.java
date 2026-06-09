@@ -27,6 +27,7 @@ import org.zkaleejoo.managers.PunishmentManager;
 import org.zkaleejoo.managers.PunishmentManagerMysql;
 import org.zkaleejoo.listeners.ChatListener;
 import org.zkaleejoo.listeners.CommandSpyListener;
+import org.zkaleejoo.listeners.CommandBlockListener;
 import org.zkaleejoo.utils.MessageUtils;
 import org.zkaleejoo.managers.ReportManager;
 import java.util.List;
@@ -342,6 +343,9 @@ public class MaxStaff extends JavaPlugin {
     }
 
     public void registerEvents() {
+        if (isModuleEnabled("staff-mode") || isModuleEnabled("freeze")) {
+            getServer().getPluginManager().registerEvents(new CommandBlockListener(this), this);
+        }
         if (isModuleEnabled("staff-mode")) {
             getServer().getPluginManager().registerEvents(new StaffItemsListener(this), this);
             getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);

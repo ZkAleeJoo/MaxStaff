@@ -50,6 +50,13 @@ fly:
   level-3-speed: 0.3
 
 #==========================================
+#       Freeze Command Lock
+#==========================================
+freeze:
+  # If true, frozen players cannot execute any command.
+  block-all-commands: true
+
+#==========================================
 #       Reports
 #==========================================
 reports:
@@ -200,6 +207,10 @@ database:
 #  Staff Mode Configuration
 # --------------------------------------------------
 staff-mode:
+  # Commands blocked while a staff member is using /staff.
+  # Leave empty to disable. Example:
+  # blacklist-commands: ["gamemode"]
+  blacklist-commands: []
   vanish:
     #Keep /vanish state when staff moves between network servers.
     #With MySQL enabled this is shared across all servers; with YAML it only persists on this backend.
