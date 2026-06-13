@@ -93,8 +93,6 @@ Important options:
 
 `/vanish` hides staff members from players without `maxstaff.see.vanish`. The vanish state can persist depending on configuration and can be enabled automatically on join with `maxstaff.vanish.join`.
 
-Standalone vanish displays its own action bar. While staff mode is active, the staff-mode action bar takes priority; leaving staff mode also disables vanish.
-
 ### Staff Chat
 
 `/sc <message>` sends a message to staff chat. If a player runs `/sc` without arguments, MaxStaff toggles staff-chat mode so their normal chat messages are sent to staff chat.
@@ -231,7 +229,6 @@ When `anti-xray` is enabled, MaxStaff monitors configured ores and alerts staff 
 Important options:
 
 - `anti-xray.alert-blocks`
-- `anti-xray.blacklisted-worlds`
 - `anti-xray.rate.window-seconds`
 - `anti-xray.rate.material-threshold`
 - `anti-xray.rate.total-threshold`

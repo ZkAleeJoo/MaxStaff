@@ -114,9 +114,6 @@ client-tracker:
 anti-xray:
   ignore-creative: true
   bypass-permission: "maxstaff.antixray.bypass"
-  # Anti Xray does not count blocks or generate alerts in these worlds.
-  # World names are matched case-insensitively. Example: ["mines", "world_event"]
-  blacklisted-worlds: []
   alert-blocks:
     - DIAMOND_ORE
     - DEEPSLATE_DIAMOND_ORE

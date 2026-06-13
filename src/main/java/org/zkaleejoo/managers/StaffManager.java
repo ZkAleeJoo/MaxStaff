@@ -1,7 +1,5 @@
 package org.zkaleejoo.managers;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -10,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitTask;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.CustomConfig;
 import org.zkaleejoo.config.MainConfigManager;
@@ -46,7 +43,6 @@ public class StaffManager {
     private final Set<UUID> vanishedPlayers = new HashSet<>();
     private final Set<UUID> persistentVanishedPlayers = new HashSet<>();
     private final Set<UUID> commandSpyPlayers = new HashSet<>();
-    private final Map<UUID, BukkitTask> actionBarTasks = new HashMap<>();
     private final Set<String> dirtySections = new HashSet<>();
     private final AtomicBoolean flushInProgress = new AtomicBoolean(false);
     private final AtomicBoolean flushRequestedWhileRunning = new AtomicBoolean(false);
@@ -199,6 +195,25 @@ public class StaffManager {
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeEnabled()));
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getInventorySaved()));
 
+        new org.bukkit.scheduler.BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!isInStaffMode(player) || !player.isOnline()) {
+                    this.cancel();
+                    return;
+                }
+
+                MainConfigManager config = plugin.getMainConfigManager();
+
+                String statusText = isVanished(player) ? config.getStatusEnabled() : config.getStatusDisabled();
+
+                String message = MessageUtils.getColoredMessage(
+                        config.getMsgActionBar().replace("{status}", statusText));
+
+                player.sendActionBar(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+                        .legacySection().deserialize(message));
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
         plugin.getDiscordManager().sendWebhook("staff_mode", player.getName(), player.getName(), "**Activated** ✅",
                 null, null);
     }
@@ -258,8 +273,6 @@ public class StaffManager {
 
         if (isVanished(player)) {
             setVanish(player, false, true);
-        } else {
-            refreshActionBar(player);
         }
 
         player.sendMessage(MessageUtils.getColoredMessage(config.getPrefix() + config.getStaffModeDisabled()));
@@ -468,66 +481,6 @@ public class StaffManager {
                 target.showPlayer(plugin, player);
             }
         }
-
-        refreshActionBar(player);
-    }
-
-    private void refreshActionBar(Player player) {
-        StaffActionBarPolicy.ActionBarType type = StaffActionBarPolicy.select(
-                isInStaffMode(player),
-                isVanished(player));
-
-        if (type == StaffActionBarPolicy.ActionBarType.NONE) {
-            stopActionBar(player.getUniqueId(), player);
-            return;
-        }
-
-        if (actionBarTasks.containsKey(player.getUniqueId())) {
-            sendCurrentActionBar(player, type);
-            return;
-        }
-
-        UUID uuid = player.getUniqueId();
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> updateActionBar(uuid), 0L, 20L);
-        actionBarTasks.put(uuid, task);
-    }
-
-    private void updateActionBar(UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null || !player.isOnline()) {
-            stopActionBar(uuid, null);
-            return;
-        }
-
-        StaffActionBarPolicy.ActionBarType type = StaffActionBarPolicy.select(
-                isInStaffMode(player),
-                isVanished(player));
-        if (type == StaffActionBarPolicy.ActionBarType.NONE) {
-            stopActionBar(uuid, player);
-            return;
-        }
-
-        sendCurrentActionBar(player, type);
-    }
-
-    private void sendCurrentActionBar(Player player, StaffActionBarPolicy.ActionBarType type) {
-        MainConfigManager config = plugin.getMainConfigManager();
-        String statusText = isVanished(player) ? config.getStatusEnabled() : config.getStatusDisabled();
-        String template = type == StaffActionBarPolicy.ActionBarType.STAFF_MODE
-                ? config.getMsgActionBar()
-                : config.getVanishActionBar();
-        String message = MessageUtils.getColoredMessage(template.replace("{status}", statusText));
-        player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(message));
-    }
-
-    private void stopActionBar(UUID uuid, Player player) {
-        BukkitTask task = actionBarTasks.remove(uuid);
-        if (task != null) {
-            task.cancel();
-        }
-        if (player != null && player.isOnline()) {
-            player.sendActionBar(Component.empty());
-        }
     }
 
     public void restoreVanishOnJoin(Player player) {
@@ -670,7 +623,6 @@ public class StaffManager {
     public void handlePlayerQuit(Player player) {
         UUID uuid = player.getUniqueId();
 
-        stopActionBar(uuid, null);
         savedInventory.remove(uuid);
         savedArmor.remove(uuid);
         savedGameMode.remove(uuid);
