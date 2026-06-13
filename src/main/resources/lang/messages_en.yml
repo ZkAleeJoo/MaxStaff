@@ -130,6 +130,8 @@ staff-mode:
   cannot-place: "&#FF3333&l✖ &#FF5555You cannot place blocks while in staff mode."
   command-blocked: "&#FF3333&l✖ &#FF5555You cannot use that command while in staff mode."
   action-bar: "&#FF3333&lSTAFF MODE &#555555| &#E0E0E0Vanish: {status}"
+  vanish:
+    action-bar: "&#00E676&lVANISH &#555555| {status}"
   status-enabled: "&#00E676&lENABLED"
   status-disabled: "&#FF3333&lDISABLED"
   items:
