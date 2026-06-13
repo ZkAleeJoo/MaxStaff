@@ -83,7 +83,7 @@ public class MainConfigManager {
     private String timeUnitPermanent, timeUnitDays, timeUnitHours, timeUnitMinutes, timeUnitSeconds;
     private String usestaffreset, usestafftake, takeNumberInvalid, playerNoHistory, msgResetSuccess, msgTakeSuccess;
     private String msgUpdateAvailable, msgUpdateCurrent, msgUpdateDownload;
-    private String msgActionBar, statusEnabled, statusDisabled;
+    private String msgActionBar, vanishActionBar, statusEnabled, statusDisabled;
     private String guiHistoryTitle;
     private String guiHistoryBansName, guiHistoryMutesName, guiHistoryWarnsName, guiHistoryKicksName;
     private List<String> guiHistoryBansLore, guiHistoryMutesLore, guiHistoryWarnsLore, guiHistoryKicksLore,
@@ -184,6 +184,7 @@ public class MainConfigManager {
     private ClickActionType antiXrayClickActionType;
     private List<String> antiXrayAlertHover;
     private Set<Material> antiXrayAlertBlocks = Set.of();
+    private Set<String> antiXrayBlacklistedWorlds = Set.of();
     private Map<Material, String> antiXrayDisplayNames = Map.of();
     private Map<String, Boolean> modules = Collections.emptyMap();
     private Set<String> disabledPluginCommands = Set.of();
@@ -415,6 +416,7 @@ public class MainConfigManager {
         antiXraySessionThreshold = Math.max(1, config.getInt("anti-xray.rate.session-threshold", 16));
         antiXrayAlertCooldownSeconds = Math.max(0, config.getInt("anti-xray.notify.cooldown-seconds", 60));
         antiXrayAlertBlocks = loadAntiXrayAlertBlocks(config);
+        antiXrayBlacklistedWorlds = loadNormalizedStringSet(config, "anti-xray.blacklisted-worlds");
         antiXrayDisplayNames = loadAntiXrayDisplayNames(config);
         loadPunishmentSectionLimits(config);
 
@@ -568,6 +570,7 @@ public class MainConfigManager {
         msgUpdateCurrent = lang.getString("messages.update-current", "&7Your current version: &c{version}");
         msgUpdateDownload = lang.getString("messages.update-download", "&eDownload it to get improvements and fixes.");
         msgActionBar = lang.getString("staff-mode.action-bar", "&4&lSTAFF MODE &8| &fVanish: {status}");
+        vanishActionBar = lang.getString("staff-mode.vanish.action-bar", "&a&lVANISH &8| {status}");
         statusEnabled = lang.getString("staff-mode.status-enabled", "&aENABLED");
         statusDisabled = lang.getString("staff-mode.status-disabled", "&cDISABLED");
         guiHistoryTitle = lang.getString("gui.history.title");
@@ -1369,6 +1372,10 @@ public class MainConfigManager {
         return msgActionBar;
     }
 
+    public String getVanishActionBar() {
+        return vanishActionBar;
+    }
+
     public String getStatusEnabled() {
         return statusEnabled;
     }
@@ -1993,6 +2000,10 @@ public class MainConfigManager {
         return antiXrayAlertBlocks;
     }
 
+    public Set<String> getAntiXrayBlacklistedWorlds() {
+        return antiXrayBlacklistedWorlds;
+    }
+
     public String getAntiXrayDisplayName(Material material) {
         if (material == null) {
             return "";
@@ -2565,6 +2576,23 @@ public class MainConfigManager {
         }
 
         return parsedBlocks.isEmpty() ? Set.of() : Collections.unmodifiableSet(parsedBlocks);
+    }
+
+    private Set<String> loadNormalizedStringSet(FileConfiguration config, String path) {
+        List<String> configuredValues = config.getStringList(path);
+        if (configuredValues == null || configuredValues.isEmpty()) {
+            return Set.of();
+        }
+
+        Set<String> normalizedValues = new java.util.LinkedHashSet<>();
+        for (String configuredValue : configuredValues) {
+            if (configuredValue == null || configuredValue.isBlank()) {
+                continue;
+            }
+            normalizedValues.add(configuredValue.trim().toLowerCase(Locale.ROOT));
+        }
+
+        return normalizedValues.isEmpty() ? Set.of() : Collections.unmodifiableSet(normalizedValues);
     }
 
     private Map<Material, String> loadAntiXrayDisplayNames(FileConfiguration config) {

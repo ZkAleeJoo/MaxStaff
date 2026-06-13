@@ -55,6 +55,12 @@ public class AntiXrayListener implements Listener {
             return;
         }
 
+        if (!AntiXrayWorldPolicy.isMonitoringEnabled(
+                plugin.getMainConfigManager().getAntiXrayBlacklistedWorlds(),
+                block.getWorld().getName())) {
+            return;
+        }
+
         Material material = block.getType();
         if (!alertBlocks.contains(material)) {
             return;
