@@ -1,10 +1,12 @@
 package org.zkaleejoo.listeners;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.managers.StaffManager;
 
 public class PlayerQuitListener implements Listener {
 
@@ -14,15 +16,29 @@ public class PlayerQuitListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        StaffManager staffManager = plugin.getStaffManager();
+
         plugin.getReportManager().clearCooldown(player.getUniqueId());
-        plugin.getInventorySnapshotManager().saveSnapshot(player);
-        plugin.getStaffManager().handlePlayerQuit(player);
+        runInventoryQuitSequence(
+                staffManager.isInStaffMode(player),
+                () -> staffManager.disableStaffMode(player),
+                () -> plugin.getInventorySnapshotManager().saveSnapshot(player),
+                () -> staffManager.handlePlayerQuit(player));
         plugin.disableStaffChat(player.getUniqueId());
-        
     }
 
-    
+    static void runInventoryQuitSequence(boolean inStaffMode,
+            Runnable restoreStaffInventory,
+            Runnable saveInventorySnapshot,
+            Runnable clearSessionState) {
+        if (inStaffMode) {
+            restoreStaffInventory.run();
+        }
+
+        saveInventorySnapshot.run();
+        clearSessionState.run();
+    }
 }
