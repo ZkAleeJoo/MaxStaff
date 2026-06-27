@@ -103,7 +103,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
 
         nameToUuidCache.put(name, uuid);
         dataFile.getConfig().set("uuid-cache." + name, uuid.toString());
-        dataFile.saveConfig();
+        saveConfigAsync();
     }
 
     private String normalizeName(String name) {
@@ -126,7 +126,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
         data.set("mutes." + uuid + ".reason", reason);
         data.set("mutes." + uuid + ".expiry", expiry);
         data.set("mutes." + uuid + ".staff", staffName);
-        dataFile.saveConfig();
+        saveConfigAsync();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
         }
 
         data.set("mutes." + uuid, null);
-        dataFile.saveConfig();
+        saveConfigAsync();
         return true;
     }
 
@@ -187,10 +187,8 @@ public class PunishmentManager extends AbstractPunishmentManager {
 
     @Override
     protected void removeMuteAsync(UUID uuid) {
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            dataFile.getConfig().set("mutes." + uuid, null);
-            dataFile.saveConfig();
-        });
+        dataFile.getConfig().set("mutes." + uuid, null);
+        saveConfigAsync();
     }
 
     @Override
@@ -215,7 +213,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
         details.add(timestamp + "|" + staff + "|" + cleanReason + "|" + cleanDuration);
 
         data.set(pathDetails, details);
-        dataFile.saveConfig();
+        saveConfigAsync();
     }
 
     @Override
@@ -273,7 +271,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
         }
 
         if (changed) {
-            dataFile.saveConfig();
+            saveConfigAsync();
         }
         return records;
     }
@@ -308,7 +306,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
             data.set("history." + uuid + "." + type.toUpperCase(), null);
             data.set("history-details." + uuid + "." + type.toUpperCase(), null);
         }
-        dataFile.saveConfig();
+        saveConfigAsync();
     }
 
     @Override
@@ -326,7 +324,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
         }
 
         data.set(path, Math.max(0, current - amount));
-        dataFile.saveConfig();
+        saveConfigAsync();
         return true;
     }
 
@@ -338,7 +336,7 @@ public class PunishmentManager extends AbstractPunishmentManager {
     @Override
     protected void persistPlayerIP(UUID uuid, String ip) {
         dataFile.getConfig().set("ip-cache." + uuid, ip);
-        dataFile.saveConfig();
+        saveConfigAsync();
     }
 
     @Override
@@ -364,4 +362,17 @@ public class PunishmentManager extends AbstractPunishmentManager {
         }
         return alts;
     }
+
+    private void saveConfigAsync() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            dataFile.saveConfig();
+        });
+    }
+
+    @Override
+    public void close() {
+        dataFile.saveConfig();
+        super.close();
+    }
+
 }
