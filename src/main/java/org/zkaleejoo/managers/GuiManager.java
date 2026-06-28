@@ -175,7 +175,6 @@ public class GuiManager {
         player.openInventory(Objects.requireNonNull(gui));
     }
 
-
     public void openXrayMenu(Player staff) {
         MaxStaffHolder holder = new MaxStaffHolder("XRAY", null);
         Inventory gui = Bukkit.createInventory(holder, 54,
@@ -205,6 +204,7 @@ public class GuiManager {
             return;
         }
 
+        @SuppressWarnings("null")
         List<String> permissions = target.getEffectivePermissions().stream()
                 .filter(PermissionAttachmentInfo::getValue)
                 .map(PermissionAttachmentInfo::getPermission)
@@ -281,7 +281,8 @@ public class GuiManager {
 
     public void openActivePunishmentsMenu(Player staff, int page) {
         Runnable loadRecords = () -> {
-            List<ActivePunishmentRecord> records = new ArrayList<>(plugin.getPunishmentManager().getActivePunishments());
+            List<ActivePunishmentRecord> records = new ArrayList<>(
+                    plugin.getPunishmentManager().getActivePunishments());
             records.sort(java.util.Comparator
                     .comparing((ActivePunishmentRecord record) -> record.type().ordinal())
                     .thenComparing(record -> safeText(record.targetName()), String.CASE_INSENSITIVE_ORDER));
@@ -888,7 +889,8 @@ public class GuiManager {
 
                     gui.addItem(head);
                 }
-                if (gui != null) staff.openInventory(Objects.requireNonNull(gui));
+                if (gui != null)
+                    staff.openInventory(Objects.requireNonNull(gui));
             });
         });
     }
@@ -1076,7 +1078,6 @@ public class GuiManager {
         return item;
     }
 
-
     private ItemStack createXraySuspectHead(XraySuspect suspect) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -1112,7 +1113,8 @@ public class GuiManager {
                 .replace("{rate}", String.valueOf(suspect.getSessionRate()))
                 .replace("{window_rate}", String.valueOf(suspect.getWindowRate()))
                 .replace("{window_total}", String.valueOf(suspect.getWindowTotal()))
-                .replace("{window_seconds}", String.valueOf(plugin.getMainConfigManager().getAntiXrayRateWindowSeconds()))
+                .replace("{window_seconds}",
+                        String.valueOf(plugin.getMainConfigManager().getAntiXrayRateWindowSeconds()))
                 .replace("{world}", world)
                 .replace("{x}", x)
                 .replace("{y}", y)
