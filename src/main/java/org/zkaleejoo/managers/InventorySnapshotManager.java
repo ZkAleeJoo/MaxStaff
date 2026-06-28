@@ -136,6 +136,7 @@ public class InventorySnapshotManager {
         return Optional.of(buildSnapshot(config));
     }
 
+    @SuppressWarnings("null")
     public List<String> getCachedPlayerNames() {
         return snapshotEntriesByName.values().stream()
                 .map(IndexedSnapshotFile::playerName)
@@ -145,6 +146,7 @@ public class InventorySnapshotManager {
                 .toList();
     }
 
+    @SuppressWarnings("null")
     public List<DeathSnapshot> getDeathSnapshots() {
         List<DeathSnapshot> snapshots = new ArrayList<>();
         long now = System.currentTimeMillis();
@@ -382,7 +384,8 @@ public class InventorySnapshotManager {
 
         String playerName = config.getString("player.name");
         String lowerName = normalizeName(playerName);
-        IndexedSnapshotFile indexedFile = new IndexedSnapshotFile(file, uuid, playerName, lowerName, hasSnapshot, hasDeath);
+        IndexedSnapshotFile indexedFile = new IndexedSnapshotFile(file, uuid, playerName, lowerName, hasSnapshot,
+                hasDeath);
 
         indexedFilesByPath.put(absolutePath, indexedFile);
         if (uuid != null) {
