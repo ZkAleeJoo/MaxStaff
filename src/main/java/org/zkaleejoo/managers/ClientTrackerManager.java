@@ -56,12 +56,13 @@ public class ClientTrackerManager implements Listener, PluginMessageListener {
         registerOutgoingChannel(LEGACY_FORGE_ALT_CHANNEL);
     }
 
+    @SuppressWarnings("null")
     public void unregisterChannels() {
         unregisterIncomingChannel(MODERN_CHANNEL);
         unregisterIncomingChannel(LEGACY_CHANNEL);
         unregisterIncomingChannel(MODERN_FORGE_CHANNEL);
         unregisterIncomingChannel(LEGACY_FORGE_CHANNEL);
-        unregisterIncomingChannel(LEGACY_FORGE_ALT_CHANNEL);    
+        unregisterIncomingChannel(LEGACY_FORGE_ALT_CHANNEL);
         unregisterOutgoingChannel(MODERN_CHANNEL);
         unregisterOutgoingChannel(LEGACY_CHANNEL);
         unregisterOutgoingChannel(MODERN_FORGE_CHANNEL);
@@ -124,7 +125,7 @@ public class ClientTrackerManager implements Listener, PluginMessageListener {
             if (nativeBrand != null && !nativeBrand.isEmpty()) {
                 String normalizedClient = resolveClientName(nativeBrand, config);
                 completeDetection(player, normalizedClient, nativeBrand);
-                return; 
+                return;
             }
         } catch (NoSuchMethodError ignored) {
         }
@@ -146,7 +147,8 @@ public class ClientTrackerManager implements Listener, PluginMessageListener {
             return;
         }
 
-        if (MODERN_FORGE_CHANNEL.equals(channel) || LEGACY_FORGE_CHANNEL.equals(channel) || LEGACY_FORGE_ALT_CHANNEL.equals(channel)) {
+        if (MODERN_FORGE_CHANNEL.equals(channel) || LEGACY_FORGE_CHANNEL.equals(channel)
+                || LEGACY_FORGE_ALT_CHANNEL.equals(channel)) {
             if (!detectedClients.containsKey(player.getUniqueId())) {
                 completeDetection(player, "Forge", "forge-handshake");
             }
@@ -213,7 +215,8 @@ public class ClientTrackerManager implements Listener, PluginMessageListener {
         String permission = config.getClientTrackerNotifyPermission();
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            if (online == null) continue;
+            if (online == null)
+                continue;
             if (permission == null || permission.isBlank() || online.hasPermission(permission)) {
                 online.sendMessage(colored);
             }
@@ -267,7 +270,7 @@ public class ClientTrackerManager implements Listener, PluginMessageListener {
         } catch (IOException ignored) {
         }
 
-        int[] indexRef = {0};
+        int[] indexRef = { 0 };
         int strLen = readVarInt(message, indexRef);
         if (strLen > 0 && indexRef[0] + strLen <= message.length) {
             return new String(message, indexRef[0], strLen, StandardCharsets.UTF_8);
