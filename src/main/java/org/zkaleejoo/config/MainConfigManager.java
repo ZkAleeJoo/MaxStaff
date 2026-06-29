@@ -195,6 +195,8 @@ public class MainConfigManager {
     private String msgPunishmentLimitExceeded;
     private String silentPunishmentUse, silentInvalid, silentFormatInvalid;
     private String staffModeCommandBlocked, freezeCommandBlocked;
+    private String altsDetectedAlert;
+    private String altsNotifyPermission;
 
     @SuppressWarnings("unused")
     private static final class PunishmentLimitGroup {
@@ -419,6 +421,7 @@ public class MainConfigManager {
         antiXrayBlacklistedWorlds = loadNormalizedStringSet(config, "anti-xray.blacklisted-worlds");
         antiXrayDisplayNames = loadAntiXrayDisplayNames(config);
         loadPunishmentSectionLimits(config);
+        altsNotifyPermission = config.getString("alts.notify.permission", "maxstaff.alts.notify");
 
         // TODO LO QUE TENGA QUE VER CON MENSAJES, ETC
         noPermission = lang.getString("messages.no-permission");
@@ -778,6 +781,8 @@ public class MainConfigManager {
         if (guiRevivePageInfoLore == null || guiRevivePageInfoLore.isEmpty()) {
             guiRevivePageInfoLore = List.of("&7Snapshots on this page: &f{snapshots-on-page}");
         }
+        altsDetectedAlert = lang.getString("messages.alts-detected",
+                "&#555555[&#FF3333&lAlts&#555555] &#E0E0E0The player &#FFD700{player} &#E0E0E0is connected from the same IP address as: &#FF3333{alts}");
 
         reviveMenuSize = config.getInt("revive.menu-size", 54);
         if (reviveMenuSize < 9) {
@@ -834,7 +839,8 @@ public class MainConfigManager {
         return size;
     }
 
-    private String getConfiguredString(FileConfiguration config, FileConfiguration lang, String path, String fallbackResourcePath) {
+    private String getConfiguredString(FileConfiguration config, FileConfiguration lang, String path,
+            String fallbackResourcePath) {
         String configuredValue = config.getString(path);
         if (hasText(configuredValue)) {
             return configuredValue;
@@ -2445,6 +2451,14 @@ public class MainConfigManager {
 
     public String getClientTrackerJoinMessage() {
         return clientTrackerJoinMessage;
+    }
+
+    public String getAltsNotifyPermission() {
+        return altsNotifyPermission;
+    }
+
+    public String getAltsDetectedAlert() {
+        return altsDetectedAlert;
     }
 
     public Map<String, List<String>> getClientTrackerCustomMappings() {

@@ -42,6 +42,7 @@ public final class CommandContextUtil {
         sender.sendMessage(MessageUtils.getColoredMessage(message));
     }
 
+    @SuppressWarnings("null")
     public static List<String> filterOnlinePlayerNamesByPrefix(String prefix) {
         if (prefix == null) {
             return Collections.emptyList();

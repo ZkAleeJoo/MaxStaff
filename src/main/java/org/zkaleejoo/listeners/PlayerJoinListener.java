@@ -39,6 +39,37 @@ public class PlayerJoinListener implements Listener {
                     "Could not resolve IP for player " + player.getName() + " on join; skipping IP cache update.");
         } else {
             plugin.getPunishmentManager().savePlayerIP(player.getUniqueId(), ip);
+
+            if (config.isModuleEnabled("alts")) {
+                org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    java.util.List<java.util.UUID> alts = plugin.getPunishmentManager().getAllAccountsByIP(ip);
+
+                    java.util.List<String> altNames = new java.util.ArrayList<>();
+                    for (java.util.UUID altUuid : alts) {
+                        if (!altUuid.equals(player.getUniqueId())) {
+                            String altName = org.bukkit.Bukkit.getOfflinePlayer(altUuid).getName();
+                            if (altName != null && !altName.isEmpty()) {
+                                altNames.add(altName);
+                            } else {
+                                altNames.add("Unknown (" + altUuid.toString().substring(0, 8) + ")");
+                            }
+                        }
+                    }
+                    if (!altNames.isEmpty()) {
+                        String altsJoined = String.join("&7, &c", altNames);
+                        String message = MessageUtils.getColoredMessage(config.getPrefix() +
+                                config.getAltsDetectedAlert()
+                                        .replace("{player}", player.getName())
+                                        .replace("{alts}", altsJoined));
+
+                        for (Player onlineStaff : org.bukkit.Bukkit.getOnlinePlayers()) {
+                            if (onlineStaff != null && onlineStaff.hasPermission(config.getAltsNotifyPermission())) {
+                                onlineStaff.sendMessage(message);
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         for (java.util.UUID uuid : plugin.getStaffManager().getVanishedPlayers()) {

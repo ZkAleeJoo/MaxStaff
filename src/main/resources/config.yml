@@ -109,6 +109,13 @@ client-tracker:
     "PvPLounge": ["pvplounge"]
 
 #==========================================
+#       Alts
+#==========================================
+alts:
+  notify:
+    permission: "maxstaff.alts.notify" #Permission required to receive those report notifications
+
+#==========================================
 #       Anti Xray
 #==========================================
 anti-xray:

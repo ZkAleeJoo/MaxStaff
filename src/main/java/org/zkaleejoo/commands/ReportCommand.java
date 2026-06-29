@@ -143,7 +143,8 @@ public class ReportCommand implements CommandExecutor, TabCompleter {
                     .replace("{sequence}", String.valueOf(reportMeta.sequentialIndex()));
 
             for (Player online : Bukkit.getOnlinePlayers()) {
-                if (online == null) continue;
+                if (online == null)
+                    continue;
                 if (notifyPermission != null && !notifyPermission.isEmpty()
                         && !online.hasPermission(notifyPermission)) {
                     continue;
@@ -199,6 +200,7 @@ public class ReportCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    @SuppressWarnings("null")
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {

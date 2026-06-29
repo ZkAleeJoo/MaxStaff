@@ -120,7 +120,7 @@ messages:
   silent-punishment-use: "&#FF5555Uso: &#FFD700/silent <ban|tempban|mute|tempmute|kick|warn|ban-ip|tempban-ip> <jugador/ip> [tiempo] [razón]"
   silent-invalid: "&#FF3333&l✖ &#FF5555Acción inválida. Usa: &#FFD700ban, tempban, mute, tempmute, kick, warn, ban-ip, tempban-ip"
   silent-format-invalid: "&#FF3333&l✖ &#FF5555Formato de duración inválido. Usa: &#FFD700<numero><s|m|h|d|w> &#FF5555o &#FFD700perm/permanent/permanentemente"
-
+  alts-detected: "&#555555[&#FF3333&lAlts&#555555] &#E0E0E0El jugador &#FFD700{player} &#E0E0E0está usando la misma IP que: &#FF3333{alts}"
 staff-mode:
   enabled: "&#00E676&l✔ &#E0E0E0Modo Staff &#00E676&lACTIVADO&#E0E0E0!"
   disabled: "&#FF3333&l✖ &#FF5555Modo Staff &#FF3333&lDESACTIVADO&#FF5555."
