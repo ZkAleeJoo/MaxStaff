@@ -441,6 +441,7 @@ public class MaxStaff extends JavaPlugin {
         HandlerList.unregisterAll(this);
 
         registerCommands();
+
         registerEvents();
     }
 
