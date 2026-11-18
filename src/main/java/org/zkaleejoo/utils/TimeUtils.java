@@ -6,11 +6,13 @@ import java.util.regex.Pattern;
 
 public class TimeUtils {
 
-    private static final Pattern DURATION_TOKEN_PATTERN = Pattern.compile("^(\\d+)([smhdw])$|^(perm|permanent|permanentemente)$");
+    private static final Pattern DURATION_TOKEN_PATTERN = Pattern
+            .compile("^(\\d+)([smhdw])$|^(perm|permanent|permanentemente)$");
     private static final Pattern TIME_PATTERN = Pattern.compile("^(\\d+)([smhdw])$");
 
     public static boolean isValidDurationToken(String arg) {
-        if (arg == null || arg.isEmpty()) return false;
+        if (arg == null || arg.isEmpty())
+            return false;
         return DURATION_TOKEN_PATTERN.matcher(arg.toLowerCase().trim()).matches();
     }
 
@@ -20,22 +22,30 @@ public class TimeUtils {
         }
         arg = arg.toLowerCase().trim();
 
-        if (arg.equals("perm") || arg.equals("permanent") || arg.equals("permanentemente")) return -1;
+        if (arg.equals("perm") || arg.equals("permanent") || arg.equals("permanentemente"))
+            return -1;
 
         Matcher matcher = TIME_PATTERN.matcher(arg);
-        if (!matcher.matches()) return 0;
+        if (!matcher.matches())
+            return 0;
 
         try {
             long value = Long.parseLong(matcher.group(1));
             String unit = matcher.group(2);
 
             switch (unit) {
-                case "s": return value * 1000L;
-                case "m": return value * 60L * 1000L;
-                case "h": return value * 60L * 60L * 1000L;
-                case "d": return value * 24L * 60L * 60L * 1000L;
-                case "w": return value * 7L * 24L * 60L * 60L * 1000L;
-                default: return 0;
+                case "s":
+                    return value * 1000L;
+                case "m":
+                    return value * 60L * 1000L;
+                case "h":
+                    return value * 60L * 60L * 1000L;
+                case "d":
+                    return value * 24L * 60L * 60L * 1000L;
+                case "w":
+                    return value * 7L * 24L * 60L * 60L * 1000L;
+                default:
+                    return 0;
             }
         } catch (NumberFormatException e) {
             return 0;
@@ -43,17 +53,22 @@ public class TimeUtils {
     }
 
     public static String getDurationString(long duration, MainConfigManager config) {
-        if (duration == -1) return config.getTimeUnitPermanent();
-        if (duration <= 0) return "0 " + config.getTimeUnitSeconds(); 
-        
+        if (duration == -1)
+            return config.getTimeUnitPermanent();
+        if (duration <= 0)
+            return "0 " + config.getTimeUnitSeconds();
+
         long seconds = duration / 1000L;
         long minutes = seconds / 60L;
         long hours = minutes / 60L;
         long days = hours / 24L;
-        
-        if (days > 0) return days + " " + config.getTimeUnitDays();
-        if (hours > 0) return hours + " " + config.getTimeUnitHours();
-        if (minutes > 0) return minutes + " " + config.getTimeUnitMinutes();
+
+        if (days > 0)
+            return days + " " + config.getTimeUnitDays();
+        if (hours > 0)
+            return hours + " " + config.getTimeUnitHours();
+        if (minutes > 0)
+            return minutes + " " + config.getTimeUnitMinutes();
         return seconds + " " + config.getTimeUnitSeconds();
     }
 
@@ -72,11 +87,19 @@ public class TimeUtils {
         if (duration == -1L) {
             return permanent;
         }
-        if (duration <= 0L) {
-            return "0 " + secondsUnit;
-        }
+        return formatDuration(Math.max(0L, duration) / 1000L, " " + daysUnit, " " + hoursUnit,
+                " " + minutesUnit, " " + secondsUnit);
+    }
 
-        long totalSeconds = duration / 1000L;
+    public static String getCompactDurationString(long duration, String permanent) {
+        if (duration == -1L) {
+            return permanent;
+        }
+        return formatDuration(Math.ceilDiv(Math.max(0L, duration), 1000L), "d", "h", "m", "s");
+    }
+
+    private static String formatDuration(long totalSeconds, String daysUnit, String hoursUnit, String minutesUnit,
+            String secondsUnit) {
         long days = totalSeconds / 86_400L;
         long hours = (totalSeconds % 86_400L) / 3_600L;
         long minutes = (totalSeconds % 3_600L) / 60L;
@@ -88,7 +111,7 @@ public class TimeUtils {
         appendDurationPart(result, minutes, minutesUnit);
         appendDurationPart(result, seconds, secondsUnit);
 
-        return result.isEmpty() ? "0 " + secondsUnit : result.toString();
+        return result.isEmpty() ? "0" + secondsUnit : result.toString();
     }
 
     private static void appendDurationPart(StringBuilder result, long value, String unit) {
@@ -98,6 +121,6 @@ public class TimeUtils {
         if (!result.isEmpty()) {
             result.append(' ');
         }
-        result.append(value).append(' ').append(unit);
+        result.append(value).append(unit);
     }
 }

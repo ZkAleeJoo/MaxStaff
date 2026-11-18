@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.zkaleejoo.utils.FoliaCompat;
 import org.zkaleejoo.utils.FoliaCompat.WrappedTask;
 import org.zkaleejoo.MaxStaff;
+import org.zkaleejoo.utils.BanScreen;
 import org.zkaleejoo.utils.BanUtils;
 import org.zkaleejoo.utils.DatabaseManager;
 import org.zkaleejoo.utils.IPUtils;
@@ -421,13 +422,10 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
             FoliaCompat.runGlobal(plugin, () -> {
                 logHistory(targetName, "BAN", reason, actor, timeDisplay);
 
-                String banScreenTemplate = cfg().getScreenBan().replace("{staff}", actor).replace("{reason}", reason)
-                        .replace("{duration}", timeDisplay);
-                String finalBanMessage = c(banScreenTemplate);
-
                 Player target = Bukkit.getPlayer(targetName);
-                if (target != null) {
-                    target.kick(MessageUtils.toComponent(finalBanMessage));
+                long remainingMillis = expiry == -1L ? -1L : Math.max(0L, expiry - System.currentTimeMillis());
+                if (target != null && remainingMillis != 0L) {
+                    target.kick(MessageUtils.toComponent(BanScreen.render(cfg(), actor, reason, remainingMillis)));
                 }
 
                 logStaffPunishment("BAN", actor, targetName);
@@ -712,7 +710,7 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
     public String getActiveBanMessage(UUID uuid, String targetName) {
         try (Connection conn = db.getConnection();
                 PreparedStatement ps = conn.prepareStatement(
-                        "SELECT reason, staff, expiry FROM MaxStaff_bans WHERE uuid = ? OR LOWER(name) = LOWER(?) LIMIT 1")) {
+                        "SELECT uuid, reason, staff, expiry FROM MaxStaff_bans WHERE uuid = ? OR LOWER(name) = LOWER(?) LIMIT 1")) {
             ps.setString(1, uuid.toString());
             ps.setString(2, targetName);
 
@@ -722,19 +720,14 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
                 }
 
                 long expiry = rs.getLong("expiry");
-                if (expiry != -1 && System.currentTimeMillis() > expiry) {
-                    removeExpiredBan(uuid);
+                long now = System.currentTimeMillis();
+                if (expiry != -1L && expiry <= now) {
+                    removeExpiredBan(UUID.fromString(rs.getString("uuid")));
                     return null;
                 }
 
-                String duration = (expiry == -1)
-                        ? TimeUtils.getDurationString(-1, cfg())
-                        : TimeUtils.getDurationString(Math.max(0, expiry - System.currentTimeMillis()), cfg());
-
-                return MessageUtils.getColoredMessage(cfg().getScreenBan()
-                        .replace("{staff}", rs.getString("staff"))
-                        .replace("{reason}", rs.getString("reason"))
-                        .replace("{duration}", duration));
+                long remainingMillis = expiry == -1L ? -1L : expiry - now;
+                return BanScreen.render(cfg(), rs.getString("staff"), rs.getString("reason"), remainingMillis);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -746,8 +739,10 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
     private void removeExpiredBan(UUID uuid) {
         FoliaCompat.runAsync(plugin, () -> {
             try (Connection conn = db.getConnection();
-                    PreparedStatement ps = conn.prepareStatement("DELETE FROM MaxStaff_bans WHERE uuid = ?")) {
+                    PreparedStatement ps = conn.prepareStatement(
+                            "DELETE FROM MaxStaff_bans WHERE uuid = ? AND expiry <> -1 AND expiry <= ?")) {
                 ps.setString(1, uuid.toString());
+                ps.setLong(2, System.currentTimeMillis());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1086,15 +1081,13 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
                 ps.setLong(8, expiry);
                 ps.setLong(9, now);
                 ps.executeUpdate();
+                enqueueSyncAction("BAN_IP", null, ip, reason, actor, timeDisplay, SYNC_ACTION_TTL_MS);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
 
-        String banMessage = c(cfg().getScreenBan()
-                .replace("{staff}", actor)
-                .replace("{reason}", reason)
-                .replace("{duration}", timeDisplay));
+        String banMessage = BanScreen.render(cfg(), actor, reason, duration);
 
         BanUtils.banIp(ip, banMessage, (expiry == -1 ? null : new java.util.Date(expiry)), actor);
 
@@ -1116,7 +1109,6 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
         }
 
         logStaffPunishment("BAN_IP", actor, ip);
-        enqueueSyncAction("BAN_IP", null, ip, reason, actor, timeDisplay, SYNC_ACTION_TTL_MS);
         plugin.getDiscordManager().sendWebhook("ban", target + " (IP)", actor, reason, timeDisplay, null);
     }
 
@@ -1186,19 +1178,14 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
                 }
 
                 long expiry = rs.getLong("expiry");
-                if (expiry != -1 && System.currentTimeMillis() > expiry) {
+                long now = System.currentTimeMillis();
+                if (expiry != -1L && expiry <= now) {
                     removeExpiredIpBan(ip);
                     return null;
                 }
 
-                String duration = (expiry == -1)
-                        ? TimeUtils.getDurationString(-1, cfg())
-                        : TimeUtils.getDurationString(Math.max(0, expiry - System.currentTimeMillis()), cfg());
-
-                return c(cfg().getScreenBan()
-                        .replace("{staff}", rs.getString("staff"))
-                        .replace("{reason}", rs.getString("reason"))
-                        .replace("{duration}", duration));
+                long remainingMillis = expiry == -1L ? -1L : expiry - now;
+                return BanScreen.render(cfg(), rs.getString("staff"), rs.getString("reason"), remainingMillis);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1209,8 +1196,10 @@ public class PunishmentManagerMysql extends AbstractPunishmentManager {
     private void removeExpiredIpBan(String ip) {
         FoliaCompat.runAsync(plugin, () -> {
             try (Connection conn = db.getConnection();
-                    PreparedStatement ps = conn.prepareStatement("DELETE FROM MaxStaff_ip_bans WHERE ip = ?")) {
+                    PreparedStatement ps = conn.prepareStatement(
+                            "DELETE FROM MaxStaff_ip_bans WHERE ip = ? AND expiry <> -1 AND expiry <= ?")) {
                 ps.setString(1, ip);
+                ps.setLong(2, System.currentTimeMillis());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();

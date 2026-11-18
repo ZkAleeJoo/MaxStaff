@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.config.MainConfigManager;
+import org.zkaleejoo.utils.BanScreen;
 import org.zkaleejoo.utils.FoliaCompat;
 import org.zkaleejoo.utils.BanUtils;
 import org.zkaleejoo.utils.IPUtils;
@@ -156,12 +157,7 @@ public abstract class AbstractPunishmentManager implements IPunishmentManager {
         logHistory(targetName, "BAN", reason, actor, timeDisplay);
 
         Date expiry = (duration == -1) ? null : new Date(System.currentTimeMillis() + duration);
-        String banScreenTemplate = cfg().getScreenBan()
-                .replace("{staff}", actor)
-                .replace("{reason}", reason)
-                .replace("{duration}", timeDisplay);
-
-        String finalBanMessage = c(banScreenTemplate);
+        String finalBanMessage = BanScreen.render(cfg(), actor, reason, duration);
         BanUtils.banPlayerName(targetName, finalBanMessage, expiry, actor);
 
         logStaffPunishment("BAN", actor, targetName);
@@ -477,10 +473,7 @@ public abstract class AbstractPunishmentManager implements IPunishmentManager {
 
         logHistory(target, "BAN-IP", reason, getActorName(staff), timeDisplay);
 
-        String banMessage = c(cfg().getScreenBan()
-                .replace("{staff}", getActorName(staff))
-                .replace("{reason}", reason)
-                .replace("{duration}", timeDisplay));
+        String banMessage = BanScreen.render(cfg(), getActorName(staff), reason, duration);
 
         BanUtils.banIp(ip, banMessage, expiry, getActorName(staff));
 

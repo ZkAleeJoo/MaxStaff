@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.zkaleejoo.MaxStaff;
 import org.zkaleejoo.managers.PunishmentManagerMysql;
+import org.zkaleejoo.utils.BanScreen;
 import org.zkaleejoo.utils.BanUtils;
 import org.zkaleejoo.utils.IPUtils;
 import org.zkaleejoo.utils.MessageUtils;
@@ -18,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,24 +67,27 @@ public class GlobalPunishmentListener implements Listener {
         try {
             String ipBanMessage = mysqlManager.getActiveIPBanMessage(normalizedIp);
             if (ipBanMessage != null) {
-                plugin.getLogger().fine("[MaxStaff IP] PreLogin blocked by IP ban for " + event.getName() + " (" + normalizedIp + ")");
+                plugin.getLogger().fine(
+                        "[MaxStaff IP] PreLogin blocked by IP ban for " + event.getName() + " (" + normalizedIp + ")");
                 disallowWithParsedBanScreen(event, ipBanMessage);
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("[MaxStaff] Error checking IP ban for " + event.getName() + " (" + normalizedIp + "): " + e.getMessage());
+            plugin.getLogger().warning("[MaxStaff] Error checking IP ban for " + event.getName() + " (" + normalizedIp
+                    + "): " + e.getMessage());
         }
     }
 
     private void handleBukkitBanListPreLogin(AsyncPlayerPreLoginEvent event) {
         try {
-            String banMessage = BanUtils.getPlayerBanReason(event.getName());
+            String banMessage = BanUtils.getPlayerBanMessage(event.getName(), plugin.getMainConfigManager());
             if (banMessage != null && !banMessage.isBlank()) {
                 disallowWithParsedBanScreen(event, banMessage);
                 plugin.getLogger().fine("[MaxStaff IP] PreLogin blocked by local NAME ban for " + event.getName());
                 return;
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("[MaxStaff] Error checking name ban for " + event.getName() + ": " + e.getMessage());
+            plugin.getLogger()
+                    .warning("[MaxStaff] Error checking name ban for " + event.getName() + ": " + e.getMessage());
         }
 
         String normalizedIp = normalizePreLoginIp(event);
@@ -91,19 +96,22 @@ public class GlobalPunishmentListener implements Listener {
         }
 
         try {
-            String ipBanMessage = BanUtils.getIpBanReason(normalizedIp);
+            String ipBanMessage = BanUtils.getIpBanMessage(normalizedIp, plugin.getMainConfigManager());
             if (ipBanMessage != null && !ipBanMessage.isBlank()) {
                 disallowWithParsedBanScreen(event, ipBanMessage);
-                plugin.getLogger().fine("[MaxStaff IP] PreLogin blocked by local IP ban for " + event.getName() + " (" + normalizedIp + ")");
+                plugin.getLogger().fine("[MaxStaff IP] PreLogin blocked by local IP ban for " + event.getName() + " ("
+                        + normalizedIp + ")");
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("[MaxStaff] Error checking IP ban for " + event.getName() + " (" + normalizedIp + "): " + e.getMessage());
+            plugin.getLogger().warning("[MaxStaff] Error checking IP ban for " + event.getName() + " (" + normalizedIp
+                    + "): " + e.getMessage());
         }
     }
 
     private String normalizePreLoginIp(AsyncPlayerPreLoginEvent event) {
         if (event.getAddress() == null) {
-            plugin.getLogger().fine("[MaxStaff IP] PreLogin has no address for " + event.getName() + "; skipping IP-ban check.");
+            plugin.getLogger()
+                    .fine("[MaxStaff IP] PreLogin has no address for " + event.getName() + "; skipping IP-ban check.");
             return null;
         }
 
@@ -131,8 +139,10 @@ public class GlobalPunishmentListener implements Listener {
             Map<UUID, String> playersToKick = new LinkedHashMap<>();
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer == null) continue;
-                String banMessage = mysqlManager.getActiveBanMessage(onlinePlayer.getUniqueId(), onlinePlayer.getName());
+                if (onlinePlayer == null)
+                    continue;
+                String banMessage = mysqlManager.getActiveBanMessage(onlinePlayer.getUniqueId(),
+                        onlinePlayer.getName());
                 if (banMessage != null) {
                     playersToKick.put(onlinePlayer.getUniqueId(), banMessage);
                 }
@@ -185,7 +195,8 @@ public class GlobalPunishmentListener implements Listener {
         long now = System.currentTimeMillis();
 
         try (Connection conn = mysqlManager.getSqlConnection()) {
-            try (PreparedStatement cleanupExpired = conn.prepareStatement("DELETE FROM MaxStaff_sync_actions WHERE expires_at <= ?")) {
+            try (PreparedStatement cleanupExpired = conn
+                    .prepareStatement("DELETE FROM MaxStaff_sync_actions WHERE expires_at <= ?")) {
                 cleanupExpired.setLong(1, now);
                 cleanupExpired.executeUpdate();
             }
@@ -197,9 +208,14 @@ public class GlobalPunishmentListener implements Listener {
 
             String serverId = mysqlManager.getSyncSourceServer();
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT act.id, act.action_type, act.target_uuid, act.target_name, act.reason, act.staff, act.duration " +
+                    "SELECT act.id, act.action_type, act.target_uuid, act.target_name, " +
+                            "COALESCE(ip_ban.reason, act.reason) AS reason, COALESCE(ip_ban.staff, act.staff) AS staff, "
+                            +
+                            "ip_ban.expiry AS ban_expiry " +
                             "FROM MaxStaff_sync_actions act " +
                             "LEFT JOIN MaxStaff_sync_action_acks ack ON ack.action_id = act.id AND ack.server_id = ? " +
+                            "LEFT JOIN MaxStaff_ip_bans ip_ban ON act.action_type = 'BAN_IP' AND ip_ban.ip = act.target_name "
+                            +
                             "WHERE act.source_server <> ? AND act.expires_at > ? AND ack.action_id IS NULL " +
                             "ORDER BY act.created_at ASC LIMIT ?")) {
                 ps.setString(1, serverId);
@@ -216,8 +232,7 @@ public class GlobalPunishmentListener implements Listener {
                                 rs.getString("target_name"),
                                 rs.getString("reason"),
                                 rs.getString("staff"),
-                                rs.getString("duration")
-                        ));
+                                rs.getObject("ban_expiry", Long.class)));
                     }
                 }
             }
@@ -255,7 +270,7 @@ public class GlobalPunishmentListener implements Listener {
                 }
             }
             case "BAN_IP" -> applyLiveIpBan(action);
-            case "UNBAN_IP" -> { 
+            case "UNBAN_IP" -> {
                 if (action.targetName() != null) {
                     BanUtils.pardonIp(IPUtils.normalizeIp(action.targetName()));
                 }
@@ -268,28 +283,34 @@ public class GlobalPunishmentListener implements Listener {
                     }
                 }
             }
-            case "UNBAN", "BAN", "MUTE" -> { 
+            case "UNBAN", "BAN", "MUTE" -> {
             }
-            default -> plugin.getLogger().warning("[MaxStaff SQL] Sync action ignored (no handler): " + type + " id=" + action.id());
+            default -> plugin.getLogger()
+                    .warning("[MaxStaff SQL] Sync action ignored (no handler): " + type + " id=" + action.id());
         }
     }
 
     private void applyLiveIpBan(SyncAction action) {
         String targetIp = IPUtils.normalizeIp(action.targetName());
-        if (targetIp == null || targetIp.isBlank()) {
+        Long expiry = action.banExpiry();
+        if (targetIp == null || expiry == null) {
             return;
         }
 
-        String duration = (action.duration() == null || action.duration().isBlank()) ? plugin.getMainConfigManager().getTimeUnitPermanent() : action.duration();
-        String banMessage = MessageUtils.getColoredMessage(plugin.getMainConfigManager().getScreenBan()
-                .replace("{staff}", action.staff() == null ? "CONSOLE" : action.staff())
-                .replace("{reason}", action.reason() == null ? "N/A" : action.reason())
-                .replace("{duration}", duration));
+        long now = System.currentTimeMillis();
+        boolean permanent = expiry == -1L;
+        if (!permanent && expiry <= now) {
+            return;
+        }
 
-        BanUtils.banIp(targetIp, banMessage, null, action.staff());
+        long remainingMillis = permanent ? -1L : expiry - now;
+        String banMessage = BanScreen.render(plugin.getMainConfigManager(), action.staff(), action.reason(),
+                remainingMillis);
+        BanUtils.banIp(targetIp, banMessage, permanent ? null : new Date(expiry), action.staff());
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            if (online == null) continue;
+            if (online == null)
+                continue;
             String onlineIp = IPUtils.normalizeIp(IPUtils.resolvePlayerIp(online));
             if (targetIp.equals(onlineIp)) {
                 online.kick(MessageUtils.toComponent(banMessage));
@@ -297,7 +318,7 @@ public class GlobalPunishmentListener implements Listener {
         }
     }
 
-    private record SyncAction(long id, String type, String targetUuid, String targetName, String reason, String staff, String duration) {
+    private record SyncAction(long id, String type, String targetUuid, String targetName, String reason, String staff,
+            Long banExpiry) {
     }
 }
-

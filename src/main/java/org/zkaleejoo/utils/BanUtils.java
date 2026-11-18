@@ -15,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.ban.IpBanList;
 import org.bukkit.ban.ProfileBanList;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import org.zkaleejoo.config.MainConfigManager;
 import org.zkaleejoo.managers.ActivePunishmentRecord;
 
 public final class BanUtils {
@@ -74,13 +75,13 @@ public final class BanUtils {
         pardonPlayer(uuid, null);
     }
 
-    public static String getPlayerBanReason(String targetName) {
+    public static String getPlayerBanMessage(String targetName, MainConfigManager config) {
         if (targetName == null || targetName.isBlank()) {
             return null;
         }
 
         BanEntry<?> entry = findActiveMatchingPlayerEntry(profileBanList(), targetName);
-        return entry == null ? null : entry.getReason();
+        return getBanMessage(entry, config);
     }
 
     @SuppressWarnings("deprecation")
@@ -200,7 +201,7 @@ public final class BanUtils {
         Bukkit.unbanIP(address.getHostAddress());
     }
 
-    public static String getIpBanReason(String ip) {
+    public static String getIpBanMessage(String ip, MainConfigManager config) {
         if (ip == null || ip.isBlank()) {
             return null;
         }
@@ -213,7 +214,19 @@ public final class BanUtils {
             return null;
         }
         BanEntry<?> entry = findActiveMatchingIpEntry(ipBanList(), address);
-        return entry == null ? null : entry.getReason();
+        return getBanMessage(entry, config);
+    }
+
+    private static String getBanMessage(BanEntry<?> entry, MainConfigManager config) {
+        if (entry == null) {
+            return null;
+        }
+        long expiry = expirationMillis(entry);
+        if (expiry == -1L) {
+            return entry.getReason();
+        }
+        long remainingMillis = expiry - System.currentTimeMillis();
+        return remainingMillis > 0L ? BanScreen.refreshStored(config, entry.getReason(), remainingMillis) : null;
     }
 
     @SuppressWarnings("deprecation")
